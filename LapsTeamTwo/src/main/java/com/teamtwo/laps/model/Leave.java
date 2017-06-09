@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.teamtwo.laps.javabeans.LeaveStatus;
@@ -38,6 +40,10 @@ public class Leave {
 	@Column(name = "wasupdated")
 	private Integer wasUpdated;
 	
+	@ManyToOne
+	@JoinColumn(name = "staffid", insertable = false, updatable = false)
+	private StaffMember staffMember;
+	
 	public Leave() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -50,10 +56,10 @@ public class Leave {
 		this.leaveId = leaveId;
 	}
 	public Integer getStaffId() {
-		return staffId;
+		return staffMember.getStaffId();
 	}
 	public void setStaffId(Integer staffId) {
-		this.staffId = staffId;
+		this.staffMember.setStaffId(staffId);
 	}
 	public Integer getLeaveType() {
 		return leaveType;
@@ -109,9 +115,18 @@ public class Leave {
 	public void setWasUpdated(Integer wasUpdated) {
 		this.wasUpdated = wasUpdated;
 	}
+	
+	public StaffMember getStaffMember() {
+		return staffMember;
+	}
+
+	public void setStaffMember(StaffMember staffMember) {
+		this.staffMember = staffMember;
+	}
+
 	@Override
 	public String toString() {
-		return "Leave [leaveId=" + leaveId + ", staffId=" + staffId + ", leaveType=" + leaveType + ", reason=" + reason
+		return "Leave [leaveId=" + leaveId + ", staffId=" + staffMember.getStaffId() + ", leaveType=" + leaveType + ", reason=" + reason
 				+ ", startDate=" + startDate + ", endDate=" + endDate + ", dissemination=" + dissemination
 				+ ", disseminationId=" + disseminationId + ", status=" + status + ", comment=" + comment
 				+ ", wasUpdated=" + wasUpdated + "]";

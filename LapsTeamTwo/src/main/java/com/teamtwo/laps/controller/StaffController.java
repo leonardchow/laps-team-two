@@ -3,6 +3,7 @@ package com.teamtwo.laps.controller;
 import static org.hamcrest.CoreMatchers.startsWith;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.teamtwo.laps.model.StaffMember;
+import com.teamtwo.laps.service.LeaveService;
 import com.teamtwo.laps.service.StaffMemberService;
 /**
  * Handles requests for the application staff pages.
@@ -27,6 +29,9 @@ public class StaffController {
 	
 	@Autowired
 	private StaffMemberService smService;
+	
+	@Autowired
+	private LeaveService lService;
 	
 	/**
 	 * Renders the staff dashboard.
@@ -53,5 +58,12 @@ public class StaffController {
 		return modelAndView;
 	}
 	
+	@RequestMapping(value = "/leave/{staffId}")
+	public ModelAndView viewStaffLeave(@PathVariable Integer staffId) {
+		ModelAndView modelAndView = new ModelAndView("staffMember-leave-view");
+//		ArrayList<Leave> leaves = lService.findAllLeaveOfStaff(staffId);
+		modelAndView.addObject("leaves", lService.findAllLeaveOfStaff(staffId));
+		return modelAndView;
+	}
 	
 }

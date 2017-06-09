@@ -1,8 +1,14 @@
 package com.teamtwo.laps.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -28,6 +34,9 @@ public class StaffMember {
 	private int managerId;
 	@Column(name = "total_hours_claimed")
 	private int totalHoursClaimed;
+	
+	@OneToMany(mappedBy="staffMember", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	private List<Leave> appliedLeaves = new ArrayList<Leave>();
 	
 	public StaffMember() {
 		super();
@@ -120,6 +129,15 @@ public class StaffMember {
 	public void setTotalHoursClaimed(int totalHoursClaimed) {
 		this.totalHoursClaimed = totalHoursClaimed;
 	}
+	
+	public List<Leave> getAppliedLeaves() {
+		return appliedLeaves;
+	}
+
+	public void setAppliedLeaves(List<Leave> appliedLeaves) {
+		this.appliedLeaves = appliedLeaves;
+	}
+
 	@Override
 	public String toString() {
 		return "StaffMember [staffId=" + staffId + ", name=" + name + ", contactNo=" + contactNo + ", email=" + email
