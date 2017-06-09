@@ -1,4 +1,4 @@
-package com.teamtwo.laps;
+package com.teamtwo.laps.init;
 
 import javax.servlet.Filter;
 

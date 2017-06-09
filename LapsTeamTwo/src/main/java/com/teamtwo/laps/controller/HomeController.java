@@ -1,4 +1,4 @@
-package com.teamtwo.laps;
+package com.teamtwo.laps.controller;
 
 import java.text.DateFormat;
 import java.util.Date;
