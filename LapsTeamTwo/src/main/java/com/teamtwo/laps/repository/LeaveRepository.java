@@ -1,0 +1,21 @@
+package com.teamtwo.laps.repository;
+
+import java.util.ArrayList;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import com.teamtwo.laps.model.Leave;
+
+
+public interface LeaveRepository extends JpaRepository<Leave, Integer> {
+	@Query("SELECT l FROM Leave l WHERE l.leaveId = :id")
+	Leave findLeaveById(@Param("id") Integer id);
+	
+	@Query("SELECT l FROM Leave l WHERE l.leaveType = :leaveType")
+	ArrayList<Leave> findLeaveByType(@Param("leaveType") Integer leaveType);
+	
+	@Query("SELECT l from Leave l WHERE l.staffId = :staffId")
+	ArrayList<Leave> findAllLeaveOfStaff(@Param("staffId") Integer staffId);
+}
