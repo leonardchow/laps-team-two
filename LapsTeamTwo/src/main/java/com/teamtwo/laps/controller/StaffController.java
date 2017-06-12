@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.teamtwo.laps.model.StaffMember;
 import com.teamtwo.laps.service.LeaveService;
 import com.teamtwo.laps.service.StaffMemberService;
+
+
 
 /**
  * Handles requests for the application staff pages.
@@ -66,5 +70,27 @@ public class StaffController {
 		modelAndView.addObject("leaves", lService.findAllLeaveOfStaff(staffId));
 		return modelAndView;
 	}
+	
+	@RequestMapping(value = "/history")
+	public ModelAndView employeeCourseHistory(HttpSession session) {
+		UserSession us = (UserSession) session.getAttribute("USERSESSION");
+		ModelAndView mav = new ModelAndView("login");
+		if (us.getSessionId() != null) {
+			mav = new ModelAndView("/staff-leave-history");
+			mav.addObject("lhistory", lService.findLeaveById(us.getUser().getStaffId()));
+			return mav;
+		}
+		return mav;
+
+	}
+	
+	@RequestMapping(value = "/logout")
+	public String logout(HttpSession session) {
+		session.invalidate();
+		return "redirect:/home/login";
+
+	}
+	
+	
 	
 }
