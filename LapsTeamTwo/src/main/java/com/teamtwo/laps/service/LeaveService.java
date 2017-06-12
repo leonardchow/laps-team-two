@@ -13,5 +13,6 @@ public interface LeaveService {
 	ArrayList<Leave> findLeaveByType(Integer staffId, Integer leaveType);
 
 	Leave findLeaveById(Integer leaveId);
-
+	
+	Leave changeLeave(Leave leave);
 }

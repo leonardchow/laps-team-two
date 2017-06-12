@@ -41,4 +41,10 @@ public class LeaveServiceImpl implements LeaveService {
 	public Leave findLeaveById(Integer leaveId) {
 		return repository.findOne(leaveId);
 	}
+
+	@Override
+	public Leave changeLeave(Leave leave) {
+		// TODO Auto-generated method stub
+		return repository.saveAndFlush(leave);
+	}
 }
