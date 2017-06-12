@@ -4,36 +4,67 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <html>
 <head>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+	integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+	crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+	integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+	crossorigin="anonymous"></script>
+
 <%@include file="Header.jsp"%>
-<c:url value="/css/simple.css" var="ss"/>
-<link rel="STYLESHEET" type="text/css"
-	href="${ss}" />
+<style>
+h1 {
+	margin: 1em 0 0.5em 0;
+	font-weight: 600;
+	font-family: 'Titillium Web', sans-serif;
+	position: relative;  
+	font-size: 21px;
+	line-height: 60px;
+	padding: 15px 15px 15px 15%;
+	color: #355681;
+	box-shadow: 
+		inset 0 0 0 1px rgba(53,86,129, 0.4), 
+		inset 0 0 5px rgba(53,86,129, 0.5),
+		inset -285px 0 35px white;
+	border-radius: 0 10px 0 10px;
+	
+}
+</style>
+
+<%-- <c:url value="/css/simple.css" var="ss" />
+<link rel="STYLESHEET" type="text/css" href="${ss}" /> --%>
 <dec:head />
 </head>
 <body>
-	<table style="width: 100%">
-		<tr>
-			<td style="width: 180; border: 1" valign="top">
-				<div>
-					
-					<%@ include file="Menu.jsp"%>
-				</div>
-			</td>
-			<td>
-				<div>
-					<h3>
-						<spring:message code="${bodyTitle}" />
-					</h3>
-					<dec:body />
-				</div>
-			</td>
-		</tr>
-	</table>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-3"><%@ include file="Menu.jsp"%></div>
 	
+			<div class="col-md-6">
+				<spring:message code="${bodyTitle}" />
+
+				<dec:body />
+			</div>
+		</div>
+
+	</div>
+
 	<!-- ======== Footer ======== -->
-				<div id="footer" align="center">
-				  <hr>
-					<small> &copy; ISS NUS SA44 2017 </small>
-				</div>
+	<div id="footer" align="center">
+		<hr>
+		<small> &copy; ISS NUS SA44 2017 </small>
+	</div>
 </body>
 </html>

@@ -26,11 +26,14 @@ import com.teamtwo.laps.model.StaffMember;
 import com.teamtwo.laps.service.LeaveService;
 import com.teamtwo.laps.service.StaffMemberService;
 
+<<<<<<< HEAD
 
 
 
 
 
+=======
+>>>>>>> branch 'master' of https://github.com/leonardchow/laps-team-two.git
 /**
  * Handles requests for the application staff pages.
  */

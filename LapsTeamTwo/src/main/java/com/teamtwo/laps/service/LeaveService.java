@@ -15,7 +15,12 @@ public interface LeaveService {
 	ArrayList<Leave> findLeaveByType(Integer staffId, Integer leaveType);
 
 	Leave findLeaveById(Integer leaveId);
+<<<<<<< HEAD
 
 	Leave createLeave(Leave leave);
 
+=======
+	
+	Leave changeLeave(Leave leave);
+>>>>>>> branch 'master' of https://github.com/leonardchow/laps-team-two.git
 }

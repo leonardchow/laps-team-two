@@ -32,10 +32,14 @@ public class Leave {
 	private String dissemination;
 	@Column(name = "disseminationid")
 	private Integer disseminationId;
+	@Column(name = "contactdetails")
+	private String contactDetails;
+
 	
 	@Enumerated(EnumType.STRING)
 	private LeaveStatus status;
 	
+	@Column(name = "comment")
 	private String comment;
 	@Column(name = "wasupdated")
 	private Integer wasUpdated;
@@ -43,6 +47,14 @@ public class Leave {
 	@ManyToOne
 	@JoinColumn(name = "staffid", insertable = false, updatable = false)
 	private StaffMember staffMember;
+	
+	@ManyToOne
+	@JoinColumn(name = "disseminationid", insertable = false, updatable = false)
+	private StaffMember disseminationMember;
+	
+	@ManyToOne
+	@JoinColumn(name = "leavetype", insertable = false, updatable = false)
+	private LeaveType leaveTypeModel;
 	
 	public Leave() {
 		super();
@@ -124,12 +136,36 @@ public class Leave {
 		this.staffMember = staffMember;
 	}
 
+	public String getContactDetails() {
+		return contactDetails;
+	}
+
+	public void setContactDetails(String contactDetails) {
+		this.contactDetails = contactDetails;
+	}
+
+	public StaffMember getDisseminationMember() {
+		return disseminationMember;
+	}
+
+	public void setDisseminationMember(StaffMember disseminationMember) {
+		this.disseminationMember = disseminationMember;
+	}
+
+	public LeaveType getLeaveTypeModel() {
+		return leaveTypeModel;
+	}
+
+	public void setLeaveTypeModel(LeaveType leaveTypeModel) {
+		this.leaveTypeModel = leaveTypeModel;
+	}
+
 	@Override
 	public String toString() {
 		return "Leave [leaveId=" + leaveId + ", staffId=" + staffMember.getStaffId() + ", leaveType=" + leaveType + ", reason=" + reason
 				+ ", startDate=" + startDate + ", endDate=" + endDate + ", dissemination=" + dissemination
 				+ ", disseminationId=" + disseminationId + ", status=" + status + ", comment=" + comment
-				+ ", wasUpdated=" + wasUpdated + "]";
+				+ ", wasUpdated=" + wasUpdated + ", contactDetails=" + contactDetails + "]";
 	}
 	
 	
