@@ -2,9 +2,11 @@ package com.teamtwo.laps.service;
 
 import java.util.ArrayList;
 
-import org.springframework.transaction.annotation.Transactional;
+
 
 import com.teamtwo.laps.model.Leave;
+
+
 
 public interface LeaveService {
 
@@ -13,5 +15,7 @@ public interface LeaveService {
 	ArrayList<Leave> findLeaveByType(Integer staffId, Integer leaveType);
 
 	Leave findLeaveById(Integer leaveId);
+
+	Leave createLeave(Leave leave);
 
 }

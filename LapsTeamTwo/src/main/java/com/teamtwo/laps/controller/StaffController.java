@@ -1,24 +1,36 @@
 package com.teamtwo.laps.controller;
 
-import static org.hamcrest.CoreMatchers.startsWith;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.teamtwo.laps.model.Leave;
 import com.teamtwo.laps.model.StaffMember;
 import com.teamtwo.laps.service.LeaveService;
 import com.teamtwo.laps.service.StaffMemberService;
+
+
+
+
+
+
 /**
  * Handles requests for the application staff pages.
  */
@@ -58,12 +70,48 @@ public class StaffController {
 		return modelAndView;
 	}
 	
-	@RequestMapping(value = "/leave/{staffId}")
-	public ModelAndView viewStaffLeave(@PathVariable Integer staffId) {
-		ModelAndView modelAndView = new ModelAndView("staffMember-leave-view");
-//		ArrayList<Leave> leaves = lService.findAllLeaveOfStaff(staffId);
-		modelAndView.addObject("leaves", lService.findAllLeaveOfStaff(staffId));
-		return modelAndView;
-	}
+//	@RequestMapping(value = "/leave/{staffId}")
+//	public ModelAndView viewStaffLeave(@PathVariable Integer staffId) {
+//		ModelAndView modelAndView = new ModelAndView("staffMember-leave-view");
+////		ArrayList<Leave> leaves = lService.findAllLeaveOfStaff(staffId);
+//		modelAndView.addObject("leaves", lService.findAllLeaveOfStaff(staffId));
+//		return modelAndView;
+//	}
 	
+	@RequestMapping(value = "/leave/create", method = RequestMethod.GET)
+	public ModelAndView NewLeavePage() {
+		ModelAndView mav = new ModelAndView("staff-leave-new");
+		
+		
+		
+		Leave leave = new Leave();
+		mav.addObject("leave", leave);
+		return mav;
 }
+	
+	
+	
+	
+@RequestMapping(value = "/leave/created", method = RequestMethod.POST)
+public ModelAndView createNewLeave(@ModelAttribute @Valid Leave leave, BindingResult result,
+		final RedirectAttributes redirectAttributes, HttpSession session) {
+
+
+
+	ModelAndView mav = new ModelAndView("staff-leave-created");
+	//UserSession us = (UserSession) session.getAttribute("USERSESSION");
+	//leave.setEmployeeId(us.getEmployee().getEmployeeId());
+	
+	leave.setStaffId(1);
+	leave.setLeaveId(7);
+	
+	
+//	String message = "New leave " + leave.getLeaveId() + " was successfully created.";
+	lService.createLeave(leave);
+
+	
+	return mav;
+}
+}
+
+

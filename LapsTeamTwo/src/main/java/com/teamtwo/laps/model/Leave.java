@@ -59,7 +59,7 @@ public class Leave {
 		return staffMember.getStaffId();
 	}
 	public void setStaffId(Integer staffId) {
-		this.staffMember.setStaffId(staffId);
+		this.staffId = staffId;
 	}
 	public Integer getLeaveType() {
 		return leaveType;
