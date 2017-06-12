@@ -15,4 +15,7 @@ public interface LeaveService {
 	Leave findLeaveById(Integer leaveId);
 	
 	Leave changeLeave(Leave leave);
+	
+	//Yin
+	ArrayList<Leave> findPendingLeaves(Integer sid );
 }

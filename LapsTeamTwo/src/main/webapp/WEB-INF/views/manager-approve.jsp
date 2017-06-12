@@ -51,8 +51,6 @@
 		</tr>
 	</table>
 	
-	<!-- Dunno how to do this part -->
-	
 	<form:form method="POST" modelAttribute="approve"
 		action="${pageContext.request.contextPath}/manager/pending/edit/${leave.leaveId}.html">
 		<table>
