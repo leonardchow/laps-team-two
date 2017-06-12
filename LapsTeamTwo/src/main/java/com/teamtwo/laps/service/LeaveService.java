@@ -15,4 +15,6 @@ public interface LeaveService {
 	Leave findLeaveById(Integer leaveId);
 	
 	Leave changeLeave(Leave leave);
+	
+	ArrayList<Leave> findAllLeave();
 }

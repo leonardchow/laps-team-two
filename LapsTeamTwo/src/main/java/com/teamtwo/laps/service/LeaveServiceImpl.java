@@ -47,4 +47,9 @@ public class LeaveServiceImpl implements LeaveService {
 		// TODO Auto-generated method stub
 		return repository.saveAndFlush(leave);
 	}
+
+	@Override
+	public ArrayList<Leave> findAllLeave() {
+		return (ArrayList<Leave>) repository.findAll();
+	}
 }

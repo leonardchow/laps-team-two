@@ -1,8 +1,13 @@
 package com.teamtwo.laps.controller;
 
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
@@ -22,6 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.teamtwo.laps.service.LeaveService;
 import com.teamtwo.laps.service.StaffMemberService;
 import com.teamtwo.laps.javabeans.Approve;
+import com.teamtwo.laps.javabeans.DashboardBean;
 import com.teamtwo.laps.javabeans.LeaveStatus;
 import com.teamtwo.laps.model.Leave;
 import com.teamtwo.laps.model.StaffMember;
@@ -40,21 +46,49 @@ public class ManagerController {
 	@Autowired
 	private StaffMemberService smService;
 
+	private final int DASHBOARD_NUM_TO_SHOW = 3;
+
+	
 	/**
 	 * Renders the staff dashboard.
 	 */
 	@RequestMapping(value = "/dashboard")
-	public String home(Locale locale, Model model) {
-		logger.info("Welcome home! The client locale is {}.", locale);
+	public ModelAndView home(HttpSession session) {
+		
+		UserSession userSession = (UserSession) session.getAttribute("USERSESSION");
+		
+		if (userSession == null || userSession.getSessionId() == null) {
+			//return new ModelAndView("redirect:/home/login");
+		}
+		
+		//int staffId = userSession.getEmployee().getStaffId();
+		//String userid = userSession.getUser().getUserId();
+		int staffId = 1;
+		
+		StaffMember staffMember = smService.findStaffById(staffId);
+		ArrayList<Leave> leaves = lService.findAllLeaveOfStaff(staffId);
 
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
+		ArrayList<StaffMember> subordinates = smService.findSubordinates(staffId);
 
-		String formattedDate = dateFormat.format(date);
+		ArrayList<Leave> subordinatesLeaves = new ArrayList<>();
+		
+		for (StaffMember staff : subordinates) {
+			subordinatesLeaves.addAll(
+					staff.getAppliedLeaves().stream()
+					.filter(al -> al.getStatus() == LeaveStatus.PENDING)
+					.collect(Collectors.toList())
+					);
+		}
+		
+		
+		ModelAndView modelAndView = new ModelAndView("manager-dashboard");
+		
+		modelAndView = DashboardBean.getDashboard(modelAndView, DASHBOARD_NUM_TO_SHOW, staffMember, leaves);
+		
+		modelAndView.addObject("subLeaves", subordinatesLeaves);
+		
+		return modelAndView;
 
-		model.addAttribute("serverTime", formattedDate);
-
-		return "staffDashboard";
 	}
 	
 	@RequestMapping(value = "/pending/{staffId")

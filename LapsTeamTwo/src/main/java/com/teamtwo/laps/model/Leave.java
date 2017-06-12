@@ -69,10 +69,10 @@ public class Leave {
 		this.leaveId = leaveId;
 	}
 	public Integer getStaffId() {
-		return staffMember.getStaffId();
+		return staffId;
 	}
 	public void setStaffId(Integer staffId) {
-		this.staffMember.setStaffId(staffId);
+		this.staffId = staffId;
 	}
 	public Integer getLeaveType() {
 		return leaveType;
