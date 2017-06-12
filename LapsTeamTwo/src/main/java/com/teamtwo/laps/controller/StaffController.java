@@ -2,13 +2,16 @@ package com.teamtwo.laps.controller;
 
 import static org.hamcrest.CoreMatchers.startsWith;
 
+import java.awt.Dialog.ModalExclusionType;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpSession;
 
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.teamtwo.laps.javabeans.LeaveStatus;
+import com.teamtwo.laps.model.Leave;
 import com.teamtwo.laps.model.StaffMember;
 import com.teamtwo.laps.service.LeaveService;
 import com.teamtwo.laps.service.StaffMemberService;
@@ -31,6 +36,7 @@ import com.teamtwo.laps.service.StaffMemberService;
 @RequestMapping(value = "/staff")
 public class StaffController {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private final int DASHBOARD_NUM_TO_SHOW = 3;
 	
 	@Autowired
 	private StaffMemberService smService;
@@ -42,17 +48,49 @@ public class StaffController {
 	 * Renders the staff dashboard.
 	 */
 	@RequestMapping(value = "/dashboard")
-	public String home(Locale locale, Model model) {
-		logger.info("Welcome home! The client locale is {}.", locale);
+	public ModelAndView home(HttpSession session) {
+		int userid = 1;
 		
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
+		UserSession userSession = (UserSession) session.getAttribute("USERSESSION");
 		
-		String formattedDate = dateFormat.format(date);
+		int staffId = userSession.getEmployee().getStaffId();
 		
-		model.addAttribute("serverTime", formattedDate );
+		StaffMember staffMember = smService.findStaffById(staffId);
+		ArrayList<Leave> leaves = lService.findAllLeaveOfStaff(staffId);
+		ModelAndView modelAndView = new ModelAndView("staffDashboard");
 		
-		return "staffDashboard";
+		Integer annualLeaveDays = leaves.stream()
+				.filter(a -> a.getLeaveType() == 1
+					&& (a.getStatus() == LeaveStatus.APPROVED
+					|| a.getStatus() == LeaveStatus.PENDING
+					|| a.getStatus() == LeaveStatus.UPDATED))
+				.map(Leave::getNumberOfDays).reduce(0, ((a, b) -> a + b));
+		Integer annualLeavePending = leaves.stream().filter(a -> a.getLeaveType() == 1 && (a.getStatus() == LeaveStatus.PENDING || a.getStatus() == LeaveStatus.UPDATED)).map(Leave::getNumberOfDays).reduce(0, ((a, b) -> a + b));
+		
+		Integer medicalLeaveDays = leaves.stream()
+				.filter(a -> a.getLeaveType() == 1
+				&& (a.getStatus() == LeaveStatus.APPROVED
+				|| a.getStatus() == LeaveStatus.PENDING
+				|| a.getStatus() == LeaveStatus.UPDATED))
+				.map(Leave::getNumberOfDays).reduce(0, ((a, b) -> a + b));
+		Integer medicalLeavePending = leaves.stream().filter(a -> a.getLeaveType() == 1 && (a.getStatus() == LeaveStatus.PENDING || a.getStatus() == LeaveStatus.UPDATED)).map(Leave::getNumberOfDays).reduce(0, ((a, b) -> a + b));
+		
+		
+		int leavesToShow = leaves.size() > DASHBOARD_NUM_TO_SHOW ? DASHBOARD_NUM_TO_SHOW : leaves.size();
+		
+		modelAndView.addObject("staffMember", staffMember);
+		modelAndView.addObject("leaves", leaves.subList(0, leavesToShow));
+		modelAndView.addObject("totalLeavesNum", leaves.size());
+		modelAndView.addObject("annualLeaveDays", annualLeaveDays);
+		modelAndView.addObject("annualLeavePending", annualLeavePending);
+		modelAndView.addObject("medicalLeaveDays", medicalLeaveDays);
+		modelAndView.addObject("medicalLeavePending", medicalLeavePending);
+		modelAndView.addObject("numToShow", DASHBOARD_NUM_TO_SHOW);
+
+//		leaves.get(1).getStartDate().getDate()
+		logger.info("Rendering dashboard for user {}.", userid);
+		
+		return modelAndView;
 	}
 	
 	@RequestMapping(value = "/view/{staffId}")

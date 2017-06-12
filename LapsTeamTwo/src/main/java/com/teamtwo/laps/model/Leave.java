@@ -1,6 +1,7 @@
 package com.teamtwo.laps.model;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -158,6 +159,10 @@ public class Leave {
 
 	public void setLeaveTypeModel(LeaveType leaveTypeModel) {
 		this.leaveTypeModel = leaveTypeModel;
+	}
+	
+	public Integer getNumberOfDays() {
+		return (int) TimeUnit.DAYS.convert(endDate.getTime() - startDate.getTime(), TimeUnit.MILLISECONDS);
 	}
 
 	@Override
