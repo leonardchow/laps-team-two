@@ -1,14 +1,16 @@
 package com.teamtwo.laps.controller;
 
+
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -157,18 +159,29 @@ public class StaffController {
 	// }
 
 	@RequestMapping(value = "/leave/create", method = RequestMethod.GET)
-	public ModelAndView NewLeavePage() {
+	public ModelAndView NewLeavePage(HttpSession session) {
+		
+		UserSession us = (UserSession) session.getAttribute("USERSESSION");
+		
+		if (us == null) {
+			return new ModelAndView("redirect:/home/login");
+		}
+		
+		int loggedInStaffId = us.getUser().getStaffId();
+		
 		ModelAndView mav = new ModelAndView("staff-leave-new");
-
-		List<LeaveType> leaveTypes = lTypeService.findAllLeaveType();
-
+		ArrayList<LeaveType> leaveTypes = lTypeService.findAllLeaveType();
+		ArrayList<StaffMember> staffMembers = (ArrayList<StaffMember>) smService.findAllStaff().stream()
+				.filter(staff -> staff.getStaffId() != loggedInStaffId).collect(Collectors.toList());
 		Leave leave = new Leave();
 		mav.addObject("leave", leave);
 		mav.addObject("leaveTypes", leaveTypes);
-
+		mav.addObject("staffMembers", staffMembers);
+		
 		return mav;
 	}
 
+	
 	@RequestMapping(value = "/history")
 	public ModelAndView employeeCourseHistory(HttpSession session) {
 		UserSession us = (UserSession) session.getAttribute("USERSESSION");
@@ -188,10 +201,10 @@ public class StaffController {
 		return "redirect:/home/login";
 
 	}
-
-	@RequestMapping(value = "/leave/created", method = RequestMethod.POST)
-	public ModelAndView createNewLeave(@ModelAttribute @Valid Leave leave, BindingResult result,
-			final RedirectAttributes redirectAttributes, HttpSession session) {
+	
+@RequestMapping(value = "/leave/created", method = RequestMethod.POST)
+public ModelAndView createNewLeave(@ModelAttribute @Valid Leave leave, BindingResult result,
+		final RedirectAttributes redirectAttributes, HttpSession session) {
 
 		ModelAndView mav = new ModelAndView("staff-leave-created");
 		UserSession us = (UserSession) session.getAttribute("USERSESSION");
