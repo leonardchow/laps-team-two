@@ -2,8 +2,6 @@ package com.teamtwo.laps.controller;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-<<<<<<< HEAD
-=======
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -11,7 +9,6 @@ import java.util.Locale;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.stream.Collectors;
->>>>>>> branch 'master' of https://github.com/leonardchow/laps-team-two.git
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,12 +18,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-<<<<<<< HEAD
-=======
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
->>>>>>> branch 'master' of https://github.com/leonardchow/laps-team-two.git
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
