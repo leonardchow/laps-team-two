@@ -1,40 +1,24 @@
 package com.teamtwo.laps.controller;
 
-import static org.hamcrest.CoreMatchers.startsWith;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-
-import java.awt.Dialog.ModalExclusionType;
-import java.text.DateFormat;
-import java.text.DateFormatSymbols;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.xml.ResourceEntityResolver;
-import org.springframework.http.HttpRequest;
-import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.teamtwo.laps.javabeans.DashboardBean;
-import com.teamtwo.laps.javabeans.LeaveStatus;
+import com.teamtwo.laps.javabeans.EmailSender;
+import com.teamtwo.laps.javabeans.MovementBean;
 import com.teamtwo.laps.model.Leave;
 import com.teamtwo.laps.model.StaffMember;
 import com.teamtwo.laps.service.LeaveService;
@@ -83,6 +67,23 @@ public class StaffController {
 		return modelAndView;
 	}
 	
+	@RequestMapping(value = "/email")
+	public String sendEmail() {
+		final String USER_NAME = "sa44lapsteamtwo";  // GMail user name (just the part before "@gmail.com")
+	    final String PASSWORD = "lapsteamtwo"; // GMail password
+	    final String RECIPIENT = "sa44lapsteamtwo@gmail.com";
+
+	        String from = USER_NAME;
+	        String pass = PASSWORD;
+	        String[] to = { RECIPIENT }; // list of recipient email addresses
+	        String subject = "Java send mail example";
+	        String body = "Welcome to JavaMail!";
+		
+		EmailSender.sendFromGMail(from, pass, to, subject, body);
+		
+		return "email";
+	}
+	
 	@RequestMapping(value = "/movement", method = RequestMethod.GET)
 	public ModelAndView movement(HttpSession session) {
 		
@@ -101,28 +102,7 @@ public class StaffController {
 		
 		modelAndView.addObject("picked", currentMonth);
 		
-		return getMovementMAV(modelAndView, currentMonth, currentYear);
-	}
-	
-	private ModelAndView getMovementMAV(ModelAndView modelAndView, int currentMonth, int currentYear) {
-		List<Leave> allLeave = lService.findAllLeave().stream().filter(leave -> {
-			Calendar start = Calendar.getInstance();
-			start.setTime(leave.getStartDate());
-			Calendar end = Calendar.getInstance();
-			end.setTime(leave.getEndDate());
-			if ((start.get(Calendar.YEAR) == currentYear && start.get(Calendar.MONTH) == currentMonth)
-					|| (end.get(Calendar.YEAR) == currentYear && end.get(Calendar.MONTH) == currentMonth))
-				return true;
-			else
-				return false;
-		}).collect(Collectors.toList());
-		
-		modelAndView.addObject("allLeave", allLeave);
-		modelAndView.addObject("year", currentYear);
-		modelAndView.addObject("monthName", new SimpleDateFormat("MMMM").format(Calendar.getInstance().getTime()));
-		modelAndView.addObject("allMonthNames", Arrays.asList(new DateFormatSymbols().getMonths()).subList(0, 12));
-		
-		return modelAndView;
+		return MovementBean.getMovementMAV(lService, modelAndView, currentMonth, currentYear);
 	}
 	
 	
@@ -134,7 +114,7 @@ public class StaffController {
 		int currentYear = Calendar.getInstance().get(Calendar.YEAR);
 		ModelAndView modelAndView = new ModelAndView("staff-movement-register", "monthSelect", Integer.class);
 		
-		modelAndView = getMovementMAV(modelAndView, currentMonth, currentYear);
+		modelAndView = MovementBean.getMovementMAV(lService, modelAndView, currentMonth, currentYear);
 		
 		modelAndView.addObject("picked", picker);
 		

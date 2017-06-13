@@ -1,7 +1,5 @@
 package com.teamtwo.laps.controller;
 
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
