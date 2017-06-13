@@ -43,11 +43,11 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 
 	@Override
-<<<<<<< HEAD
 	public Leave createLeave(Leave leave) {
-=======
+		return repository.saveAndFlush(leave);
+
+	}
 	public Leave changeLeave(Leave leave) {
->>>>>>> branch 'master' of https://github.com/leonardchow/laps-team-two.git
 		// TODO Auto-generated method stub
 		return repository.saveAndFlush(leave);
 	}

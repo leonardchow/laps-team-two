@@ -1,5 +1,6 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <link rel="STYLESHEET" type="text/css"
 	href="${pageContext.request.contextPath}/js/jquery-ui.theme.css" />
@@ -34,7 +35,16 @@
 		</tr>	
 		<tr>
 			<td>LeaveType</td>
-			<td colspan="3"><form:input size="40" path="leaveType" /> <form:errors
+			<td colspan="3">
+			<form:select path="leaveType">
+			<c:forEach var="lType" items="${leaveTypes}">
+				<form:option value="${ lType.leaveType }">${lType.leaveName}</form:option>
+			</c:forEach>
+			</form:select>
+			
+			
+<%-- 			<form:input size="40" path="leaveType" /> --%>
+			<form:errors
 					path="leaveType" cssStyle="color: red;" /></td>
 				
 		</tr>
@@ -62,11 +72,11 @@
 			<td>&nbsp;</td>
 			<td colspan="2" align="left"><br></br> <form:button
 					type="submit">
-					<img
+		<img
 						src="${pageContext.request.contextPath}/image/button_submit.gif"
 						alt="" align="middle">
 				</form:button>&nbsp; 
-				<a href="javascript:history.back();"> <img
+				<a href="javascript:history.back(-1);"> <img
 					src="${pageContext.request.contextPath}/image/button_cancel.gif"
 					alt="" align="middle" border="0">
 			</a></td>

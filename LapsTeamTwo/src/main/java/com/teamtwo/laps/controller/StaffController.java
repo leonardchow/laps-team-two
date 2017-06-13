@@ -3,6 +3,7 @@ package com.teamtwo.laps.controller;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpSession;
@@ -21,19 +22,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.teamtwo.laps.javabeans.LeaveStatus;
 import com.teamtwo.laps.model.Leave;
+import com.teamtwo.laps.model.LeaveType;
 import com.teamtwo.laps.model.StaffMember;
 import com.teamtwo.laps.service.LeaveService;
+import com.teamtwo.laps.service.LeaveTypeService;
 import com.teamtwo.laps.service.StaffMemberService;
 
-<<<<<<< HEAD
 
 
 
 
 
-=======
->>>>>>> branch 'master' of https://github.com/leonardchow/laps-team-two.git
 /**
  * Handles requests for the application staff pages.
  */
@@ -47,6 +48,9 @@ public class StaffController {
 	
 	@Autowired
 	private LeaveService lService;
+	
+	@Autowired
+	private LeaveTypeService lTypeService;
 	
 	/**
 	 * Renders the staff dashboard.
@@ -85,10 +89,12 @@ public class StaffController {
 	public ModelAndView NewLeavePage() {
 		ModelAndView mav = new ModelAndView("staff-leave-new");
 		
-		
+		List<LeaveType> leaveTypes = lTypeService.findAllLeaveType();
 		
 		Leave leave = new Leave();
 		mav.addObject("leave", leave);
+		mav.addObject("leaveTypes", leaveTypes);
+		
 		return mav;
 }
 	
@@ -102,11 +108,14 @@ public ModelAndView createNewLeave(@ModelAttribute @Valid Leave leave, BindingRe
 
 
 	ModelAndView mav = new ModelAndView("staff-leave-created");
-	//UserSession us = (UserSession) session.getAttribute("USERSESSION");
+	UserSession us = (UserSession) session.getAttribute("USERSESSION");
 	//leave.setEmployeeId(us.getEmployee().getEmployeeId());
 	
-	leave.setStaffId(1);
-	leave.setLeaveId(7);
+	leave.setStaffId(us.getUser().getStaffId());
+	
+	leave.setStatus(LeaveStatus.PENDING);
+	
+
 	
 	
 //	String message = "New leave " + leave.getLeaveId() + " was successfully created.";
