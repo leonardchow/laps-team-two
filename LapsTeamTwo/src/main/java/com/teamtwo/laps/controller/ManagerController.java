@@ -4,12 +4,8 @@ package com.teamtwo.laps.controller;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-<<<<<<< HEAD
-
-=======
 import java.util.HashMap;
 import java.util.List;
->>>>>>> branch 'master' of https://github.com/leonardchow/laps-team-two.git
 import java.util.Locale;
 import java.util.stream.Collectors;
 
@@ -28,12 +24,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-<<<<<<< HEAD
 import com.teamtwo.laps.service.LeaveService;
 import com.teamtwo.laps.service.StaffMemberService;
 
-=======
->>>>>>> branch 'master' of https://github.com/leonardchow/laps-team-two.git
 import com.teamtwo.laps.javabeans.Approve;
 import com.teamtwo.laps.javabeans.DashboardBean;
 import com.teamtwo.laps.javabeans.LeaveStatus;
@@ -56,13 +49,8 @@ public class ManagerController {
 
 	@Autowired
 	private StaffMemberService smService;
-<<<<<<< HEAD
-	
-	
-=======
 
 	private final int DASHBOARD_NUM_TO_SHOW = 3;
->>>>>>> branch 'master' of https://github.com/leonardchow/laps-team-two.git
 
 	/**
 	 * Renders the staff dashboard.
@@ -145,9 +133,6 @@ public class ManagerController {
 		redirectAttributes.addFlashAttribute("message", message);
 		return mav;
 	}
-<<<<<<< HEAD
-	
-=======
 
 	// Yin
 	@RequestMapping(value = "/leave/subordinate", method = RequestMethod.GET)
@@ -177,5 +162,4 @@ public class ManagerController {
 		mav.addObject("leaveHistoryList", leaveHistoryList);
 		return mav;
 	}
->>>>>>> branch 'master' of https://github.com/leonardchow/laps-team-two.git
 }

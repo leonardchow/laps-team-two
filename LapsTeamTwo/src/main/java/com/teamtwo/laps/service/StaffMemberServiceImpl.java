@@ -57,12 +57,11 @@ public class StaffMemberServiceImpl implements StaffMemberService {
 		return repository.findSubordinates(staffId);
 	}
 
-<<<<<<< HEAD
 	@Override
 	public ArrayList<Integer> findAllStaffId() {
 		// TODO Auto-generated method stub
 		return repository.findAllStaffId();
-=======
+	}
 	// Yin
 	@Override
 	@Transactional
@@ -82,6 +81,5 @@ public class StaffMemberServiceImpl implements StaffMemberService {
 	@Transactional
 	public StaffMember findStaff(Integer sid) {
 		return repository.findOne(sid);
->>>>>>> branch 'master' of https://github.com/leonardchow/laps-team-two.git
 	}
 }
