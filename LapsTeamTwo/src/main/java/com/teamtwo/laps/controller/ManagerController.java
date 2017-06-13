@@ -1,6 +1,5 @@
 package com.teamtwo.laps.controller;
 
-
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -108,15 +107,10 @@ public class ManagerController {
 	@RequestMapping(value = "/pending/detail/{leaveId}")
 	public ModelAndView approveApplicationPage(@PathVariable Integer leaveId, HttpSession session) {
 		ModelAndView modelAndView = new ModelAndView("manager-pending-approve");
-		
-		ManagerPath mp = (ManagerPath) session.getAttribute("MANAGERPATH");
-		if (mp == null) {
-			mp = ManagerPath.PENDING;
-			session.setAttribute("MANAGERPATH", mp);
-		}
-		mp = ManagerPath.PENDING;
-		session.setAttribute("MANAGERPATH", mp);		
-		
+
+		ManagerPath mp = ManagerPath.PENDING;
+		session.setAttribute("MANAGERPATH", mp);
+
 		Leave leave = lService.findLeaveById(leaveId);
 		modelAndView.addObject("leave", leave);
 		modelAndView.addObject("approve", new Approve());
@@ -137,16 +131,36 @@ public class ManagerController {
 		}
 		leave.setComment(approve.getComment());
 		System.out.println(leave.toString());
-		lService.changeLeave(leave);
-		ManagerPath mp = (ManagerPath) session.getAttribute("MANAGERPATH");
-		if (mp == ManagerPath.PENDING) {
-			ModelAndView mav = new ModelAndView("redirect:/manager/pending/list");
-		} else if (mp == ManagerPath.HISTORY) {
-			ModelAndView mav = new ModelAndView("redirect:/manager/pending/list");
-		}
 		ModelAndView mav = new ModelAndView("redirect:/manager/pending/list");
+		ManagerPath mp = (ManagerPath) session.getAttribute("MANAGERPATH");
+		if (mp == ManagerPath.DASHBOARD) {
+			mav = new ModelAndView("redirect:/manager/dashboard");
+		} else if (mp == ManagerPath.HISTORY) {
+			String url = "redirect:/manager/subordinate/history/" + leave.getStaffId();
+			mav = new ModelAndView(url);
+		} else {
+			mav = new ModelAndView("redirect:/manager/pending/list");
+		}
+		lService.changeLeave(leave);
 		String message = "Course was successfully updated.";
 		redirectAttributes.addFlashAttribute("message", message);
+		return mav;
+	}
+
+	@RequestMapping(value = "/pending/cancel/{leaveId}", method = RequestMethod.POST)
+	public ModelAndView cancelApproveOrRejectCourse(@ModelAttribute("approve") Approve approve, BindingResult result,
+			@PathVariable Integer leaveId, HttpSession session, final RedirectAttributes redirectAttributes) {
+		ModelAndView mav = new ModelAndView("redirect:/manager/pending/list");
+		Leave leave = lService.findLeaveById(leaveId);
+		ManagerPath mp = (ManagerPath) session.getAttribute("MANAGERPATH");
+		if (mp == ManagerPath.DASHBOARD) {
+			mav = new ModelAndView("redirect:/manager/dashboard");
+		} else if (mp == ManagerPath.HISTORY) {
+			String url = "redirect:/manager/subordinate/history/" + leave.getStaffId();
+			mav = new ModelAndView(url);
+		} else {
+			mav = new ModelAndView("redirect:/manager/pending/list");
+		}
 		return mav;
 	}
 
@@ -160,8 +174,6 @@ public class ManagerController {
 		return mav;
 	}
 
-
-
 	@RequestMapping(value = "/subordinate/history/{staffId}", method = RequestMethod.GET)
 	public ModelAndView viewSubordinateLeaveHistoryDeatils(@PathVariable int staffId) {
 		ModelAndView mav = new ModelAndView("manager-subordinate-history");
@@ -173,11 +185,13 @@ public class ManagerController {
 		mav.addObject("leaveHistoryList", leaveHistoryList);
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/subordinate/history/detail/{leaveId}", method = RequestMethod.GET)
-	public ModelAndView viewSubordinateLeaveHistory(@PathVariable int leaveId) {
+	public ModelAndView viewSubordinateLeaveHistory(@PathVariable int leaveId, HttpSession session) {
 		ModelAndView modelAndView = new ModelAndView("manager-pending-approve");
 		Leave leave = lService.findLeaveById(leaveId);
+		ManagerPath mp = ManagerPath.HISTORY;
+		session.setAttribute("MANAGERPATH", mp);
 		modelAndView.addObject("leave", leave);
 		modelAndView.addObject("approve", new Approve());
 		return modelAndView;
