@@ -47,4 +47,10 @@ public class StaffMemberServiceImpl implements StaffMemberService {
 		// TODO Auto-generated method stub
 		return repository.findSubordinates(staffId);
 	}
+
+	@Override
+	public ArrayList<Integer> findAllStaffId() {
+		// TODO Auto-generated method stub
+		return repository.findAllStaffId();
+	}
 }

@@ -2,6 +2,7 @@ package com.teamtwo.laps.controller;
 
 import java.text.DateFormat;
 import java.util.Date;
+
 import java.util.Locale;
 
 import javax.servlet.http.HttpSession;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.teamtwo.laps.service.LeaveService;
 import com.teamtwo.laps.service.StaffMemberService;
+
 import com.teamtwo.laps.javabeans.Approve;
 import com.teamtwo.laps.javabeans.LeaveStatus;
 import com.teamtwo.laps.model.Leave;
@@ -39,6 +41,8 @@ public class ManagerController {
 	
 	@Autowired
 	private StaffMemberService smService;
+	
+	
 
 	/**
 	 * Renders the staff dashboard.
@@ -94,4 +98,5 @@ public class ManagerController {
 		redirectAttributes.addFlashAttribute("message", message);
 		return mav;
 	}
+	
 }
