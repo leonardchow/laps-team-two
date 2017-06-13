@@ -21,7 +21,7 @@
 						for approval</span>
 					<!-- 					Recent requests -->
 					<span class="float-vertical-align"><a
-						class="btn btn-primary" href="#">View pending applications (${ (totalLeavesNum - numToShow) > 0 ? totalLeavesNum - numToShow : 0 }
+						class="btn btn-primary" href="${pageContext.request.contextPath}/manager/pending/list">View pending applications (${ (totalLeavesNum - numToShow) > 0 ? totalLeavesNum - numToShow : 0 }
 							more)</a></span>
 				</div>
 				<!-- 					<div class="panel-body text-center float-wrapper"> -->
@@ -84,8 +84,8 @@
 									class=''>${ fmtEndDate }</span></td>
 								<td>${ leave.reason }</td>
 								<td><span class="label label-${ typeStyle }">${ leave.leaveTypeModel.leaveName }</span></td>
-								<td><input type='button' class='btn btn-primary btn-xs'
-									value='Details...' /></td>
+								<td><a class='btn btn-info btn-xs'
+									href='${pageContext.request.contextPath}/manager/pending/detail/${leave.leaveId}.html'>Details...</a></td>
 							</tr>
 						</c:forEach>
 					</tbody>
@@ -181,8 +181,8 @@
 										class=''>${ fmtEndDate }</span></td>
 									<td>${ leave.reason }</td>
 									<td class="<c:out value = "${ statusStyle }"/>">${ leave.status.toString() }</td>
-									<td><input type='button' class='btn btn-info btn-xs'
-										value='Details...' /></td>
+									<td><a class='btn btn-info btn-xs'
+									href='${pageContext.request.contextPath}/manager/pending/detail/${leave.leaveId}.html'>Details...</a></td>
 								</tr>
 							</c:forEach>
 						</tbody>
