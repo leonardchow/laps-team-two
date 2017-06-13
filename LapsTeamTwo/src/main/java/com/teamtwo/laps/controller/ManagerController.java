@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
@@ -24,13 +25,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.teamtwo.laps.service.LeaveService;
-import com.teamtwo.laps.service.StaffMemberService;
 import com.teamtwo.laps.javabeans.Approve;
 import com.teamtwo.laps.javabeans.DashboardBean;
 import com.teamtwo.laps.javabeans.LeaveStatus;
 import com.teamtwo.laps.model.Leave;
+import com.teamtwo.laps.model.LeaveType;
 import com.teamtwo.laps.model.StaffMember;
+import com.teamtwo.laps.service.LeaveService;
+import com.teamtwo.laps.service.StaffMemberService;
 
 /**
  * Handles requests for the application staff pages.
@@ -42,7 +44,7 @@ public class ManagerController {
 
 	@Autowired
 	private LeaveService lService;
-	
+
 	@Autowired
 	private StaffMemberService smService;
 
@@ -90,16 +92,16 @@ public class ManagerController {
 		return modelAndView;
 
 	}
-	
-	@RequestMapping(value = "/pending/{staffId")
-	public ModelAndView viewPendingPage(@PathVariable Integer staffId) {
-		ModelAndView modelAndView = new ModelAndView("manager-view-pending");
-		StaffMember manager = smService.findStaffById(staffId);
-		modelAndView.addObject("manager", manager);
-		modelAndView.addObject("approve", new Approve());
+
+	@RequestMapping(value = "/pending/list")
+	public ModelAndView viewPendingPage() {
+		ModelAndView modelAndView = new ModelAndView("manager-pending-list");
+		//havent implement usser sessions
+		List leaveList = lService.findPendingLeaveByType(1);
+		modelAndView.addObject("leaveList", leaveList);
 		return modelAndView;
 	}
-	
+
 	@RequestMapping(value = "/pending/detail/{leaveId}")
 	public ModelAndView approveApplicationPage(@PathVariable Integer leaveId) {
 		ModelAndView modelAndView = new ModelAndView("manager-approve");
@@ -108,7 +110,7 @@ public class ManagerController {
 		modelAndView.addObject("approve", new Approve());
 		return modelAndView;
 	}
-	
+
 	@RequestMapping(value = "/pending/edit/{leaveId}", method = RequestMethod.POST)
 	public ModelAndView approveOrRejectCourse(@ModelAttribute("approve") Approve approve, BindingResult result,
 			@PathVariable Integer leaveId, HttpSession session, final RedirectAttributes redirectAttributes) {
@@ -126,6 +128,42 @@ public class ManagerController {
 		ModelAndView mav = new ModelAndView("redirect:/manager/pending");
 		String message = "Course was successfully updated.";
 		redirectAttributes.addFlashAttribute("message", message);
+		return mav;
+	}
+
+	// Yin
+	@RequestMapping(value = "/leave/Subordinate", method = RequestMethod.GET)
+	public ModelAndView viewSubordinateListForLeaveApproval() {
+		ModelAndView mav = new ModelAndView("manager-subordinate-list");
+		List<StaffMember> subordinateList = smService.showBySubordinateName();
+		mav.addObject("subordinateList", subordinateList);
+		return mav;
+	}
+
+	@RequestMapping(value = "/leave/Subordinate/approve", method = RequestMethod.GET)
+	public ModelAndView viewLeaveForDetails() {
+		ModelAndView mav = new ModelAndView("manager-approve-leavelist");
+		mav.addObject("leaveList", "#######");
+		return mav;
+	}
+
+	@RequestMapping(value = "/subordinate/LeaveHistory", method = RequestMethod.GET)
+	public ModelAndView viewSubordinateLeaveHistory() {
+		ModelAndView mav = new ModelAndView("manager-subordinate-leave-history");
+		List<StaffMember> subordinateLeave = smService.showBySubordinateName();
+		mav.addObject("subordinateLeave", subordinateLeave);
+		return mav;
+	}
+
+	@RequestMapping(value = "/subordinate/LeaveHistory/Details/{sid}", method = RequestMethod.GET)
+	public ModelAndView viewSubordinateLeaveHistoryDeatils(@PathVariable int sid) {
+		ModelAndView mav = new ModelAndView("manager-subordinate-leave-history-detail");
+
+		StaffMember staffMember = smService.findStaff(sid);
+		mav.addObject("staffMember", staffMember);
+
+		List<Leave> leaveHistoryList = lService.findStaffLeaveHistory(staffMember.getStaffId());
+		mav.addObject("leaveHistoryList", leaveHistoryList);
 		return mav;
 	}
 }

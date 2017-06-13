@@ -18,4 +18,10 @@ public interface StaffMemberService {
 	
 	ArrayList<StaffMember> findSubordinates(Integer staffId);
 
+	//Yin
+	ArrayList<StaffMember> showBySubordinateName();
+	
+	ArrayList<String> getOnlyStaffName();
+	
+	StaffMember findStaff(Integer sid);
 }
