@@ -55,5 +55,11 @@ public class LeaveTypeServiceImpl implements LeaveTypeService {
 		ltrepository.delete(lt);
 	}
 
+	@Override
+	public ArrayList<String> findAllLeaveTypeName() {
+		// TODO Auto-generated method stub
+		return ltrepository.findAllLeaveTypeName();
+	}
+
 
 }

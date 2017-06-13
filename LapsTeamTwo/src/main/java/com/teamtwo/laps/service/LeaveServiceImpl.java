@@ -43,6 +43,10 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 
 	@Override
+	public Leave createLeave(Leave leave) {
+		return repository.saveAndFlush(leave);
+
+	}
 	public Leave changeLeave(Leave leave) {
 		// TODO Auto-generated method stub
 		return repository.saveAndFlush(leave);
