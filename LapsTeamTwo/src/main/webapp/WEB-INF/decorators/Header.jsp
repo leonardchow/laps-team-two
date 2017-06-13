@@ -5,18 +5,44 @@
 		<h1 align="right">Leave Application System</h1>
 
 	</div>
-	<div class="row">
-		<nav class="navbar navbar-default">
-			<div class="container-fluid">
-				<div class="navbar-header">
 
-					<a class="navbar-brand" href="#">Brand
-					</a>
+	<c:if test="${not empty sessionScope.USERSESSION}">
 
+		<div class="row">
+			<nav class="navbar navbar-default">
+				<div class="container">
+					<div class="navbar-header">
+
+						<c:choose>
+							<c:when test="${sessionScope.USERSESSION.user.isAdmin eq true }">
+								<a class="navbar-brand" href="#"> Admin Panel
+
+								</a>
+							</c:when>
+
+							<c:when
+								test="${sessionScope.USERSESSION.user.isManager eq true }">
+								<a class="navbar-brand" href="#"> Manager Panel
+
+								</a>
+							</c:when>
+
+							<c:when test="${sessionScope.USERSESSION.user.isStaff eq true }">
+							<a class="navbar-brand" href="#"> Staff Panel
+
+								</a>
+							</c:when>
+						</c:choose>
+						
+						
+						
+					</div>
+						<p class="navbar-text navbar-right">Signed in as <c:out
+										value="${sessionScope.USERSESSION.user.userId}" /></p>
 				</div>
-			</div>
-		</nav>
-	</div>
+			</nav>
+		</div>
+	</c:if>
 </div>
 
 

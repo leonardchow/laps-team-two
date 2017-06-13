@@ -20,4 +20,11 @@ public interface LeaveService {
 
 	
 	Leave changeLeave(Leave leave);
+	
+	ArrayList<Leave> findAllLeave();
+
+	ArrayList<Leave> findPendingLeaveByType(Integer managerId);
+	
+	//Yin
+	ArrayList<Leave> findStaffLeaveHistory(Integer sid );
 }
