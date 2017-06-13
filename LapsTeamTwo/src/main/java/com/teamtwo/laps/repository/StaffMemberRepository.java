@@ -19,7 +19,14 @@ public interface StaffMemberRepository extends JpaRepository<StaffMember, Intege
 	
 	@Query("SELECT DISTINCT e2 FROM StaffMember e1, StaffMember e2 WHERE e1.staffId = e2.managerId AND e1.staffId = :eid")
 	ArrayList<StaffMember> findSubordinates(@Param("eid") Integer staffId);
+<<<<<<< HEAD
 	
 	@Query("SELECT DISTINCT e.staffId FROM StaffMember e")
 	ArrayList<Integer> findAllStaffId();
+=======
+
+	//Yin
+	@Query(value="select s.name from staff_list s, leave_history l where s.staffid =  l.staffid ", nativeQuery=true)
+	ArrayList<String> getOnlyStaffName();
+>>>>>>> branch 'master' of https://github.com/leonardchow/laps-team-two.git
 }
