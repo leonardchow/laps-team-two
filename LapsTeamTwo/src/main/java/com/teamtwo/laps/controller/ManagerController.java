@@ -134,27 +134,28 @@ public class ManagerController {
 	}
 
 	// Yin
-	@RequestMapping(value = "/leave/subordinate", method = RequestMethod.GET)
-	public ModelAndView viewSubordinateListForLeaveApproval() {
+	@RequestMapping(value = "/subordinate", method = RequestMethod.GET)
+	public ModelAndView viewSubordinateListForLeaveApproval(HttpSession session) {
 		ModelAndView mav = new ModelAndView("manager-subordinate-list");
-		List<StaffMember> subordinateList = smService.showBySubordinateName();
+		UserSession us = (UserSession) session.getAttribute("USERSESSION");
+		List<StaffMember> subordinateList = smService.findSubordinates(us.getEmployee().getStaffId());
 		mav.addObject("subordinateList", subordinateList);
 		return mav;
 	}
 
-	@RequestMapping(value = "/subordinate/LeaveHistory", method = RequestMethod.GET)
-	public ModelAndView viewSubordinateLeaveHistory() {
-		ModelAndView mav = new ModelAndView("manager-subordinate-leave-history");
-		List<StaffMember> subordinateLeave = smService.showBySubordinateName();
-		mav.addObject("subordinateLeave", subordinateLeave);
-		return mav;
-	}
+//	@RequestMapping(value = "/subordinate/history", method = RequestMethod.GET)
+//	public ModelAndView viewSubordinateLeaveHistory() {
+//		ModelAndView mav = new ModelAndView("manager-subordinate-leave-history");
+//		List<StaffMember> subordinateLeave = smService.showBySubordinateName();
+//		mav.addObject("subordinateLeave", subordinateLeave);
+//		return mav;
+//	}
 
-	@RequestMapping(value = "/subordinate/LeaveHistory/Details/{sid}", method = RequestMethod.GET)
-	public ModelAndView viewSubordinateLeaveHistoryDeatils(@PathVariable int sid) {
-		ModelAndView mav = new ModelAndView("manager-subordinate-leave-history-detail");
+	@RequestMapping(value = "/subordinate/history/{staffId}", method = RequestMethod.GET)
+	public ModelAndView viewSubordinateLeaveHistoryDeatils(@PathVariable int staffId) {
+		ModelAndView mav = new ModelAndView("manager-subordinate-history-detail");
 
-		StaffMember staffMember = smService.findStaff(sid);
+		StaffMember staffMember = smService.findStaff(staffId);
 		mav.addObject("staffMember", staffMember);
 
 		List<Leave> leaveHistoryList = lService.findStaffLeaveHistory(staffMember.getStaffId());

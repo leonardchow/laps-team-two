@@ -15,7 +15,7 @@
 				<th>Email</th>
 				<th>Home Address</th>
 				<th>Designation</th>
-				<th>View For Leave Approval</th>		
+				<th>View For Leave Approval</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -27,7 +27,9 @@
 					<td>${staff_list.email}</td>
 					<td>${staff_list.homeAddress}</td>
 					<td>${staff_list.designation}</td>
-					<td><a href="${pageContext.request.contextPath}/manager/leave/Subordinate/approve.html">Detail</a></td>
+					<td><a
+						href="${pageContext.request.contextPath}/manager/subordinate/LeaveHistory/Details/${staff_list.staffId}.html">Detail</a>
+					</td>
 				</tr>
 			</c:forEach>
 		</tbody>
