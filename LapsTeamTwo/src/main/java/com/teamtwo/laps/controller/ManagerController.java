@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -33,6 +34,7 @@ import com.teamtwo.laps.model.LeaveType;
 import com.teamtwo.laps.model.StaffMember;
 import com.teamtwo.laps.service.LeaveService;
 import com.teamtwo.laps.service.StaffMemberService;
+
 
 /**
  * Handles requests for the application staff pages.
@@ -93,24 +95,37 @@ public class ManagerController {
 
 	}
 
+	//DONE
 	@RequestMapping(value = "/pending/list")
-	public ModelAndView viewPendingPage() {
+	public ModelAndView viewPendingPage(HttpSession session) {
 		ModelAndView modelAndView = new ModelAndView("manager-pending-list");
-		//havent implement usser sessions
-		List leaveList = lService.findPendingLeaveByType(1);
-		modelAndView.addObject("leaveList", leaveList);
+		HashMap<StaffMember, ArrayList<Leave>> hm = new HashMap<StaffMember, ArrayList<Leave>>();
+		UserSession us = (UserSession) session.getAttribute("USERSESSION");
+		ModelAndView mav = new ModelAndView("login");
+		if (us.getSessionId() != null) {
+			for (StaffMember sMember : us.getSubordinates()) {
+				ArrayList<Leave> llist = lService.findPendingLeaveByType(sMember.getStaffId());
+				hm.put(sMember, llist);
+			}
+			mav = new ModelAndView("manager-pending-list");
+			mav.addObject("pendinghistory", hm);
+			return mav;
+		}
 		return modelAndView;
 	}
 
+	//DONE
 	@RequestMapping(value = "/pending/detail/{leaveId}")
 	public ModelAndView approveApplicationPage(@PathVariable Integer leaveId) {
-		ModelAndView modelAndView = new ModelAndView("manager-approve");
+		ModelAndView modelAndView = new ModelAndView("manager-pending-approve");
 		Leave leave = lService.findLeaveById(leaveId);
 		modelAndView.addObject("leave", leave);
 		modelAndView.addObject("approve", new Approve());
 		return modelAndView;
 	}
 
+	
+	//leave validation and business logic
 	@RequestMapping(value = "/pending/edit/{leaveId}", method = RequestMethod.POST)
 	public ModelAndView approveOrRejectCourse(@ModelAttribute("approve") Approve approve, BindingResult result,
 			@PathVariable Integer leaveId, HttpSession session, final RedirectAttributes redirectAttributes) {
@@ -125,7 +140,7 @@ public class ManagerController {
 		leave.setComment(approve.getComment());
 		System.out.println(leave.toString());
 		lService.changeLeave(leave);
-		ModelAndView mav = new ModelAndView("redirect:/manager/pending");
+		ModelAndView mav = new ModelAndView("redirect:/manager/pending/list");
 		String message = "Course was successfully updated.";
 		redirectAttributes.addFlashAttribute("message", message);
 		return mav;
@@ -137,13 +152,6 @@ public class ManagerController {
 		ModelAndView mav = new ModelAndView("manager-subordinate-list");
 		List<StaffMember> subordinateList = smService.showBySubordinateName();
 		mav.addObject("subordinateList", subordinateList);
-		return mav;
-	}
-
-	@RequestMapping(value = "/leave/Subordinate/approve", method = RequestMethod.GET)
-	public ModelAndView viewLeaveForDetails() {
-		ModelAndView mav = new ModelAndView("manager-approve-leavelist");
-		mav.addObject("leaveList", "#######");
 		return mav;
 	}
 

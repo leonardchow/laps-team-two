@@ -23,7 +23,7 @@ public interface LeaveService {
 	
 	ArrayList<Leave> findAllLeave();
 
-	ArrayList<Leave> findPendingLeaveByType(Integer managerId);
+	ArrayList<Leave> findPendingLeaveByType(Integer staffId);
 	
 	//Yin
 	ArrayList<Leave> findStaffLeaveHistory(Integer sid );

@@ -67,9 +67,9 @@ public class LeaveServiceImpl implements LeaveService {
 
 	@Override
 	@Transactional
-	public ArrayList<Leave> findPendingLeaveByType(Integer managerId) {
-		ArrayList<Leave> leavel = (ArrayList<Leave>) repository.findPendingLeaveByType(managerId);
+	public ArrayList<Leave> findPendingLeaveByType(Integer staffId) {
+		ArrayList<Leave> leavel = (ArrayList<Leave>) repository.findPendingLeaveByType(staffId);
 		// TODO Auto-generated method stub
-		return null;
+		return leavel;
 	}
 }
