@@ -11,6 +11,8 @@ import com.teamtwo.laps.model.StaffMember;
 public interface StaffMemberService {
 
 	ArrayList<StaffMember> findAllStaff();
+	
+	ArrayList<Integer> findAllStaffId();
 
 	StaffMember findStaffById(Integer staffId);
 

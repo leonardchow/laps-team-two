@@ -1,7 +1,5 @@
 package com.teamtwo.laps.controller;
 
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -25,6 +23,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.teamtwo.laps.service.LeaveService;
+import com.teamtwo.laps.service.StaffMemberService;
 
 import com.teamtwo.laps.javabeans.Approve;
 import com.teamtwo.laps.javabeans.DashboardBean;
