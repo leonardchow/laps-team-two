@@ -1,31 +1,22 @@
 package com.teamtwo.laps.controller;
 
-<<<<<<< HEAD
-=======
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
->>>>>>> branch 'master' of https://github.com/leonardchow/laps-team-two.git
 
 import java.awt.Dialog.ModalExclusionType;
 import java.text.DateFormat;
-<<<<<<< HEAD
-=======
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
->>>>>>> branch 'master' of https://github.com/leonardchow/laps-team-two.git
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-<<<<<<< HEAD
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-=======
 import java.util.stream.Collectors;
->>>>>>> branch 'master' of https://github.com/leonardchow/laps-team-two.git
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,27 +39,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-<<<<<<< HEAD
 import com.teamtwo.laps.javabeans.LeaveStatus;
 import com.teamtwo.laps.model.Leave;
 import com.teamtwo.laps.model.LeaveType;
-=======
 import com.teamtwo.laps.javabeans.DashboardBean;
 import com.teamtwo.laps.javabeans.LeaveStatus;
 import com.teamtwo.laps.model.Leave;
->>>>>>> branch 'master' of https://github.com/leonardchow/laps-team-two.git
 import com.teamtwo.laps.model.StaffMember;
 import com.teamtwo.laps.service.LeaveService;
 import com.teamtwo.laps.service.LeaveTypeService;
 import com.teamtwo.laps.service.StaffMemberService;
 
-<<<<<<< HEAD
 
 
 
 
-=======
->>>>>>> branch 'master' of https://github.com/leonardchow/laps-team-two.git
 
 /**
  * Handles requests for the application staff pages.
@@ -189,7 +174,6 @@ public class StaffController {
 //		return modelAndView;
 //	}
 	
-<<<<<<< HEAD
 	@RequestMapping(value = "/leave/create", method = RequestMethod.GET)
 	public ModelAndView NewLeavePage() {
 		ModelAndView mav = new ModelAndView("staff-leave-new");
@@ -201,7 +185,7 @@ public class StaffController {
 		mav.addObject("leaveTypes", leaveTypes);
 		
 		return mav;
-=======
+	}
 	@RequestMapping(value = "/history")
 	public ModelAndView employeeCourseHistory(HttpSession session) {
 		UserSession us = (UserSession) session.getAttribute("USERSESSION");
@@ -224,8 +208,6 @@ public class StaffController {
 	
 	
 	
->>>>>>> branch 'master' of https://github.com/leonardchow/laps-team-two.git
-}
 	
 	
 	
