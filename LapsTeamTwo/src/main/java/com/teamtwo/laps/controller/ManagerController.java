@@ -35,7 +35,6 @@ import com.teamtwo.laps.model.StaffMember;
 import com.teamtwo.laps.service.LeaveService;
 import com.teamtwo.laps.service.StaffMemberService;
 
-
 /**
  * Handles requests for the application staff pages.
  */
@@ -52,50 +51,39 @@ public class ManagerController {
 
 	private final int DASHBOARD_NUM_TO_SHOW = 3;
 
-	
 	/**
 	 * Renders the staff dashboard.
 	 */
 	@RequestMapping(value = "/dashboard")
 	public ModelAndView home(HttpSession session) {
-		
+
 		UserSession userSession = (UserSession) session.getAttribute("USERSESSION");
-		
+
 		if (userSession == null || userSession.getSessionId() == null) {
-			//return new ModelAndView("redirect:/home/login");
+			// return new ModelAndView("redirect:/home/login");
 		}
-		
-		//int staffId = userSession.getEmployee().getStaffId();
-		//String userid = userSession.getUser().getUserId();
+
+		// int staffId = userSession.getEmployee().getStaffId();
+		// String userid = userSession.getUser().getUserId();
 		int staffId = 1;
-		
+
 		StaffMember staffMember = smService.findStaffById(staffId);
 		ArrayList<Leave> leaves = lService.findAllLeaveOfStaff(staffId);
-
 		ArrayList<StaffMember> subordinates = smService.findSubordinates(staffId);
-
 		ArrayList<Leave> subordinatesLeaves = new ArrayList<>();
-		
-		for (StaffMember staff : subordinates) {
-			subordinatesLeaves.addAll(
-					staff.getAppliedLeaves().stream()
-					.filter(al -> al.getStatus() == LeaveStatus.PENDING)
-					.collect(Collectors.toList())
-					);
-		}
-		
-		
-		ModelAndView modelAndView = new ModelAndView("manager-dashboard");
-		
-		modelAndView = DashboardBean.getDashboard(modelAndView, DASHBOARD_NUM_TO_SHOW, staffMember, leaves);
-		
-		modelAndView.addObject("subLeaves", subordinatesLeaves);
-		
-		return modelAndView;
 
+		for (StaffMember staff : subordinates) {
+			subordinatesLeaves.addAll(staff.getAppliedLeaves().stream()
+					.filter(al -> al.getStatus() == LeaveStatus.PENDING).collect(Collectors.toList()));
+		}
+
+		ModelAndView modelAndView = new ModelAndView("manager-dashboard");
+		modelAndView = DashboardBean.getDashboard(modelAndView, DASHBOARD_NUM_TO_SHOW, staffMember, leaves);
+		modelAndView.addObject("subLeaves", subordinatesLeaves);
+		return modelAndView;
 	}
 
-	//DONE
+	// DONE
 	@RequestMapping(value = "/pending/list")
 	public ModelAndView viewPendingPage(HttpSession session) {
 		ModelAndView modelAndView = new ModelAndView("manager-pending-list");
@@ -114,7 +102,7 @@ public class ManagerController {
 		return modelAndView;
 	}
 
-	//DONE
+	// DONE
 	@RequestMapping(value = "/pending/detail/{leaveId}")
 	public ModelAndView approveApplicationPage(@PathVariable Integer leaveId) {
 		ModelAndView modelAndView = new ModelAndView("manager-pending-approve");
@@ -124,8 +112,7 @@ public class ManagerController {
 		return modelAndView;
 	}
 
-	
-	//leave validation and business logic
+	// leave validation and business logic
 	@RequestMapping(value = "/pending/edit/{leaveId}", method = RequestMethod.POST)
 	public ModelAndView approveOrRejectCourse(@ModelAttribute("approve") Approve approve, BindingResult result,
 			@PathVariable Integer leaveId, HttpSession session, final RedirectAttributes redirectAttributes) {
@@ -147,7 +134,7 @@ public class ManagerController {
 	}
 
 	// Yin
-	@RequestMapping(value = "/leave/Subordinate", method = RequestMethod.GET)
+	@RequestMapping(value = "/leave/subordinate", method = RequestMethod.GET)
 	public ModelAndView viewSubordinateListForLeaveApproval() {
 		ModelAndView mav = new ModelAndView("manager-subordinate-list");
 		List<StaffMember> subordinateList = smService.showBySubordinateName();
