@@ -59,12 +59,12 @@ public class ManagerController {
 		return "staffDashboard";
 	}
 
-	@RequestMapping(value = "/pending/{staffId}")
-	public ModelAndView viewPendingPage(@PathVariable Integer staffId) {
-		ModelAndView modelAndView = new ModelAndView("manager-view-pending");
-		StaffMember manager = smService.findStaffById(staffId);
-		modelAndView.addObject("manager", manager);
-		modelAndView.addObject("approve", new Approve());
+	@RequestMapping(value = "/pending/list")
+	public ModelAndView viewPendingPage() {
+		ModelAndView modelAndView = new ModelAndView("manager-pending-list");
+		//havent implement usser sessions
+		List leaveList = lService.findPendingLeaveByType(1);
+		modelAndView.addObject("leaveList", leaveList);
 		return modelAndView;
 	}
 
@@ -128,7 +128,7 @@ public class ManagerController {
 		StaffMember staffMember = smService.findStaff(sid);
 		mav.addObject("staffMember", staffMember);
 
-		List<Leave> leaveHistoryList = lService.findPendingLeaves(staffMember.getStaffId());
+		List<Leave> leaveHistoryList = lService.findStaffLeaveHistory(staffMember.getStaffId());
 		mav.addObject("leaveHistoryList", leaveHistoryList);
 		return mav;
 	}
