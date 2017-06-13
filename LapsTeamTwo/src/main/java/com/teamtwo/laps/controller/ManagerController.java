@@ -4,6 +4,7 @@ package com.teamtwo.laps.controller;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -48,67 +49,68 @@ public class ManagerController {
 
 	private final int DASHBOARD_NUM_TO_SHOW = 3;
 
-	
 	/**
 	 * Renders the staff dashboard.
 	 */
 	@RequestMapping(value = "/dashboard")
 	public ModelAndView home(HttpSession session) {
-		
+
 		UserSession userSession = (UserSession) session.getAttribute("USERSESSION");
-		
+
 		if (userSession == null || userSession.getSessionId() == null) {
-			//return new ModelAndView("redirect:/home/login");
+			// return new ModelAndView("redirect:/home/login");
 		}
-		
-		//int staffId = userSession.getEmployee().getStaffId();
-		//String userid = userSession.getUser().getUserId();
+
+		// int staffId = userSession.getEmployee().getStaffId();
+		// String userid = userSession.getUser().getUserId();
 		int staffId = 1;
-		
+
 		StaffMember staffMember = smService.findStaffById(staffId);
 		ArrayList<Leave> leaves = lService.findAllLeaveOfStaff(staffId);
-
 		ArrayList<StaffMember> subordinates = smService.findSubordinates(staffId);
-
 		ArrayList<Leave> subordinatesLeaves = new ArrayList<>();
-		
+
 		for (StaffMember staff : subordinates) {
-			subordinatesLeaves.addAll(
-					staff.getAppliedLeaves().stream()
-					.filter(al -> al.getStatus() == LeaveStatus.PENDING)
-					.collect(Collectors.toList())
-					);
+			subordinatesLeaves.addAll(staff.getAppliedLeaves().stream()
+					.filter(al -> al.getStatus() == LeaveStatus.PENDING).collect(Collectors.toList()));
 		}
-		
-		
+
 		ModelAndView modelAndView = new ModelAndView("manager-dashboard");
-		
 		modelAndView = DashboardBean.getDashboard(modelAndView, DASHBOARD_NUM_TO_SHOW, staffMember, leaves);
-		
 		modelAndView.addObject("subLeaves", subordinatesLeaves);
-		
 		return modelAndView;
-
 	}
 
+	// DONE
 	@RequestMapping(value = "/pending/list")
-	public ModelAndView viewPendingPage() {
+	public ModelAndView viewPendingPage(HttpSession session) {
 		ModelAndView modelAndView = new ModelAndView("manager-pending-list");
-		//havent implement usser sessions
-		List leaveList = lService.findPendingLeaveByType(1);
-		modelAndView.addObject("leaveList", leaveList);
+		HashMap<StaffMember, ArrayList<Leave>> hm = new HashMap<StaffMember, ArrayList<Leave>>();
+		UserSession us = (UserSession) session.getAttribute("USERSESSION");
+		ModelAndView mav = new ModelAndView("login");
+		if (us.getSessionId() != null) {
+			for (StaffMember sMember : us.getSubordinates()) {
+				ArrayList<Leave> llist = lService.findPendingLeaveByType(sMember.getStaffId());
+				hm.put(sMember, llist);
+			}
+			mav = new ModelAndView("manager-pending-list");
+			mav.addObject("pendinghistory", hm);
+			return mav;
+		}
 		return modelAndView;
 	}
 
+	// DONE
 	@RequestMapping(value = "/pending/detail/{leaveId}")
 	public ModelAndView approveApplicationPage(@PathVariable Integer leaveId) {
-		ModelAndView modelAndView = new ModelAndView("manager-approve");
+		ModelAndView modelAndView = new ModelAndView("manager-pending-approve");
 		Leave leave = lService.findLeaveById(leaveId);
 		modelAndView.addObject("leave", leave);
 		modelAndView.addObject("approve", new Approve());
 		return modelAndView;
 	}
 
+	// leave validation and business logic
 	@RequestMapping(value = "/pending/edit/{leaveId}", method = RequestMethod.POST)
 	public ModelAndView approveOrRejectCourse(@ModelAttribute("approve") Approve approve, BindingResult result,
 			@PathVariable Integer leaveId, HttpSession session, final RedirectAttributes redirectAttributes) {
@@ -123,25 +125,18 @@ public class ManagerController {
 		leave.setComment(approve.getComment());
 		System.out.println(leave.toString());
 		lService.changeLeave(leave);
-		ModelAndView mav = new ModelAndView("redirect:/manager/pending");
+		ModelAndView mav = new ModelAndView("redirect:/manager/pending/list");
 		String message = "Course was successfully updated.";
 		redirectAttributes.addFlashAttribute("message", message);
 		return mav;
 	}
 
 	// Yin
-	@RequestMapping(value = "/leave/Subordinate", method = RequestMethod.GET)
+	@RequestMapping(value = "/leave/subordinate", method = RequestMethod.GET)
 	public ModelAndView viewSubordinateListForLeaveApproval() {
 		ModelAndView mav = new ModelAndView("manager-subordinate-list");
 		List<StaffMember> subordinateList = smService.showBySubordinateName();
 		mav.addObject("subordinateList", subordinateList);
-		return mav;
-	}
-
-	@RequestMapping(value = "/leave/Subordinate/approve", method = RequestMethod.GET)
-	public ModelAndView viewLeaveForDetails() {
-		ModelAndView mav = new ModelAndView("manager-approve-leavelist");
-		mav.addObject("leaveList", "#######");
 		return mav;
 	}
 

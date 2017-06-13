@@ -5,37 +5,38 @@
 <html>
 <body>
 	<h3>
-		<spring:message code="testing pending page" />
+		<spring:message code="Leaves for Approval" />
 	</h3>
-	<c:if test="${fn:length(leaveList) gt 0}">
-		<table style="cellspacing: 2; cellpadding: 2; border: 1;">
-			<thead>
+	<c:forEach var="entry" items="${pendinghistory}">
+		<c:if test="${fn:length(entry.value) gt 0}">
+			<br />
+			<spring:message code="name" /> : <c:out value="${entry.key.name}" />
+			<br />
+			<table style="cellspacing: 2; cellpadding: 2; border: 1;">
 				<tr class="listHeading">
-					<th>Leave ID</th>
-					<th>Staff ID</th>
-					<th>Leave Type</th>
-					<th>Start Date</th>
-					<th>End Date</th>
-					<th>DisseminationId</th>
-					<th>Status</th>
-					<th>Was Updated</th>
+					<th><spring:message code="reference" /></th>
+					<th><spring:message code="courseName" /></th>
+					<th><spring:message code="startDate" /></th>
+					<th><spring:message code="endDate" /></th>
+					<th><spring:message code="fees" /></th>
+					<th><spring:message code="status" /></th>
+					<th><spring:message code="courseDetails" /></th>
 				</tr>
-			</thead>
-			<tbody>
-				<c:forEach var="leave_history" items="${leaveList}">
+				<c:forEach var="leave" items="${entry.value}">
 					<tr class="listRecord">
-						<td>${leave_history.leaveId}</td>
-						<td>${leave_history.staffMember.name}</td>
-						<td>${leave_history.leaveTypeModel.leaveName}</td>
-						<td>${leave_history.startDate}</td>
-						<td>${leave_history.endDate}</td>
-						<td>${leave_history.disseminationMember.name}</td>
-						<td>${leave_history.status.toString()}</td>
-						<td>${leave_history.wasUpdated}</td>
+						<td>${leave.leaveId}</td>
+						<td>${leave.reason}</td>
+						<td>${leave.startDate}</td>
+						<td>${leave.endDate}</td>
+						<td>${leave.disseminationMember.name}</td>
+						<td>${leave.status}</td>
+						<td><c:url
+								value="/manager/pending/detail/${leave.leaveId}.html" var="d" />
+							<a href="${d}"><spring:message code="detail" /></a></td>
 					</tr>
 				</c:forEach>
-			</tbody>
-		</table>
-	</c:if>
+			</table>
+		</c:if>
+	</c:forEach>
 </body>
 </html>
