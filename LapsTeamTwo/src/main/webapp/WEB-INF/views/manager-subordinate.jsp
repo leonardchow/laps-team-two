@@ -28,7 +28,7 @@
 					<td>${staff_list.homeAddress}</td>
 					<td>${staff_list.designation}</td>
 					<td><a
-						href="${pageContext.request.contextPath}/manager/subordinate/LeaveHistory/Details/${staff_list.staffId}.html">Detail</a>
+						href="${pageContext.request.contextPath}/manager/subordinate/history/${staff_list.staffId}.html">Detail</a>
 					</td>
 				</tr>
 			</c:forEach>
