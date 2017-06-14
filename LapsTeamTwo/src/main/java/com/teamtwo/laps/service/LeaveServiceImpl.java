@@ -45,15 +45,24 @@ public class LeaveServiceImpl implements LeaveService {
 	}
 
 	@Override
+	public Leave createLeave(Leave leave) {
+		return repository.saveAndFlush(leave);
+
+	}
 	public Leave changeLeave(Leave leave) {
 		// TODO Auto-generated method stub
 		return repository.saveAndFlush(leave);
+	}
+
+	@Override
+	public ArrayList<Leave> findAllLeave() {
+		return (ArrayList<Leave>) repository.findAll();
 	}
 	
 	//Yin
 	@Override
 	@Transactional
-	public ArrayList<Leave> findPendingLeaves(Integer sid) {
+	public ArrayList<Leave> findStaffLeaveHistory(Integer sid) {
 		ArrayList<Leave> leavel = (ArrayList<Leave>) repository.getLeaveHistoryBySID(sid);
 		return leavel;
 	}
@@ -62,10 +71,20 @@ public class LeaveServiceImpl implements LeaveService {
 	public void cancelLeave(Leave lt, LeaveStatus ls) {
 		// TODO Auto-generated method stub
 		lt.setStatus(ls);
-		repository.saveAndFlush(lt);}
+		repository.saveAndFlush(lt);
+	}
 	
 	public void DeleteLeave(Leave lt, LeaveStatus ls) {
 		// TODO Auto-generated method stub
 		lt.setStatus(ls);
 		repository.saveAndFlush(lt);
-}}
+	}
+
+	@Override
+	@Transactional
+	public ArrayList<Leave> findPendingLeaveByType(Integer staffId) {
+		ArrayList<Leave> leavel = (ArrayList<Leave>) repository.findPendingLeaveByType(staffId);
+		// TODO Auto-generated method stub
+		return leavel;
+	}
+}

@@ -1,17 +1,22 @@
 package com.teamtwo.laps.model;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -22,25 +27,30 @@ import com.teamtwo.laps.javabeans.LeaveStatus;
 public class Leave {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "leaveid")
 	private Integer leaveId;
 	@Column(name = "staffid")
 	private Integer staffId;
 	@Column(name = "leavetype")
 	private Integer leaveType;
+	@NotNull
+	@Size(min=1, message = "Please give a reason for the leave")
 	private String reason;
 	
-	
+	@NotNull(message = "Please give a start date")
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	@Column(name = "startdate")
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date startDate;
 
+	@NotNull(message = "Please give an end date")
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@Temporal(TemporalType.DATE)
 	@Column(name = "enddate")
-	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date endDate;
-	
+	@NotNull
+	@Size(min=1, message = "Please describe what work to be taken over")
 	private String dissemination;
 	@Column(name = "disseminationid")
 	private Integer disseminationId;
@@ -83,7 +93,7 @@ public class Leave {
 		return staffId;
 	}
 	public void setStaffId(Integer staffId) {
-		this.staffId=staffId;
+		this.staffId = staffId;
 	}
 	public Integer getLeaveType() {
 		return leaveType;
@@ -170,6 +180,10 @@ public class Leave {
 
 	public void setLeaveTypeModel(LeaveType leaveTypeModel) {
 		this.leaveTypeModel = leaveTypeModel;
+	}
+	
+	public Integer getNumberOfDays() {
+		return (int) TimeUnit.DAYS.convert(endDate.getTime() - startDate.getTime(), TimeUnit.MILLISECONDS);
 	}
 
 	@Override

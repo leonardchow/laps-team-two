@@ -7,6 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	wadda bitch
+Your application is successful!
+Just wait for reply.
 </body>
 </html>

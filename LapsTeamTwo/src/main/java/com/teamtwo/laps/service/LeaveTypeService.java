@@ -13,6 +13,8 @@ public interface LeaveTypeService {
 	
 	ArrayList<LeaveType> findAllLeaveType();
 	
+	ArrayList<String> findAllLeaveTypeName();
+	
 	LeaveType findLeaveTypeById(Integer leaveType);
 	
 	LeaveType changeLeaveType(LeaveType lt);
