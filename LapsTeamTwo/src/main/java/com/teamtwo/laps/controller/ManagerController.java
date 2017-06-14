@@ -1,7 +1,10 @@
 package com.teamtwo.laps.controller;
 
+
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +12,7 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +34,7 @@ import com.teamtwo.laps.javabeans.Approve;
 import com.teamtwo.laps.javabeans.DashboardBean;
 import com.teamtwo.laps.javabeans.LeaveStatus;
 import com.teamtwo.laps.javabeans.ManagerPath;
+import com.teamtwo.laps.javabeans.MovementBean;
 import com.teamtwo.laps.model.Leave;
 import com.teamtwo.laps.model.LeaveType;
 import com.teamtwo.laps.model.StaffMember;
@@ -90,7 +95,7 @@ public class ManagerController {
 
 	// DONE
 	@RequestMapping(value = "/pending/list")
-	public ModelAndView viewPendingPage(HttpSession session) {
+	public ModelAndView viewPendingPage(HttpSession session) throws IOException {
 		ModelAndView modelAndView = new ModelAndView("manager-pending-list");
 		HashMap<StaffMember, ArrayList<Leave>> hm = new HashMap<StaffMember, ArrayList<Leave>>();
 		UserSession us = (UserSession) session.getAttribute("USERSESSION");
@@ -101,7 +106,9 @@ public class ManagerController {
 				hm.put(sMember, llist);
 			}
 			mav = new ModelAndView("manager-pending-list");
-			mav.addObject("pendinghistory", hm);
+			//Pagination
+		     //ObjectMapper mapper = new ObjectMapper();
+			mav.addObject("pendinghistory", hm);		     
 			return mav;
 		}
 		return modelAndView;
@@ -111,13 +118,20 @@ public class ManagerController {
 	@RequestMapping(value = "/pending/detail/{leaveId}")
 	public ModelAndView approveApplicationPage(@PathVariable Integer leaveId, HttpSession session) {
 		ModelAndView modelAndView = new ModelAndView("manager-pending-approve");
-
 		ManagerPath mp = ManagerPath.PENDING;
 		session.setAttribute("MANAGERPATH", mp);
-
 		Leave leave = lService.findLeaveById(leaveId);
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(leave.getStartDate());
+		int month = cal.get(Calendar.MONTH);
+		int year = cal.get(Calendar.YEAR);
+		ArrayList<Leave> allLeave = lService.findAllLeaveOfSubordinate(leave.getStaffMember().getManagerId());
+		List<Leave> subLeave = MovementBean.filterLeaveByStatusAndMonth(allLeave, LeaveStatus.APPROVED, month, year);
+		
 		modelAndView.addObject("leave", leave);
 		modelAndView.addObject("approve", new Approve());
+		modelAndView.addObject("subLeave", subLeave);
 		return modelAndView;
 	}
 
@@ -162,7 +176,11 @@ public class ManagerController {
 		} else if (mp == ManagerPath.HISTORY) {
 			String url = "redirect:/manager/subordinate/history/" + leave.getStaffId();
 			mav = new ModelAndView(url);
-		} else {
+		} else if (mp == ManagerPath.DETAIL) {
+			String url = "redirect:/manager/subordinate/history/" + leave.getStaffId();
+			mav = new ModelAndView(url);
+		}
+			else {
 			mav = new ModelAndView("redirect:/manager/pending/list");
 		}
 		return mav;
@@ -194,10 +212,26 @@ public class ManagerController {
 	public ModelAndView viewSubordinateLeaveHistory(@PathVariable int leaveId, HttpSession session) {
 		ModelAndView modelAndView = new ModelAndView("manager-pending-approve");
 		Leave leave = lService.findLeaveById(leaveId);
+		if ((leave.getStatus() == LeaveStatus.APPROVED) || (leave.getStatus() == LeaveStatus.CANCELLED) || 
+				(leave.getStatus() == LeaveStatus.REJECTED)){
+			String url = "redirect:/manager/view/detail/" + leave.getLeaveId();
+			modelAndView = new ModelAndView(url);
+			return modelAndView;
+		}
 		ManagerPath mp = ManagerPath.HISTORY;
 		session.setAttribute("MANAGERPATH", mp);
 		modelAndView.addObject("leave", leave);
 		modelAndView.addObject("approve", new Approve());
+		return modelAndView;
+	}
+	
+	@RequestMapping(value = "/view/detail/{leaveId}", method = RequestMethod.GET)
+	public ModelAndView viewSubordinateLeaveDetail(@PathVariable int leaveId, HttpSession session) {
+		ModelAndView modelAndView = new ModelAndView("manager-view-details");
+		Leave leave = lService.findLeaveById(leaveId);
+		ManagerPath mp = ManagerPath.DETAIL;
+		session.setAttribute("MANAGERPATH", mp);
+		modelAndView.addObject("leave", leave);
 		return modelAndView;
 	}
 }
