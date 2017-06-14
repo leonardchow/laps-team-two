@@ -19,7 +19,7 @@
 			</tr>
 
 			<tr>
-				<td><input type="submit" value="Update" /></td>
+				<td><input type="submit" value="Update" class="btn btn-primary" /></td>
 				<td></td>
 				<td></td>
 			</tr>

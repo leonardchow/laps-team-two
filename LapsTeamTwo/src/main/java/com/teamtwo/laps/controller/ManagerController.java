@@ -118,7 +118,7 @@ public class ManagerController {
 	public ModelAndView approveApplicationPage(@PathVariable Integer leaveId, HttpSession session) {
 		ModelAndView modelAndView = new ModelAndView("manager-pending-approve");
 		ManagerPath mp = ManagerPath.PENDING;
-		session.setAttribute("MANAGERPATH", mp);
+		session.setAttribute("USERPATH", mp);
 		Leave leave = lService.findLeaveById(leaveId);
 
 		Calendar cal = Calendar.getInstance();
@@ -176,7 +176,7 @@ public class ManagerController {
 		leave.setComment(approve.getComment());
 		System.out.println(leave.toString());
 		ModelAndView mav = new ModelAndView("redirect:/manager/pending/list");
-		ManagerPath mp = (ManagerPath) session.getAttribute("MANAGERPATH");
+		ManagerPath mp = (ManagerPath) session.getAttribute("USERPATH");
 		if (mp == ManagerPath.DASHBOARD) {
 			mav = new ModelAndView("redirect:/manager/dashboard");
 		} else if (mp == ManagerPath.HISTORY) {
@@ -219,7 +219,7 @@ public class ManagerController {
 			@PathVariable Integer leaveId, HttpSession session, final RedirectAttributes redirectAttributes) {
 		ModelAndView mav = new ModelAndView("redirect:/manager/pending/list");
 		Leave leave = lService.findLeaveById(leaveId);
-		ManagerPath mp = (ManagerPath) session.getAttribute("MANAGERPATH");
+		ManagerPath mp = (ManagerPath) session.getAttribute("USERPATH");
 		if (mp == ManagerPath.DASHBOARD) {
 			mav = new ModelAndView("redirect:/manager/dashboard");
 		} else if (mp == ManagerPath.HISTORY) {
@@ -270,7 +270,7 @@ public class ManagerController {
 			return modelAndView;
 		}
 		ManagerPath mp = ManagerPath.HISTORY;
-		session.setAttribute("MANAGERPATH", mp);
+		session.setAttribute("USERPATH", mp);
 		modelAndView.addObject("leave", leave);
 		modelAndView.addObject("approve", new Approve());
 		return modelAndView;
@@ -281,7 +281,7 @@ public class ManagerController {
 		ModelAndView modelAndView = new ModelAndView("manager-view-details");
 		Leave leave = lService.findLeaveById(leaveId);
 		ManagerPath mp = ManagerPath.DETAIL;
-		session.setAttribute("MANAGERPATH", mp);
+		session.setAttribute("USERPATH", mp);
 		modelAndView.addObject("leave", leave);
 		return modelAndView;
 	}

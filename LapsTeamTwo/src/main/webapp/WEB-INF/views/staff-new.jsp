@@ -4,7 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
-<h3>New User</h3>
+<h3>New Employee</h3>
 <form:form method="POST" commandName="staff"
 	action="${pageContext.request.contextPath}/admin/staff/create.html">
 	<table class="table">
@@ -60,7 +60,7 @@
 			</tr>
 
 			<tr>
-				<td><input type="submit" value="Create" /></td>
+				<td><input type="submit" value="Create" class="btn btn-primary"/></td>
 				<td></td>
 				<td></td>
 			</tr>

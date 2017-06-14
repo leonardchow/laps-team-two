@@ -54,6 +54,7 @@ import com.teamtwo.laps.service.LeaveService;
 import com.teamtwo.laps.service.LeaveTypeService;
 import com.teamtwo.laps.service.OvertimeService;
 import com.teamtwo.laps.service.StaffMemberService;
+import com.teamtwo.laps.javabeans.StaffPath;
 
 import com.teamtwo.laps.controller.UserSession;
 
@@ -101,6 +102,9 @@ public class StaffController {
 	public ModelAndView home(HttpSession session) {
 
 		UserSession userSession = (UserSession) session.getAttribute("USERSESSION");
+		
+		StaffPath sp = StaffPath.SDASHBOARD;
+		session.setAttribute("USERPATH", sp);
 
 		if (userSession == null || userSession.getSessionId() == null) {
 			return new ModelAndView("redirect:/home/login");
@@ -247,8 +251,12 @@ public class StaffController {
 	}
 	
 	@RequestMapping(value = "/history/details/{id}", method = RequestMethod.POST)
-	public ModelAndView LeaveDetailsBack(@PathVariable Integer id) {
+	public ModelAndView LeaveDetailsBack(@PathVariable Integer id, HttpSession session) {
 		ModelAndView mav = new ModelAndView("redirect:/staff/history");
+		StaffPath sp = (StaffPath) session.getAttribute("USERPATH");
+		if (sp == StaffPath.SDASHBOARD) {
+			mav = new ModelAndView("redirect:/staff/dashboard");
+		}
 		return mav;
 	}
 	
