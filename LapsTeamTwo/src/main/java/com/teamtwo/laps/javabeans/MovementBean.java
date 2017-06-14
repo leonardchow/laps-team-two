@@ -54,5 +54,19 @@ public class MovementBean {
 				return false;
 		}).collect(Collectors.toList());
 	}
+	
+	public static List<Leave> filterLeaveByMonth(List<Leave> allLeave, int year) {
+		return allLeave.stream().filter(leave -> {
+			Calendar start = Calendar.getInstance();
+			start.setTime(leave.getStartDate());
+			Calendar end = Calendar.getInstance();
+			end.setTime(leave.getEndDate());
+			
+			if ((start.get(Calendar.YEAR) <= year && year <= end.get(Calendar.YEAR)))
+				return true;
+			else
+				return false;
+		}).collect(Collectors.toList());
+	}
 
 }

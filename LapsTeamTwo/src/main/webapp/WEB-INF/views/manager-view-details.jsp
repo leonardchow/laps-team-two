@@ -60,10 +60,10 @@
 	</table>
 
 	<form:form method="POST" modelAttribute="leave"
-		action="${pageContext.request.contextPath}/manager/pending/cancel/${leave.leaveId}.html">
-		<form:button name="button" type="submit" value="submit">
-			<img src="${pageContext.request.contextPath}/image/button_cancel.gif"
-				width="59" height="22" alt="" border="0">
+		action="${pageContext.request.contextPath}/manager/pending/edit/${leave.leaveId}.html">
+		<form:button name="cancel" type="submit" value="submit"
+			class="btn btn-primary">
+			Cancel
 		</form:button>
 	</form:form>
 

@@ -100,18 +100,16 @@
 					<form:textarea path="comment" cols="60" rows="4" id="comment" /></td>
 			</tr>
 		</table>
-		<form:button name="button" type="submit" value="submit"
-			class="btn btn-primary">
-			Submit
-		</form:button>
-	</form:form>
-	<form:form method="POST" modelAttribute="approve"
-		action="${pageContext.request.contextPath}/manager/pending/cancel/${leave.leaveId}.html">
-		<form:button name="button" type="submit" value="submit">
-			<img src="${pageContext.request.contextPath}/image/button_cancel.gif"
-				width="59" height="22" alt="" border="0">
-		</form:button>
-	</form:form>
+		<td><form:button name="submit" type="submit" value="submit"
+				class="btn btn-primary">
+			 Submit
+		</form:button></td>
 
+		<td><form:button name="cancel" type="submit" value="submit"
+				class="btn btn-primary">
+			Cancel
+		</form:button></td>
+
+	</form:form>
 </body>
 </html>
