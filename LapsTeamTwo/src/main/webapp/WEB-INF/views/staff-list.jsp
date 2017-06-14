@@ -4,14 +4,22 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
 <h3>Employee List</h3>
-<br>
+
 
 <c:if test="${fn:length(stafflist) gt 0}">
 
+	<div class="row">
+		<div class="col-md-4">
+			<input type="text" id="myInput" onkeyup="StaffSearch()"
+				placeholder="Search for Staff Name..." class="form-control"
+				title="Type in a name">
+		</div>
+	</div>
+
+
 	<div class="table-responsive">
-		
-		<input type="text" id="myInput" onkeyup="StaffSearch()"
-		placeholder="Search for Staff Name..." title="Type in a name">
+
+
 		<table id="staffTable" class="table table-hover">
 			<thead>
 				<tr>
@@ -48,30 +56,30 @@
 				</c:forEach>
 			</tbody>
 		</table>
-	
+
 	</div>
 </c:if>
 
 <a class="btn btn-primary"
 	href="${pageContext.request.contextPath}/admin/staff/create">Add
 	New Employee</a>
-	
-	<script>
-			function StaffSearch() {
-				var input, filter, table, tr, td, i;
-				input = document.getElementById("myInput");
-				filter = input.value.toUpperCase();
-				table = document.getElementById("staffTable");
-				tr = table.getElementsByTagName("tr");
-				for (i = 0; i < tr.length; i++) {
-					td = tr[i].getElementsByTagName("td")[1];
-					if (td) {
-						if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
-							tr[i].style.display = "";
-						} else {
-							tr[i].style.display = "none";
-						}
-					}
+
+<script>
+	function StaffSearch() {
+		var input, filter, table, tr, td, i;
+		input = document.getElementById("myInput");
+		filter = input.value.toUpperCase();
+		table = document.getElementById("staffTable");
+		tr = table.getElementsByTagName("tr");
+		for (i = 0; i < tr.length; i++) {
+			td = tr[i].getElementsByTagName("td")[1];
+			if (td) {
+				if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+					tr[i].style.display = "";
+				} else {
+					tr[i].style.display = "none";
 				}
 			}
-		</script>
+		}
+	}
+</script>

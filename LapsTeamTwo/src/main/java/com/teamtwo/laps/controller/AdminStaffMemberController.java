@@ -3,6 +3,7 @@ package com.teamtwo.laps.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,21 +23,13 @@ import com.teamtwo.laps.model.User;
 import com.teamtwo.laps.service.StaffMemberService;
 import com.teamtwo.laps.service.UserService;
 
-
-
-
-
-
-
-@RequestMapping(value="/admin/staff")
+@RequestMapping(value = "/admin/staff")
 @Controller
 public class AdminStaffMemberController {
 
-
-
 	@Autowired
 	private UserService uService;
-	
+
 	@Autowired
 	private StaffMemberService smService;
 
@@ -46,23 +39,50 @@ public class AdminStaffMemberController {
 	 * @return
 	 */
 
-
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public ModelAndView staffListPage() {
-		ModelAndView mav = new ModelAndView("staff-list");
-		ArrayList<StaffMember> staffList = smService.findAllStaff();
-		mav.addObject("stafflist", staffList);
+	public ModelAndView staffListPage(HttpSession session) {
+
+		ModelAndView mav = new ModelAndView("login");
+		try {
+			UserSession us = (UserSession) session.getAttribute("USERSESSION");
+			if (us.getSessionId() != null && us.getUser().getIsAdmin()) {
+
+				mav = new ModelAndView("staff-list");
+				ArrayList<StaffMember> staffList = smService.findAllStaff();
+				mav.addObject("stafflist", staffList);
+			} else {
+				mav = new ModelAndView("unauthorized-admin-access");
+			}
+
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+			mav = new ModelAndView("unauthorized-access");
+		}
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
-	public ModelAndView newUserPage() {
-		ModelAndView mav = new ModelAndView("staff-new", "staff", new StaffMember());
-		ArrayList<StaffMember> sList = smService.findAllStaff();
-		mav.addObject("mlist", sList);
+	public ModelAndView newUserPage(HttpSession session) {
+
+		ModelAndView mav = new ModelAndView("login");
+		try {
+			UserSession us = (UserSession) session.getAttribute("USERSESSION");
+			if (us.getSessionId() != null && us.getUser().getIsAdmin()) {
+
+				mav = new ModelAndView("staff-new", "staff", new StaffMember());
+				ArrayList<StaffMember> sList = smService.findAllStaff();
+				mav.addObject("mlist", sList);
+			} else {
+				mav = new ModelAndView("unauthorized-admin-access");
+			}
+
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+			mav = new ModelAndView("unauthorized-access");
+		}
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public ModelAndView createNewUser(@ModelAttribute @Valid StaffMember staff, BindingResult result,
 			final RedirectAttributes redirectAttributes) {
@@ -79,20 +99,34 @@ public class AdminStaffMemberController {
 		redirectAttributes.addFlashAttribute("message", message);
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-	public ModelAndView editUserPage(@PathVariable Integer id) {
-		ModelAndView mav = new ModelAndView("staff-edit");
-		StaffMember staff = smService.findStaff(id);
-		mav.addObject("staff", staff);
-		ArrayList<StaffMember> sList = smService.findAllStaff();
-		mav.addObject("mlist", sList);
+	public ModelAndView editUserPage(@PathVariable Integer id, HttpSession session) {
+
+		ModelAndView mav = new ModelAndView("login");
+		try {
+			UserSession us = (UserSession) session.getAttribute("USERSESSION");
+			if (us.getSessionId() != null && us.getUser().getIsAdmin()) {
+
+				mav = new ModelAndView("staff-edit");
+				StaffMember staff = smService.findStaff(id);
+				mav.addObject("staff", staff);
+				ArrayList<StaffMember> sList = smService.findAllStaff();
+				mav.addObject("mlist", sList);
+			} else {
+				mav = new ModelAndView("unauthorized-admin-access");
+			}
+
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+			mav = new ModelAndView("unauthorized-access");
+		}
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
-	public ModelAndView editUser(@ModelAttribute @Valid StaffMember staff, BindingResult result, @PathVariable Integer id,
-			final RedirectAttributes redirectAttributes){
+	public ModelAndView editUser(@ModelAttribute @Valid StaffMember staff, BindingResult result,
+			@PathVariable Integer id, final RedirectAttributes redirectAttributes) {
 
 		if (result.hasErrors())
 			return new ModelAndView("staff-edit");
@@ -107,15 +141,28 @@ public class AdminStaffMemberController {
 	}
 
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
-	public ModelAndView deleteUser(@PathVariable Integer id, final RedirectAttributes redirectAttributes)
-	{
+	public ModelAndView deleteUser(@PathVariable Integer id, final RedirectAttributes redirectAttributes,
+			HttpSession session) {
 
-		ModelAndView mav = new ModelAndView("redirect:/admin/staff/list");
-		StaffMember staff = smService.findStaff(id);
-		smService.removeStaff(staff);
-		String message = "The staff " + staff.getStaffId() + " was successfully deleted.";
+		ModelAndView mav = new ModelAndView("login");
+		try {
+			UserSession us = (UserSession) session.getAttribute("USERSESSION");
+			if (us.getSessionId() != null && us.getUser().getIsAdmin()) {
 
-		redirectAttributes.addFlashAttribute("message", message);
+				mav = new ModelAndView("redirect:/admin/staff/list");
+				StaffMember staff = smService.findStaff(id);
+				smService.removeStaff(staff);
+				String message = "The staff " + staff.getStaffId() + " was successfully deleted.";
+
+				redirectAttributes.addFlashAttribute("message", message);
+			} else {
+				mav = new ModelAndView("unauthorized-admin-access");
+			}
+
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+			mav = new ModelAndView("unauthorized-access");
+		}
 		return mav;
 	}
 
