@@ -26,4 +26,9 @@ public interface StaffMemberService {
 	ArrayList<String> getOnlyStaffName();
 	
 	StaffMember findStaff(Integer sid);
+	
+	//htein
+	StaffMember createStaff(StaffMember staff);
+	
+	void removeStaff(StaffMember staff);
 }

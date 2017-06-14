@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
@@ -5,15 +7,15 @@
 <html>
 <body>
 	<h3>
-		Employee Course History
+		Employee Leave History
 	</h3>
-	<c:if test="${fn:length(lhistory) gt 0}">
-		<table style="cellspacing: 2; cellpadding: 2; border: 1;">
-			<tr class="listHeading">
+<%-- 	<c:if test="${fn:length(lhistory) gt 0}"> --%>
+		<table class="table table-hover">
+			<tr >
 			
 			</tr>
 			<c:forEach var="leave" items="${lhistory}">
-				<tr class="listRecord">
+				<tr >
 					<td>${leave.leaveId}</td>
 					<td></td>
 					<td></td>
@@ -22,12 +24,12 @@
 					<td></td>
 					<td></td>
 					<c:if
-						test="${course.status eq 'SUBMITTED' || course.status eq 'UPDATED' }">
+						test="${leave.status eq 'SUBMITTED' || leave.status eq 'UPDATED' }">
 						<td><a
-							href="${pageContext.request.contextPath}/staff/course/edit/${course.courseId}.html"><spring:message
+							href="${pageContext.request.contextPath}/staff/leave/edit/${course.courseId}.html"><spring:message
 									code="fieldLabel.update" /></a></td>
 						<td><a
-							href="${pageContext.request.contextPath}/staff/course/withdraw/${course.courseId}.html"><spring:message
+							href="${pageContext.request.contextPath}/staff/leave/withdraw/${course.courseId}.html"><spring:message
 									code="fieldLabel.withdraw" /></a></td>
 					</c:if>
 					<c:if
@@ -38,6 +40,6 @@
 				</tr>
 			</c:forEach>
 		</table>
-	</c:if>
+<%-- 	</c:if> --%>
 </body>
 </html>

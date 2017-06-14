@@ -29,9 +29,9 @@
 							<td>${leave.leaveType}</td>
 							<td>${leave.leaveName}</td>
 							<td><a
-								href="${pageContext.request.contextPath}/admin/leavetype/edit/${leave.leaveType}.html">Edit</a></td>
+								href="${pageContext.request.contextPath}/admin/leavetype/edit/${leave.leaveType}.html" class="btn btn-success">Edit</a></td>
 							<td><a
-								href="${pageContext.request.contextPath}/admin/leavetype/delete/${leave.leaveType}.html">Delete</a></td>
+								href="${pageContext.request.contextPath}/admin/leavetype/delete/${leave.leaveType}.html" class="btn btn-danger">Delete</a></td>
 						</tr>
 					</c:forEach>
 				</tbody>

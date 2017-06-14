@@ -2,23 +2,22 @@ package com.teamtwo.laps.controller;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+
 import java.util.List;
-import java.util.Locale;
+
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.stream.Collectors;
+
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +32,7 @@ import com.teamtwo.laps.model.LeaveType;
 import com.teamtwo.laps.javabeans.DashboardBean;
 import com.teamtwo.laps.javabeans.EmailSender;
 import com.teamtwo.laps.javabeans.MovementBean;
-import com.teamtwo.laps.model.Leave;
+
 import com.teamtwo.laps.model.StaffMember;
 import com.teamtwo.laps.service.LeaveService;
 import com.teamtwo.laps.service.LeaveTypeService;
@@ -172,11 +171,11 @@ public class StaffController {
 		return mav;
 	}
 	@RequestMapping(value = "/history")
-	public ModelAndView employeeCourseHistory(HttpSession session) {
+	public ModelAndView employeeLeaveHistory(HttpSession session) {
 		UserSession us = (UserSession) session.getAttribute("USERSESSION");
 		ModelAndView mav = new ModelAndView("login");
 		if (us.getSessionId() != null) {
-			mav = new ModelAndView("/staff-leave-history");
+			mav = new ModelAndView("staff-leave-history");
 			mav.addObject("lhistory", lService.findLeaveById(us.getUser().getStaffId()));
 			return mav;
 		}

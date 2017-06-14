@@ -23,62 +23,51 @@
 <form:form method="POST" commandName="leave"
 	action="${pageContext.request.contextPath}/staff/leave/created">
 
-	<table>
-	
- 	 <tr>
+	<table class="table table-striped">
+
+		<tr>
 			<td>Start Date</td>
-			<td><form:input size="16" path="startDate" id="datepicker1" /><form:errors
-					path="startDate" cssStyle="color: red;" /></td>
+			<td><form:input size="16" path="startDate" id="datepicker1" />
+				<form:errors path="startDate" cssStyle="color: red;" /></td>
 			<td>End Date</td>
-			<td><form:input size="16" path="endDate" id="datepicker2" /><form:errors
+			<td><form:input size="16" path="endDate" id="datepicker2" /> <form:errors
 					path="endDate" cssStyle="color: red;" /></td>
-		</tr>	
+		</tr>
 		<tr>
 			<td>LeaveType</td>
-			<td colspan="3">
-			<form:select path="leaveType">
-			<c:forEach var="lType" items="${leaveTypes}">
-				<form:option value="${ lType.leaveType }">${lType.leaveName}</form:option>
-			</c:forEach>
-			</form:select>
-			
-			
-<%-- 			<form:input size="40" path="leaveType" /> --%>
-			<form:errors
-					path="leaveType" cssStyle="color: red;" /></td>
-				
+
+			<td><form:select path="leaveType">
+					<c:forEach var="lType" items="${leaveTypes}">
+						<form:option value="${ lType.leaveType }">${lType.leaveName}</form:option>
+					</c:forEach>
+				</form:select> <form:errors path="leaveType" cssStyle="color: red;" /></td>
+
 		</tr>
-		
+
 		<tr>
 			<td>Work Dissemination</td>
 			<td colspan="3"><form:input size="40" path="dissemination" /></td>
 		</tr>
-		
+
 		<tr>
 			<td>Dissemination ID</td>
 			<td colspan="3"><form:input size="40" path="disseminationId" /></td>
 		</tr>
-		
-	
+
+
 		<tr>
 			<td>Reason</td>
-			<td colspan="3"><form:textarea cols="64" rows="5"
-					path="reason" /></td>
+			<td colspan="3"><form:textarea cols="64" rows="5" path="reason" /></td>
 		</tr>
-		
+
 
 
 		<tr>
-			<td>&nbsp;</td>
-			<td colspan="2" align="left"><br></br> <form:button
-					type="submit">
-		<img
-						src="${pageContext.request.contextPath}/image/button_submit.gif"
-						alt="" align="middle">
-				</form:button>&nbsp; 
-				<a href="javascript:history.back(-1);"> <img
-					src="${pageContext.request.contextPath}/image/button_cancel.gif"
-					alt="" align="middle" border="0">
+
+			<td><form:button type="submit" class="btn btn-primary">
+					Submit
+				</form:button></td>
+			<td><a href="javascript:history.back(-1);" class="btn btn-primary"> Cancel
 			</a></td>
 		</tr>
 

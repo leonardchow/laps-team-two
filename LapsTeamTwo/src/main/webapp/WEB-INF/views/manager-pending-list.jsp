@@ -9,22 +9,22 @@
 	</h3>
 	<c:forEach var="entry" items="${pendinghistory}">
 		<c:if test="${fn:length(entry.value) gt 0}">
-			<br />
-			<spring:message code="name" /> : <c:out value="${entry.key.name}" />
-			<br />
-			<table style="cellspacing: 2; cellpadding: 2; border: 1;">
-				<tr class="listHeading">
-					<th><spring:message code="reference" /></th>
-					<th><spring:message code="courseName" /></th>
+			
+			<table class="table table-hover">
+				<tr>
+					<th>#</th>
+					<th>Name</th>
+					<th>Reason</th>
 					<th><spring:message code="startDate" /></th>
 					<th><spring:message code="endDate" /></th>
-					<th><spring:message code="fees" /></th>
-					<th><spring:message code="status" /></th>
-					<th><spring:message code="courseDetails" /></th>
+					<th>Dissemination Member</th>
+					<th>Status</th>
+					<th>Detail</th>
 				</tr>
 				<c:forEach var="leave" items="${entry.value}">
 					<tr class="listRecord">
 						<td>${leave.leaveId}</td>
+						<td><c:out value="${entry.key.name}" /></td>
 						<td>${leave.reason}</td>
 						<td>${leave.startDate}</td>
 						<td>${leave.endDate}</td>
@@ -32,7 +32,7 @@
 						<td>${leave.status}</td>
 						<td><c:url
 								value="/manager/pending/detail/${leave.leaveId}.html" var="d" />
-							<a href="${d}"><spring:message code="detail" /></a></td>
+							<a href="${d}" class="btn btn-primary">Detail</a></td>
 					</tr>
 				</c:forEach>
 			</table>
