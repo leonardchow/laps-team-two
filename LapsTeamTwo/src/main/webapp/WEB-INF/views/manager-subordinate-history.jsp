@@ -4,45 +4,47 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
 <body>
-	<h1>
+	<h3>
 		<spring:message code="title.leaveDetailsHistory" />
-	</h1>
+	</h3>
 
 	<form:form method="POST" modelAttribute="staffMember"
 		action="${pageContext.request.contextPath}/manager/subordinate/LeaveHistory/Details/${staffMember.staffId}.html">
 
-		<h2>Staff Name: ${staffMember.name}</h2>
+		<h4>Staff Name: ${staffMember.name}</h4>
 		<c:if test="${fn:length(leaveHistoryList) gt 0}">
-			<table style="cellspacing: 2; cellpadding: 2; border: 1;">
-				<thead>
-					<tr class="listHeading">
-						<th><spring:message code="fieldLabel.leaveId" /></th>
-						<th><spring:message code="fieldLabel.employeeId" /></th>
-						<th><spring:message code="fieldLabel.leaveType" /></th>
-						<th><spring:message code="fieldLabel.startDate" /></th>
-						<th><spring:message code="fieldLabel.endDate" /></th>
-						<th><spring:message code="fieldLabel.dissemination" /></th>
-						<th><spring:message code="fieldLabel.status" /></th>
-						<th><spring:message code="title.leaveDetails" /></th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:forEach var="leave_history" items="${leaveHistoryList}">
-						<tr class="listRecord">
-							<td>${leave_history.leaveId}</td>
-							<td>${leave_history.staffMember.name}</td>
-							<td>${leave_history.leaveTypeModel.leaveName}</td>
-							<td>${leave_history.startDate}</td>
-							<td>${leave_history.endDate}</td>
-							<td>${leave_history.disseminationMember.name}</td>
-							<td>${leave_history.status.toString()}</td>
-							<td><a
-								href="${pageContext.request.contextPath}/manager/subordinate/history//detail/${leave_history.leaveId}.html"
-								class="btn btn-primary">Detail</a></td>
+			<div class="table-responsive">
+				<table class="table table-hover ">
+					<thead>
+						<tr class="listHeading">
+							<th><spring:message code="fieldLabel.leaveId" /></th>
+							<th><spring:message code="fieldLabel.employeeId" /></th>
+							<th><spring:message code="fieldLabel.leaveType" /></th>
+							<th><spring:message code="fieldLabel.startDate" /></th>
+							<th><spring:message code="fieldLabel.endDate" /></th>
+							<th><spring:message code="fieldLabel.dissemination" /></th>
+							<th><spring:message code="fieldLabel.status" /></th>
+							<th><spring:message code="title.leaveDetails" /></th>
 						</tr>
-					</c:forEach>
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+						<c:forEach var="leave_history" items="${leaveHistoryList}">
+							<tr class="listRecord">
+								<td>${leave_history.leaveId}</td>
+								<td>${leave_history.staffMember.name}</td>
+								<td>${leave_history.leaveTypeModel.leaveName}</td>
+								<td>${leave_history.startDate}</td>
+								<td>${leave_history.endDate}</td>
+								<td>${leave_history.disseminationMember.name}</td>
+								<td>${leave_history.status.toString()}</td>
+								<td><a
+									href="${pageContext.request.contextPath}/manager/subordinate/history//detail/${leave_history.leaveId}.html"
+									class="btn btn-primary">Detail</a></td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+			</div>
 		</c:if>
 	</form:form>
 </body>

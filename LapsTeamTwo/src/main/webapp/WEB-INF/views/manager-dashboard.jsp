@@ -116,7 +116,7 @@
 			<div class='row bottom-margin-10'>
 				<div class="panel panel-primary">
 					<div class="panel-heading float-wrapper">
-						<span class="h4">${ numToShow } <spring:message
+						<span class="h4"><spring:message
 								code="caption.recentApp" /></span>
 						<!-- 					Recent requests -->
 						<span class="float-vertical-align"><a class="btn btn-info"

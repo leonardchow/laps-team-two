@@ -11,8 +11,7 @@
 
 	<c:if test="${fn:length(subordinateLeave) gt 0}">
 		<table class="table table-hover">
-			<thead>
-				<tr>
+				<tr class="listHeading">
 					<th>Staff ID</th>
 					<th>Staff Name</th>
 					<th>Contact No</th>
@@ -21,8 +20,6 @@
 					<th>Designation</th>
 					<th>View For Subordinate Leave History</th>
 				</tr>
-			</thead>
-			<tbody>
 				<c:forEach var="staff_list" items="${subordinateLeave}">
 					<tr class="listRecord">
 						<td>${staff_list.staffId}</td>
@@ -36,7 +33,6 @@
 								var="d" /> <a href="${d}" class="btn btn-primary">Details</a></td>
 					</tr>
 				</c:forEach>
-			</tbody>
 		</table>
 	</c:if>
 </body>
