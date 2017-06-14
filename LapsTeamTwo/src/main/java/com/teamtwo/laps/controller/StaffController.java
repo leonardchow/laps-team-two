@@ -49,6 +49,7 @@ import com.teamtwo.laps.javabeans.MovementBean;
 import com.teamtwo.laps.javabeans.OvertimeList;
 import com.teamtwo.laps.model.Leave;
 import com.teamtwo.laps.model.StaffMember;
+import com.teamtwo.laps.model.User;
 import com.teamtwo.laps.service.LeaveService;
 import com.teamtwo.laps.service.LeaveTypeService;
 import com.teamtwo.laps.service.OvertimeService;
@@ -106,34 +107,30 @@ public class StaffController {
 		}
 
 		int staffId = userSession.getEmployee().getStaffId();
-		String userid = userSession.getUser().getUserId();
+		User user = userSession.getUser();
 
+		if (user.getIsManager()) {
+			return new ModelAndView("redirect:/manager/dashboard");
+		}
+		
 		StaffMember staffMember = smService.findStaffById(staffId);
 		ArrayList<Leave> leaves = lService.findAllLeaveOfStaff(staffId);
-		ModelAndView modelAndView = new ModelAndView("staffDashboard");
+		ModelAndView modelAndView = new ModelAndView("staff-dashboard");
 
 		modelAndView = DashboardBean.getDashboard(modelAndView, DASHBOARD_NUM_TO_SHOW, staffMember, leaves);
 
 		// leaves.get(1).getStartDate().getDate()
-		logger.info("Rendering dashboard for user {}.", userid);
+		logger.info("Rendering dashboard for user {}.", user.getUserId());
 
 		return modelAndView;
 	}
 
 	@RequestMapping(value = "/email")
 	public String sendEmail() {
-		final String USER_NAME = "sa44lapsteamtwo"; // GMail user name (just the
-													// part before "@gmail.com")
-		final String PASSWORD = "lapsteamtwo"; // GMail password
+
 		final String RECIPIENT = "sa44lapsteamtwo@gmail.com";
 
-		String from = USER_NAME;
-		String pass = PASSWORD;
-		String[] to = { RECIPIENT }; // list of recipient email addresses
-		String subject = "Java send mail example";
-		String body = "Welcome to JavaMail!";
-
-		EmailSender.sendFromGMail(from, pass, to, subject, body);
+		EmailSender.getEmailSender().addRecipient(RECIPIENT).setMessage("hello").setSubject("Not important").send();
 
 		return "email";
 	}
@@ -403,6 +400,32 @@ public class StaffController {
 			// String message = "New leave " + leave.getLeaveId() + " was
 			// successfully created.";
 			lService.createLeave(leave);
+
+			// ----- EMAIL ------
+			// Get manager email
+			String mgrEmail = "sa44lapsteamtwo+manager@gmail.com";
+			StaffMember mgr =  smService.findStaff(us.getEmployee().getManagerId());
+			//String mgrEmail = mgr.getEmail();
+			
+			// set message
+			int highestID = 0;
+			List<Leave> leaves = lService.findAllLeaveOfStaff(staffId);
+			
+			for (Leave leaveIter : leaves) {
+				if (leaveIter.getLeaveId() > highestID) {
+					highestID = leaveIter.getLeaveId();
+				}
+			}
+			
+			String url = "http://localhost:8080/laps/manager/subordinate/history/detail/" + highestID + ".html";
+			String message = "Dear " + mgr.getName() + ",\n"
+					+ "Your subordinate, " + us.getEmployee().getName()
+							+ " has applied for leave. You can view the application here: \n"
+							+ url;
+			String subject = "Employee " + us.getEmployee().getName() + " has applied for leave.";
+			
+			EmailSender.getEmailSender().addRecipient(mgrEmail).setMessage(message).setSubject(subject).send();
+			// ----- END OF EMAIL ------
 
 			return mav;
 		}

@@ -2,8 +2,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<html>
-<body>
+
 	<h3>
 		<spring:message code="title.appsForApproval" />
 	</h3>
@@ -39,5 +38,5 @@
 			</table>
 		</c:if>
 	</c:forEach>
-</body>
-</html>
+
+

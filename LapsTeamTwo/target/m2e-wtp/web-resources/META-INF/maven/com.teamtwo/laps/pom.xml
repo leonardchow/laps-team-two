@@ -147,8 +147,7 @@
 		    <artifactId>mail</artifactId>
 		    <version>1.4</version>
 		</dependency>
-
-
+		
 		<!-- Site Mesh -->
 		<dependency>
 			<groupId>opensymphony</groupId>

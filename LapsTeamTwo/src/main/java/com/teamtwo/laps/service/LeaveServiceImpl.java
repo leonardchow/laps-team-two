@@ -87,4 +87,12 @@ public class LeaveServiceImpl implements LeaveService {
 		// TODO Auto-generated method stub
 		return leavel;
 	}
+	
+	@Override
+	@Transactional
+	public ArrayList<Leave> findAllLeaveOfSubordinate(Integer managerId) {
+		ArrayList<Leave> leavel = (ArrayList<Leave>) repository.findAllLeaveOfSubordinate(managerId);
+		// TODO Auto-generated method stub
+		return leavel;
+	}
 }

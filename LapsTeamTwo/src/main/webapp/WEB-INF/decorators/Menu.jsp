@@ -4,6 +4,10 @@
 <c:if test="${sessionScope.USERSESSION.getSessionId() ne null}">
 
 	<ul class="nav nav-pills nav-stacked">
+	
+		<li role="presentation"><spring:url value="/staff/dashboard"
+						var="ulist" htmlEscape="true" /><a href="${ulist}">Dashboard
+						</a></li>
 
 		<c:choose>
 			<c:when test="${sessionScope.USERSESSION.user.isAdmin eq true }">
