@@ -10,7 +10,7 @@
 
 	<h2>Staff Name: ${staffMember.name}</h2>
 	<c:if test="${fn:length(leaveHistoryList) gt 0}">
-		<table style="cellspacing: 2; cellpadding: 2; border: 1;">
+		<table class="table table-hover">
 			<thead>
 				<tr class="listHeading">
 					<th>Leave ID</th>

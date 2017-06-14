@@ -6,7 +6,7 @@
 <h1>View Leave Application For Approval Page 1</h1>
 
 <c:if test="${fn:length(subordinateList) gt 0}">
-	<table style="cellspacing: 2; cellpadding: 2; border: 1;">
+	<table class="table table-hover">
 		<thead>
 			<tr class="listHeading">
 				<th>Staff ID</th>

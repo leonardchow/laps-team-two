@@ -2,8 +2,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<html>
-<body>
+
 	<h3>
 		<spring:message code="Leaves for Approval" />
 	</h3>
@@ -12,7 +11,7 @@
 			<br />
 			<spring:message code="name" /> : <c:out value="${entry.key.name}" />
 			<br />
-			<table style="cellspacing: 2; cellpadding: 2; border: 1;">
+			<table class="table table-hover" >
 				<tr class="listHeading">
 					<th><spring:message code="reference" /></th>
 					<th><spring:message code="courseName" /></th>
@@ -38,5 +37,5 @@
 			</table>
 		</c:if>
 	</c:forEach>
-</body>
-</html>
+
+

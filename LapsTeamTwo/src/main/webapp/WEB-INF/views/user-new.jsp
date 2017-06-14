@@ -19,16 +19,22 @@
 				<td><form:errors path="password" cssStyle="color: red;" /></td>
 			</tr>
 			<tr>
+
 				<td>Staff ID</td>
+
 				<td><form:select path="staffId" items="${sidlist}" /></td>
+
 				<td><form:errors path="staffId" cssStyle="color: red;" /></td>
 			</tr>
 
 			<tr>
 				<td>Role</td>
-				<td><form:checkbox path="isAdmin" /> Admin <form:checkbox
-						path="isManager" /> Manager <form:checkbox path="isStaff" />
-					Staff</td>
+				<td>
+
+				<form:checkbox path="isAdmin" /> Admin 
+				<form:checkbox path="isManager" /> Manager
+				 <form:checkbox path="isStaff"  /> Staff
+
 			</tr>
 
 			<tr>
@@ -39,4 +45,5 @@
 		</tbody>
 	</table>
 </form:form>
+
 

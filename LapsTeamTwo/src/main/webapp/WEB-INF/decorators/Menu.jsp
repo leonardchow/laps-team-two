@@ -25,13 +25,16 @@
 
 		</c:when>
 		<c:when test="${sessionScope.USERSESSION.user.isManager eq true }">
-			<li role="presentation"><spring:url value="/admin/user/list"
+			<li role="presentation"><spring:url value="/manager/pending/list"
 					var="ulist" htmlEscape="true" /><a href="${ulist}">View Leave
 					Application For Approval</a></li>
 
-			<li role="presentation"><spring:url value="/admin/user/list"
+			<li role="presentation"><spring:url value="/manager/subordinate"
 					var="ulist" htmlEscape="true" /><a href="${ulist}">Subordinate
 					Leave History</a></li>
+					
+		    <li role="presentation"><spring:url value="/manager/allstaff"
+					var="ulist" htmlEscape="true" /><a href="${ulist}">Show All Staff</a></li>
 
 
 		</c:when>

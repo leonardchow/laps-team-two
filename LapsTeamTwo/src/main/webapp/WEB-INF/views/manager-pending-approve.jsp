@@ -12,7 +12,7 @@
 		<spring:message code="${leave.staffMember.name} "/>
 	</h3>
 
-	<table>
+	<table class="table table-hover">
 		<tr>
 			<th align="right"><spring:message code="Staff Name" /></th>
 			<td colspan="3"><c:out value="${leave.staffMember.name}" /></td>
