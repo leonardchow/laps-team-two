@@ -21,7 +21,9 @@
 					<span class="h4">${ numToShow } most recent requests</span>
 					<!-- 					Recent requests -->
 					<span class="float-vertical-align"><a
-						class="btn btn-info" href="#">View all requests (${ (totalLeavesNum - numToShow) > 0 ? totalLeavesNum - numToShow : 0 } more)</a></span>
+						class="btn btn-info"
+						href="${pageContext.request.contextPath}/staff/history">
+						View all your applications (${ (totalLeavesNum - numToShow) > 0 ? totalLeavesNum - numToShow : 0 } more)</a></span>
 				</div>
 				<!-- 					<div class="panel-body text-center float-wrapper"> -->
 				<!-- 					</div> -->
@@ -84,8 +86,9 @@
 									class=''>${ fmtEndDate }</span></td>
 								<td>${ leave.reason }</td>
 								<td class="<c:out value = "${statusStyle}"/>">${ leave.status.toString() }</td>
-								<td><input type='button' class='btn btn-info btn-xs'
-									value='Details...' /></td>
+								<td>
+								<a href='${pageContext.request.contextPath}/staff/history/details/${leave.leaveId}.html'
+								class="btn btn-info btn-xs">Details...</a>
 							</tr>
 						</c:forEach>
 					</tbody>

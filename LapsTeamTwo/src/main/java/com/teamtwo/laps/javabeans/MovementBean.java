@@ -39,7 +39,7 @@ public class MovementBean {
 		return modelAndView;
 	}
 
-	private static List<Leave> filterLeaveByStatusAndMonth(List<Leave> allLeave, LeaveStatus status, int month, int year) {
+	public static List<Leave> filterLeaveByStatusAndMonth(List<Leave> allLeave, LeaveStatus status, int month, int year) {
 		return allLeave.stream().filter(leave -> leave.getStatus() == status).filter(leave -> {
 			Calendar start = Calendar.getInstance();
 			start.setTime(leave.getStartDate());

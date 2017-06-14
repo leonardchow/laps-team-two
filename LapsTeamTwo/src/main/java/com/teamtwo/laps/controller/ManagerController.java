@@ -33,6 +33,7 @@ import com.teamtwo.laps.javabeans.ManagerPath;
 import com.teamtwo.laps.model.Leave;
 import com.teamtwo.laps.model.LeaveType;
 import com.teamtwo.laps.model.StaffMember;
+import com.teamtwo.laps.model.User;
 import com.teamtwo.laps.service.LeaveService;
 import com.teamtwo.laps.service.StaffMemberService;
 
@@ -61,12 +62,15 @@ public class ManagerController {
 		UserSession userSession = (UserSession) session.getAttribute("USERSESSION");
 
 		if (userSession == null || userSession.getSessionId() == null) {
-			// return new ModelAndView("redirect:/home/login");
+			return new ModelAndView("redirect:/home/login");
 		}
 
-		// int staffId = userSession.getEmployee().getStaffId();
-		// String userid = userSession.getUser().getUserId();
-		int staffId = 1;
+		 int staffId = userSession.getEmployee().getStaffId();
+		 User user = userSession.getUser();
+		 
+		 if (!user.getIsManager()) {
+			 return new ModelAndView("redirect:/staff/dashboard");
+		 }
 
 		StaffMember staffMember = smService.findStaffById(staffId);
 		ArrayList<Leave> leaves = lService.findAllLeaveOfStaff(staffId);
