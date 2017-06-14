@@ -4,19 +4,21 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
 <body>
-	<h1><spring:message code="title.selectEmployee"/></h1>
+	<h1>
+		<spring:message code="title.selectEmployee" />
+	</h1>
 
 	<c:if test="${fn:length(subordinateList) gt 0}">
 		<table style="cellspacing: 2; cellpadding: 2; border: 1;">
 			<thead>
 				<tr class="listHeading">
-					<th><spring:message code="fieldLabel.employeeId"/></th>
-					<th><spring:message code="fieldLabel.employeeName"/></th>
-					<th><spring:message code="fieldLabel.contactInfo"/></th>
-					<th><spring:message code="fieldLabel.email"/></th>
-					<th><spring:message code="fieldLabel.homeAddress"/></th>
-					<th><spring:message code="fieldLabel.designation"/></th>
-					<th><spring:message code="fieldLabel.viewEmployee"/></th>
+					<th><spring:message code="fieldLabel.employeeId" /></th>
+					<th><spring:message code="fieldLabel.employeeName" /></th>
+					<th><spring:message code="fieldLabel.contactInfo" /></th>
+					<th><spring:message code="fieldLabel.email" /></th>
+					<th><spring:message code="fieldLabel.homeAddress" /></th>
+					<th><spring:message code="fieldLabel.designation" /></th>
+					<th><spring:message code="fieldLabel.viewEmployee" /></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -29,8 +31,8 @@
 						<td>${staff_list.homeAddress}</td>
 						<td>${staff_list.designation}</td>
 						<td><a
-							href="${pageContext.request.contextPath}/manager/subordinate/history/${staff_list.staffId}.html">Detail</a>
-						</td>
+							href="${pageContext.request.contextPath}/manager/subordinate/history/${staff_list.staffId}.html"
+							class="btn btn-primary">Detail</a></td>
 					</tr>
 				</c:forEach>
 			</tbody>

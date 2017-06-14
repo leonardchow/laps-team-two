@@ -3,7 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
-<h3>Edit User page</h3>
+<h3>Edit ${user.userId}'s user information</h3>
 
 <form:form method="POST" commandName="user"
 	action="${pageContext.request.contextPath}/admin/user/edit/${user.userId}.html">
@@ -33,7 +33,7 @@
 			</tr>
 
 			<tr>
-				<td><input type="submit" value="Edit" /></td>
+				<td><input type="submit" value="Edit" class="btn btn-primary" /></td>
 				<td></td>
 				<td></td>
 			</tr>

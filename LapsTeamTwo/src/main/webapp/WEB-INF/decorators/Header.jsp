@@ -6,7 +6,7 @@
 
 	</div>
 
-	<c:if test="${not empty sessionScope.USERSESSION}">
+	<c:if test="${not empty sessionScope.USERSESSION.getSessionId()}">
 
 		<div class="row">
 			<nav class="navbar navbar-default">

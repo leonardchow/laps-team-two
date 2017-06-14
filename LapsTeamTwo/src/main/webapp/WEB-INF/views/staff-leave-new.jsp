@@ -96,7 +96,7 @@
 			<td colspan="3"><form:input size="40" path="contactDetails" /></td>
 		</tr>
 		<tr>
-			<td>Dissemination ID</td>
+			<td>Dissemination Staff</td>
 			<td colspan="3">
 				<%-- 			<form:input size="40" path="disseminationId" /> --%> <form:select
 					path="disseminationId">

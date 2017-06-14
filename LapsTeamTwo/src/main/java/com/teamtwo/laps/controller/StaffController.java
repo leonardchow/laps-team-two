@@ -56,6 +56,7 @@ import com.teamtwo.laps.service.LeaveService;
 import com.teamtwo.laps.service.LeaveTypeService;
 import com.teamtwo.laps.service.OvertimeService;
 import com.teamtwo.laps.service.StaffMemberService;
+import com.teamtwo.laps.javabeans.StaffPath;
 
 import com.teamtwo.laps.controller.UserSession;
 
@@ -106,6 +107,9 @@ public class StaffController {
 	public ModelAndView home(HttpSession session) {
 
 		UserSession userSession = (UserSession) session.getAttribute("USERSESSION");
+		
+		StaffPath sp = StaffPath.SDASHBOARD;
+		session.setAttribute("USERPATH", sp);
 
 		if (userSession == null || userSession.getSessionId() == null) {
 			return new ModelAndView("redirect:/home/login");
@@ -233,7 +237,11 @@ public class StaffController {
 		ModelAndView mav = new ModelAndView("login");
 		if (us.getSessionId() != null) {
 			mav = new ModelAndView("/staff-leave-history");
-			mav.addObject("lhistory", lService.findAllLeaveOfStaff(us.getEmployee().getStaffId()));
+			List<Leave> allLeave = lService.findStaffLeaveHistory(us.getEmployee().getStaffId());
+			Calendar cal = Calendar.getInstance();
+			int year = cal.get(Calendar.YEAR);
+			List<Leave> leaveHistoryList = MovementBean.filterLeaveByYear(allLeave, year);
+			mav.addObject("lhistory", leaveHistoryList);
 			return mav;
 		} 
 		return mav;
@@ -248,8 +256,12 @@ public class StaffController {
 	}
 	
 	@RequestMapping(value = "/history/details/{id}", method = RequestMethod.POST)
-	public ModelAndView LeaveDetailsBack(@PathVariable Integer id) {
+	public ModelAndView LeaveDetailsBack(@PathVariable Integer id, HttpSession session) {
 		ModelAndView mav = new ModelAndView("redirect:/staff/history");
+		StaffPath sp = (StaffPath) session.getAttribute("USERPATH");
+		if (sp == StaffPath.SDASHBOARD) {
+			mav = new ModelAndView("redirect:/staff/dashboard");
+		}
 		return mav;
 	}
 	

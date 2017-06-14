@@ -1,6 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+
 
 <body>
 	<h1>
@@ -29,8 +31,9 @@
 						<td>${staff_list.email}</td>
 						<td>${staff_list.homeAddress}</td>
 						<td>${staff_list.designation}</td>
-						<td><a
-							href="${pageContext.request.contextPath}/manager/subordinate/LeaveHistory/Details/${staff_list.staffId}.html">Detail</a></td>
+						<td><c:url
+								value="/manager/subordinate/LeaveHistory/Details/${staff_list.staffId}.html"
+								var="d" /> <a href="${d}" class="btn btn-primary">Details</a></td>
 					</tr>
 				</c:forEach>
 			</tbody>

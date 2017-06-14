@@ -35,19 +35,21 @@
 							<td>${user.staffId}</td>
 							<c:choose>
 								<c:when test="${user.isAdmin eq true }">
-								<td>Admin</td>
+									<td>Admin</td>
 								</c:when>
 								<c:when test="${user.isManager eq true }">
-								<td>Manager</td>
+									<td>Manager</td>
 								</c:when>
 								<c:when test="${user.isStaff eq true }">
-								<td>Staff</td>
+									<td>Staff</td>
 								</c:when>
-								</c:choose>
-									<td><a
-										href="${pageContext.request.contextPath}/admin/user/edit/${user.userId}.html" class="btn btn-success">Edit</a></td>
-									<td><a
-										href="${pageContext.request.contextPath}/admin/user/delete/${user.userId}.html" class="btn btn-danger">Delete</a></td>
+							</c:choose>
+							<td><a
+								href="${pageContext.request.contextPath}/admin/user/edit/${user.userId}.html"
+								class="btn btn-success">Edit</a></td>
+							<td><a
+								href="${pageContext.request.contextPath}/admin/user/delete/${user.userId}.html"
+								class="btn btn-danger">Delete</a></td>
 						</tr>
 					</c:forEach>
 				</tbody>
