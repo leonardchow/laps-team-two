@@ -137,7 +137,7 @@ public class ManagerController {
 	}
 
 	// leave validation and business logic
-	@RequestMapping(value = "/pending/edit/{leaveId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/pending/edit/{leaveId}", method = RequestMethod.POST, params = "submit")
 	public ModelAndView approveOrRejectCourse(@ModelAttribute("approve") Approve approve, BindingResult result,
 			@PathVariable Integer leaveId, HttpSession session, final RedirectAttributes redirectAttributes) {
 		if (result.hasErrors())
@@ -191,7 +191,7 @@ public class ManagerController {
 		return mav;
 	}
 
-	@RequestMapping(value = "/pending/cancel/{leaveId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/pending/edit/{leaveId}", method = RequestMethod.POST, params = "cancel")
 	public ModelAndView cancelApproveOrRejectCourse(@ModelAttribute("approve") Approve approve, BindingResult result,
 			@PathVariable Integer leaveId, HttpSession session, final RedirectAttributes redirectAttributes) {
 		ModelAndView mav = new ModelAndView("redirect:/manager/pending/list");
@@ -229,7 +229,10 @@ public class ManagerController {
 		StaffMember staffMember = smService.findStaff(staffId);
 		mav.addObject("staffMember", staffMember);
 
-		List<Leave> leaveHistoryList = lService.findStaffLeaveHistory(staffMember.getStaffId());
+		List<Leave> allLeave = lService.findStaffLeaveHistory(staffMember.getStaffId());
+		Calendar cal = Calendar.getInstance();
+		int year = cal.get(Calendar.YEAR);
+		List<Leave> leaveHistoryList = MovementBean.filterLeaveByMonth(allLeave, year);
 		mav.addObject("leaveHistoryList", leaveHistoryList);
 		return mav;
 	}
