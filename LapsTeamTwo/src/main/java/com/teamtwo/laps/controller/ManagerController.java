@@ -32,6 +32,7 @@ import com.teamtwo.laps.service.StaffMemberService;
 
 import com.teamtwo.laps.javabeans.Approve;
 import com.teamtwo.laps.javabeans.DashboardBean;
+import com.teamtwo.laps.javabeans.EmailSender;
 import com.teamtwo.laps.javabeans.LeaveStatus;
 import com.teamtwo.laps.javabeans.ManagerPath;
 import com.teamtwo.laps.javabeans.MovementBean;
@@ -160,6 +161,31 @@ public class ManagerController {
 			mav = new ModelAndView("redirect:/manager/pending/list");
 		}
 		lService.changeLeave(leave);
+		
+		// ----- EMAIL ------
+		UserSession us = (UserSession) session.getAttribute("USERSESSION");
+
+		if (us == null || us.getSessionId() == null) {
+			return new ModelAndView("redirect:/home/login");
+		}
+
+		// Get manager email
+		String staffEmail = "sa44lapsteamtwo+staff@gmail.com";
+		StaffMember staff =  smService.findStaff(leave.getStaffId());
+		//String mgrEmail = mgr.getEmail();
+		
+		// set message
+		// http://localhost:8080/laps/staff/history/details/1.html
+		String url = "http://localhost:8080/laps/staff/history/details/" + leaveId + ".html";
+		String emailMsg = "Dear " + staff.getName() + ",\n"
+				+ "Your manager, " + us.getEmployee().getName()
+						+ " has approved your leave. You can view the details here: \n"
+						+ url;
+		String subject = "Manager " + us.getEmployee().getName() + " has approved your leave.";
+		
+		EmailSender.getEmailSender().addRecipient(staffEmail).setMessage(emailMsg).setSubject(subject).send();
+		// ----- END OF EMAIL ------
+		
 		String message = "Course was successfully updated.";
 		redirectAttributes.addFlashAttribute("message", message);
 		return mav;

@@ -401,6 +401,7 @@ public class StaffController {
 			// successfully created.";
 			lService.createLeave(leave);
 
+			// ----- EMAIL ------
 			// Get manager email
 			String mgrEmail = "sa44lapsteamtwo+manager@gmail.com";
 			StaffMember mgr =  smService.findStaff(us.getEmployee().getManagerId());
@@ -424,7 +425,8 @@ public class StaffController {
 			String subject = "Employee " + us.getEmployee().getName() + " has applied for leave.";
 			
 			EmailSender.getEmailSender().addRecipient(mgrEmail).setMessage(message).setSubject(subject).send();
-			
+			// ----- END OF EMAIL ------
+
 			return mav;
 		}
 }
