@@ -228,7 +228,11 @@ public class StaffController {
 		ModelAndView mav = new ModelAndView("login");
 		if (us.getSessionId() != null) {
 			mav = new ModelAndView("/staff-leave-history");
-			mav.addObject("lhistory", lService.findAllLeaveOfStaff(us.getEmployee().getStaffId()));
+			List<Leave> allLeave = lService.findStaffLeaveHistory(us.getEmployee().getStaffId());
+			Calendar cal = Calendar.getInstance();
+			int year = cal.get(Calendar.YEAR);
+			List<Leave> leaveHistoryList = MovementBean.filterLeaveByYear(allLeave, year);
+			mav.addObject("lhistory", leaveHistoryList);
 			return mav;
 		} 
 		return mav;

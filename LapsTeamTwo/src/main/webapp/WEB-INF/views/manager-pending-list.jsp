@@ -14,7 +14,7 @@
 			<table class="table table-hover">
 				<tr class="listHeading">
 					<th><spring:message code="fieldLabel.leaveId" /></th>
-					<th><spring:message code="fieldLabel.reason" /></th>
+					<th><spring:message code="fieldLabel.employeeName" /></th>
 					<th><spring:message code="fieldLabel.startDate" /></th>
 					<th><spring:message code="fieldLabel.endDate" /></th>
 					<th><spring:message code="fieldLabel.dissemination" /></th>

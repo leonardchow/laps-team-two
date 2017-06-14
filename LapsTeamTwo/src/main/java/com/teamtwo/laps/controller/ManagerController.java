@@ -1,6 +1,5 @@
 package com.teamtwo.laps.controller;
 
-
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -12,7 +11,6 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
-
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,12 +69,12 @@ public class ManagerController {
 			return new ModelAndView("redirect:/home/login");
 		}
 
-		 int staffId = userSession.getEmployee().getStaffId();
-		 User user = userSession.getUser();
-		 
-		 if (!user.getIsManager()) {
-			 return new ModelAndView("redirect:/staff/dashboard");
-		 }
+		int staffId = userSession.getEmployee().getStaffId();
+		User user = userSession.getUser();
+
+		if (!user.getIsManager()) {
+			return new ModelAndView("redirect:/staff/dashboard");
+		}
 
 		StaffMember staffMember = smService.findStaffById(staffId);
 		ArrayList<Leave> leaves = lService.findAllLeaveOfStaff(staffId);
@@ -107,9 +105,9 @@ public class ManagerController {
 				hm.put(sMember, llist);
 			}
 			mav = new ModelAndView("manager-pending-list");
-			//Pagination
-		     //ObjectMapper mapper = new ObjectMapper();
-			mav.addObject("pendinghistory", hm);		     
+			// Pagination
+			// ObjectMapper mapper = new ObjectMapper();
+			mav.addObject("pendinghistory", hm);
 			return mav;
 		}
 		return modelAndView;
@@ -122,14 +120,14 @@ public class ManagerController {
 		ManagerPath mp = ManagerPath.PENDING;
 		session.setAttribute("MANAGERPATH", mp);
 		Leave leave = lService.findLeaveById(leaveId);
-		
+
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(leave.getStartDate());
 		int month = cal.get(Calendar.MONTH);
 		int year = cal.get(Calendar.YEAR);
 		ArrayList<Leave> allLeave = lService.findAllLeaveOfSubordinate(leave.getStaffMember().getManagerId());
 		List<Leave> subLeave = MovementBean.filterLeaveByStatusAndMonth(allLeave, LeaveStatus.APPROVED, month, year);
-		
+
 		modelAndView.addObject("leave", leave);
 		modelAndView.addObject("approve", new Approve());
 		modelAndView.addObject("subLeave", subLeave);
@@ -142,6 +140,33 @@ public class ManagerController {
 			@PathVariable Integer leaveId, HttpSession session, final RedirectAttributes redirectAttributes) {
 		if (result.hasErrors())
 			return new ModelAndView("manager-approve");
+		else {
+			ModelAndView mav = new ModelAndView("manager-pending-approve");
+			Leave leave = lService.findLeaveById(leaveId);
+			
+			leave.setStatus(LeaveStatus.DELETED);
+
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(leave.getStartDate());
+			int month = cal.get(Calendar.MONTH);
+			int year = cal.get(Calendar.YEAR);
+			ArrayList<Leave> allLeave = lService.findAllLeaveOfSubordinate(leave.getStaffMember().getManagerId());
+			List<Leave> subLeave = MovementBean.filterLeaveByStatusAndMonth(allLeave, LeaveStatus.APPROVED, month,
+					year);
+
+			mav.addObject("leave", leave);
+			mav.addObject("approve", new Approve());
+			mav.addObject("subLeave", subLeave);
+
+			if (approve.getDecision() == null) {
+				mav.addObject("valError", "Select either Approve or Reject");
+				return mav;
+			} else if (approve.getDecision().equalsIgnoreCase("REJECTED")
+					&& approve.getComment().equalsIgnoreCase("")) {
+				mav.addObject("valError", "Mandatory comment required if rejecting leave");
+				return mav;
+			}
+		}
 		Leave leave = lService.findLeaveById(leaveId);
 		if (approve.getDecision().equalsIgnoreCase("approved")) {
 			leave.setStatus(LeaveStatus.APPROVED);
@@ -161,7 +186,7 @@ public class ManagerController {
 			mav = new ModelAndView("redirect:/manager/pending/list");
 		}
 		lService.changeLeave(leave);
-		
+
 		// ----- EMAIL ------
 		UserSession us = (UserSession) session.getAttribute("USERSESSION");
 
@@ -171,21 +196,19 @@ public class ManagerController {
 
 		// Get manager email
 		String staffEmail = "sa44lapsteamtwo+staff@gmail.com";
-		StaffMember staff =  smService.findStaff(leave.getStaffId());
-		//String mgrEmail = mgr.getEmail();
-		
+		StaffMember staff = smService.findStaff(leave.getStaffId());
+		// String mgrEmail = mgr.getEmail();
+
 		// set message
 		// http://localhost:8080/laps/staff/history/details/1.html
 		String url = "http://localhost:8080/laps/staff/history/details/" + leaveId + ".html";
-		String emailMsg = "Dear " + staff.getName() + ",\n"
-				+ "Your manager, " + us.getEmployee().getName()
-						+ " has approved your leave. You can view the details here: \n"
-						+ url;
+		String emailMsg = "Dear " + staff.getName() + ",\n" + "Your manager, " + us.getEmployee().getName()
+				+ " has approved your leave. You can view the details here: \n" + url;
 		String subject = "Manager " + us.getEmployee().getName() + " has approved your leave.";
-		
+
 		EmailSender.getEmailSender().addRecipient(staffEmail).setMessage(emailMsg).setSubject(subject).send();
 		// ----- END OF EMAIL ------
-		
+
 		String message = "Course was successfully updated.";
 		redirectAttributes.addFlashAttribute("message", message);
 		return mav;
@@ -205,8 +228,7 @@ public class ManagerController {
 		} else if (mp == ManagerPath.DETAIL) {
 			String url = "redirect:/manager/subordinate/history/" + leave.getStaffId();
 			mav = new ModelAndView(url);
-		}
-			else {
+		} else {
 			mav = new ModelAndView("redirect:/manager/pending/list");
 		}
 		return mav;
@@ -232,7 +254,7 @@ public class ManagerController {
 		List<Leave> allLeave = lService.findStaffLeaveHistory(staffMember.getStaffId());
 		Calendar cal = Calendar.getInstance();
 		int year = cal.get(Calendar.YEAR);
-		List<Leave> leaveHistoryList = MovementBean.filterLeaveByMonth(allLeave, year);
+		List<Leave> leaveHistoryList = MovementBean.filterLeaveByYear(allLeave, year);
 		mav.addObject("leaveHistoryList", leaveHistoryList);
 		return mav;
 	}
@@ -241,8 +263,8 @@ public class ManagerController {
 	public ModelAndView viewSubordinateLeaveHistory(@PathVariable int leaveId, HttpSession session) {
 		ModelAndView modelAndView = new ModelAndView("manager-pending-approve");
 		Leave leave = lService.findLeaveById(leaveId);
-		if ((leave.getStatus() == LeaveStatus.APPROVED) || (leave.getStatus() == LeaveStatus.CANCELLED) || 
-				(leave.getStatus() == LeaveStatus.REJECTED)){
+		if ((leave.getStatus() == LeaveStatus.APPROVED) || (leave.getStatus() == LeaveStatus.CANCELLED)
+				|| (leave.getStatus() == LeaveStatus.REJECTED)) {
 			String url = "redirect:/manager/view/detail/" + leave.getLeaveId();
 			modelAndView = new ModelAndView(url);
 			return modelAndView;
@@ -253,7 +275,7 @@ public class ManagerController {
 		modelAndView.addObject("approve", new Approve());
 		return modelAndView;
 	}
-	
+
 	@RequestMapping(value = "/view/detail/{leaveId}", method = RequestMethod.GET)
 	public ModelAndView viewSubordinateLeaveDetail(@PathVariable int leaveId, HttpSession session) {
 		ModelAndView modelAndView = new ModelAndView("manager-view-details");

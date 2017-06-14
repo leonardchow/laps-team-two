@@ -55,7 +55,7 @@ public class MovementBean {
 		}).collect(Collectors.toList());
 	}
 	
-	public static List<Leave> filterLeaveByMonth(List<Leave> allLeave, int year) {
+	public static List<Leave> filterLeaveByYear(List<Leave> allLeave, int year) {
 		return allLeave.stream().filter(leave -> {
 			Calendar start = Calendar.getInstance();
 			start.setTime(leave.getStartDate());

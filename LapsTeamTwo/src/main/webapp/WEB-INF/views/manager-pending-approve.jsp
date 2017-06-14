@@ -68,7 +68,6 @@
 					<th><spring:message code="fieldLabel.endDate" /></th>
 					<th><spring:message code="fieldLabel.dissemination" /></th>
 					<th><spring:message code="fieldLabel.status" /></th>
-					<th><spring:message code="title.leaveDetails" /></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -88,6 +87,7 @@
 	</c:if>
 	<form:form method="POST" modelAttribute="approve"
 		action="${pageContext.request.contextPath}/manager/pending/edit/${leave.leaveId}.html">
+		<p style="color: red; font-size: 2em;">${ valError }</p>
 		<table class="table table-hover">
 			<tr>
 				<td><form:radiobutton path="decision" value="APPROVED"

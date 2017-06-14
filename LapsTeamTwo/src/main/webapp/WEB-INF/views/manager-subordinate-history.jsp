@@ -4,7 +4,9 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
 <body>
-	<h1><spring:message code="title.leaveDetailsHistory" /></h1>
+	<h1>
+		<spring:message code="title.leaveDetailsHistory" />
+	</h1>
 
 	<form:form method="POST" modelAttribute="staffMember"
 		action="${pageContext.request.contextPath}/manager/subordinate/LeaveHistory/Details/${staffMember.staffId}.html">
@@ -14,14 +16,14 @@
 			<table style="cellspacing: 2; cellpadding: 2; border: 1;">
 				<thead>
 					<tr class="listHeading">
-						<th><spring:message code="fieldLabel.leaveId"/></th>
-						<th><spring:message code="fieldLabel.employeeId"/></th>
-						<th><spring:message code="fieldLabel.leaveType"/></th>
-						<th><spring:message code="fieldLabel.startDate"/></th>
-						<th><spring:message code="fieldLabel.endDate"/></th>
-						<th><spring:message code="fieldLabel.dissemination"/></th>
-						<th><spring:message code="fieldLabel.status"/></th>
-						<th><spring:message code="title.leaveDetails"/></th>
+						<th><spring:message code="fieldLabel.leaveId" /></th>
+						<th><spring:message code="fieldLabel.employeeId" /></th>
+						<th><spring:message code="fieldLabel.leaveType" /></th>
+						<th><spring:message code="fieldLabel.startDate" /></th>
+						<th><spring:message code="fieldLabel.endDate" /></th>
+						<th><spring:message code="fieldLabel.dissemination" /></th>
+						<th><spring:message code="fieldLabel.status" /></th>
+						<th><spring:message code="title.leaveDetails" /></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -35,8 +37,8 @@
 							<td>${leave_history.disseminationMember.name}</td>
 							<td>${leave_history.status.toString()}</td>
 							<td><a
-								href="${pageContext.request.contextPath}/manager/subordinate/history//detail/${leave_history.leaveId}.html">Detail</a>
-							</td>
+								href="${pageContext.request.contextPath}/manager/subordinate/history//detail/${leave_history.leaveId}.html"
+								class="btn btn-primary">Detail</a></td>
 						</tr>
 					</c:forEach>
 				</tbody>
