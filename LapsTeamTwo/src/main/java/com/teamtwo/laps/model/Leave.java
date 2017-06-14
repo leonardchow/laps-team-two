@@ -10,6 +10,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.teamtwo.laps.javabeans.LeaveStatus;
 
@@ -25,10 +29,18 @@ public class Leave {
 	@Column(name = "leavetype")
 	private Integer leaveType;
 	private String reason;
+	
+	
+	@Temporal(TemporalType.DATE)
 	@Column(name = "startdate")
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date startDate;
+
+	@Temporal(TemporalType.DATE)
 	@Column(name = "enddate")
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date endDate;
+	
 	private String dissemination;
 	@Column(name = "disseminationid")
 	private Integer disseminationId;
@@ -68,10 +80,10 @@ public class Leave {
 		this.leaveId = leaveId;
 	}
 	public Integer getStaffId() {
-		return staffMember.getStaffId();
+		return staffId;
 	}
 	public void setStaffId(Integer staffId) {
-		this.staffMember.setStaffId(staffId);
+		this.staffId=staffId;
 	}
 	public Integer getLeaveType() {
 		return leaveType;

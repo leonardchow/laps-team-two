@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import com.teamtwo.laps.javabeans.LeaveStatus;
 import com.teamtwo.laps.model.Leave;
+import com.teamtwo.laps.model.LeaveType;
 
 public interface LeaveService {
 
@@ -18,4 +20,8 @@ public interface LeaveService {
 	
 	//Yin
 	ArrayList<Leave> findPendingLeaves(Integer sid );
+	
+	//Huitian
+    void DeleteLeave(Leave lt, LeaveStatus ls);
+	void cancelLeave(Leave lt, LeaveStatus ls);
 }

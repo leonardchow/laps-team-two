@@ -7,7 +7,9 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.teamtwo.laps.javabeans.LeaveStatus;
 import com.teamtwo.laps.model.Leave;
+import com.teamtwo.laps.model.LeaveType;
 import com.teamtwo.laps.repository.LeaveRepository;
 
 @Service
@@ -55,4 +57,15 @@ public class LeaveServiceImpl implements LeaveService {
 		ArrayList<Leave> leavel = (ArrayList<Leave>) repository.getLeaveHistoryBySID(sid);
 		return leavel;
 	}
-}
+	
+	//Huitian
+	public void cancelLeave(Leave lt, LeaveStatus ls) {
+		// TODO Auto-generated method stub
+		lt.setStatus(ls);
+		repository.saveAndFlush(lt);}
+	
+	public void DeleteLeave(Leave lt, LeaveStatus ls) {
+		// TODO Auto-generated method stub
+		lt.setStatus(ls);
+		repository.saveAndFlush(lt);
+}}
