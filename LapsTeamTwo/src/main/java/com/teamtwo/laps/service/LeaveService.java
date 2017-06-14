@@ -26,6 +26,8 @@ public interface LeaveService {
 
 	ArrayList<Leave> findPendingLeaveByType(Integer staffId);
 	
+	ArrayList<Leave> findAllLeaveOfSubordinate(Integer managerId);
+	
 	//Huitian
     void DeleteLeave(Leave lt, LeaveStatus ls);
     

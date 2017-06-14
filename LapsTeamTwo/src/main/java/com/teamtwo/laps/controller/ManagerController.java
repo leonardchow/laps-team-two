@@ -2,6 +2,7 @@ package com.teamtwo.laps.controller;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +31,7 @@ import com.teamtwo.laps.javabeans.Approve;
 import com.teamtwo.laps.javabeans.DashboardBean;
 import com.teamtwo.laps.javabeans.LeaveStatus;
 import com.teamtwo.laps.javabeans.ManagerPath;
+import com.teamtwo.laps.javabeans.MovementBean;
 import com.teamtwo.laps.model.Leave;
 import com.teamtwo.laps.model.LeaveType;
 import com.teamtwo.laps.model.StaffMember;
@@ -107,13 +109,20 @@ public class ManagerController {
 	@RequestMapping(value = "/pending/detail/{leaveId}")
 	public ModelAndView approveApplicationPage(@PathVariable Integer leaveId, HttpSession session) {
 		ModelAndView modelAndView = new ModelAndView("manager-pending-approve");
-
 		ManagerPath mp = ManagerPath.PENDING;
 		session.setAttribute("MANAGERPATH", mp);
-
 		Leave leave = lService.findLeaveById(leaveId);
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(leave.getStartDate());
+		int month = cal.get(Calendar.MONTH);
+		int year = cal.get(Calendar.YEAR);
+		ArrayList<Leave> allLeave = lService.findAllLeaveOfSubordinate(leave.getStaffMember().getManagerId());
+		List<Leave> subLeave = MovementBean.filterLeaveByStatusAndMonth(allLeave, LeaveStatus.APPROVED, month, year);
+		
 		modelAndView.addObject("leave", leave);
 		modelAndView.addObject("approve", new Approve());
+		modelAndView.addObject("subLeave", subLeave);
 		return modelAndView;
 	}
 

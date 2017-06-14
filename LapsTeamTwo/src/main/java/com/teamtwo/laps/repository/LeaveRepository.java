@@ -22,6 +22,9 @@ public interface LeaveRepository extends JpaRepository<Leave, Integer> {
 	@Query("SELECT l from Leave l WHERE l.staffId = :staffId")
 	ArrayList<Leave> findAllLeaveOfStaff(@Param("staffId") Integer staffId);
 	
+	@Query("SELECT l from Leave l WHERE l.staffMember.managerId = :managerId")
+	ArrayList<Leave> findAllLeaveOfSubordinate(@Param("managerId") Integer managerId);
+
 	//Yin
 	@Query("SELECT l from Leave l WHERE l.staffId = :sid")
 	ArrayList<Leave> getLeaveHistoryBySID(@Param("sid") Integer sid);
