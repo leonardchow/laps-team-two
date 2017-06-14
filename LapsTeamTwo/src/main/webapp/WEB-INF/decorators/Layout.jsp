@@ -50,9 +50,9 @@ h1 {
 <body>
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col-md-3"><%@ include file="Menu.jsp"%></div>
+			<div class="col-md-2"><%@ include file="Menu.jsp"%></div>
 	
-			<div class="col-md-6">
+			<div class="col-md-8">
 				<spring:message code="${bodyTitle}" />
 
 				<dec:body />

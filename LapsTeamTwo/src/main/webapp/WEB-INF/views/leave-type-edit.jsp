@@ -9,7 +9,7 @@
 		<tbody>
 			<tr>
 				<td>Leave Type</td>
-				<td><form:input path="leaveType" /></td>
+				<td><form:input path="leaveType" readonly="true"  /></td>
 				<td><form:errors path="leaveType" cssStyle="color: red;" /></td>
 			</tr>
 			<tr>

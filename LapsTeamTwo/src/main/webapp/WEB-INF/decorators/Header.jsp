@@ -15,30 +15,32 @@
 
 						<c:choose>
 							<c:when test="${sessionScope.USERSESSION.user.isAdmin eq true }">
-								<a class="navbar-brand" href="#"> Admin Panel
-
-								</a>
+								<spring:url value="/staff/dashboard" var="ulist"
+									htmlEscape="true" />
+								<a href="${ulist}" class="navbar-brand"> Admin Panel </a>
 							</c:when>
 
 							<c:when
 								test="${sessionScope.USERSESSION.user.isManager eq true }">
-								<a class="navbar-brand" href="#"> Manager Panel
-
-								</a>
+								<spring:url value="/manager/dashboard" var="ulist"
+									htmlEscape="true" />
+								<a href="${ulist}" class="navbar-brand" > Manager Panel </a>
 							</c:when>
 
 							<c:when test="${sessionScope.USERSESSION.user.isStaff eq true }">
-							<a class="navbar-brand" href="#"> Staff Panel
-
-								</a>
+								<spring:url value="/staff/dashboard" var="ulist"
+									htmlEscape="true" />
+								<a href="${ulist}" class="navbar-brand" > Staff Panel </a>
 							</c:when>
 						</c:choose>
-						
-						
-						
+
+
+
 					</div>
-						<p class="navbar-text navbar-right">Signed in as <c:out
-										value="${sessionScope.USERSESSION.user.userId}" /></p>
+					<p class="navbar-text navbar-right">
+						Signed in as
+						<c:out value="${sessionScope.USERSESSION.user.userId}" />
+					</p>
 				</div>
 			</nav>
 		</div>
