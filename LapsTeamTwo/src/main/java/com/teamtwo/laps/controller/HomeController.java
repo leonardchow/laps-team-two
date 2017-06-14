@@ -11,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.teamtwo.laps.model.User;
+
 /**
  * Handles requests for the application home page.
  */
@@ -33,7 +35,14 @@ public class HomeController {
 		
 		model.addAttribute("serverTime", formattedDate );
 		
-		return "home";
+		model.addAttribute("user", new User());
+		return "login";
 	}
+	
+	/*@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String logic(Model model) {
+		model.addAttribute("user", new User());
+		return "login";
+	}*/
 	
 }

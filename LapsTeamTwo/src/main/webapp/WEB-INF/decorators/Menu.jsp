@@ -1,7 +1,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<c:if test="${sessionScope.USERSESSION.sessionId ne null}">
+<c:if test="${sessionScope.USERSESSION.getSessionId() ne null}">
 
 	<ul class="nav nav-pills nav-stacked">
 
@@ -22,9 +22,9 @@
 				<li role="presentation"><spring:url value="/admin/holiday/list"
 						var="ulist" htmlEscape="true" /><a href="${ulist}">Manage
 						Public Holiday</a></li>
-				<li role="presentation"><spring:url value="/staff/leave/create"
-						var="ulist" htmlEscape="true" /><a href="${ulist}">Apply
-						Leave</a></li>
+				<li role="presentation"><spring:url value="/staff/history"
+						var="ulist" htmlEscape="true" /><a href="${ulist}">View Leave
+						History</a></li>
 
 
 			</c:when>

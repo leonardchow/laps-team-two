@@ -1,11 +1,9 @@
 package com.teamtwo.laps.controller;
 
-
 import java.util.ArrayList;
 
-
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,8 +17,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.teamtwo.laps.service.LeaveTypeService;
-
-
 
 import com.teamtwo.laps.model.LeaveType;;
 
@@ -39,8 +35,20 @@ public class AdminLeaveTypeController {
 	 */
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
-	public ModelAndView newLeavePage() {
-		ModelAndView mav = new ModelAndView("leave-type-new", "leavetype", new LeaveType());
+	public ModelAndView newLeavePage(HttpSession session) {
+		ModelAndView mav = new ModelAndView("login");
+		try {
+			UserSession us = (UserSession) session.getAttribute("USERSESSION");
+			if (us.getSessionId() != null && us.getUser().getIsAdmin()) {
+				mav = new ModelAndView("leave-type-new", "leavetype", new LeaveType());
+			} else {
+				mav = new ModelAndView("unauthorized-admin-access");
+			}
+
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+			mav = new ModelAndView("unauthorized-access");
+		}
 		return mav;
 	}
 
@@ -62,21 +70,49 @@ public class AdminLeaveTypeController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public ModelAndView leaveTypeListPage() {
-		ModelAndView mav = new ModelAndView("leave-type-list");
-		ArrayList<LeaveType> leaveTypeList = ltService.findAllLeaveType();
-		mav.addObject("leaveTypeList", leaveTypeList);
+	public ModelAndView leaveTypeListPage(HttpSession session) {
+
+		ModelAndView mav = new ModelAndView("login");
+		try {
+			UserSession us = (UserSession) session.getAttribute("USERSESSION");
+			if (us.getSessionId() != null && us.getUser().getIsAdmin()) {
+
+				mav = new ModelAndView("leave-type-list");
+				ArrayList<LeaveType> leaveTypeList = ltService.findAllLeaveType();
+				mav.addObject("leaveTypeList", leaveTypeList);
+			} else {
+				mav = new ModelAndView("unauthorized-admin-access");
+			}
+
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+			mav = new ModelAndView("unauthorized-access");
+		}
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-	public ModelAndView editLeaveTypePage(@PathVariable Integer id) {
-		ModelAndView mav = new ModelAndView("leave-type-edit");
-		LeaveType leaveType = ltService.findLeaveTypeById(id);
-		mav.addObject("leaveType", leaveType);
+	public ModelAndView editLeaveTypePage(@PathVariable Integer id, HttpSession session) {
+
+		ModelAndView mav = new ModelAndView("login");
+		try {
+			UserSession us = (UserSession) session.getAttribute("USERSESSION");
+			if (us.getSessionId() != null && us.getUser().getIsAdmin()) {
+
+				mav = new ModelAndView("leave-type-edit");
+				LeaveType leaveType = ltService.findLeaveTypeById(id);
+				mav.addObject("leaveType", leaveType);
+			} else {
+				mav = new ModelAndView("unauthorized-admin-access");
+			}
+
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+			mav = new ModelAndView("unauthorized-access");
+		}
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.POST)
 	public ModelAndView editRole(@ModelAttribute @Valid LeaveType leave, BindingResult result, @PathVariable Integer id,
 			final RedirectAttributes redirectAttributes) {
@@ -92,17 +128,30 @@ public class AdminLeaveTypeController {
 		redirectAttributes.addFlashAttribute("message", message);
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
-	public ModelAndView deleteRole(@PathVariable Integer id, final RedirectAttributes redirectAttributes)
-			 {
+	public ModelAndView deleteRole(@PathVariable Integer id, final RedirectAttributes redirectAttributes,
+			HttpSession session) {
 
-		ModelAndView mav = new ModelAndView("redirect:/admin/leavetype/list");
-		LeaveType leave = ltService.findLeaveTypeById(id);
-		ltService.removeLeaveType(leave);
-		String message = "The role " + leave.getLeaveType() + " was successfully deleted.";
+		ModelAndView mav = new ModelAndView("login");
+		try {
+			UserSession us = (UserSession) session.getAttribute("USERSESSION");
+			if (us.getSessionId() != null && us.getUser().getIsAdmin()) {
 
-		redirectAttributes.addFlashAttribute("message", message);
+				mav = new ModelAndView("redirect:/admin/leavetype/list");
+				LeaveType leave = ltService.findLeaveTypeById(id);
+				ltService.removeLeaveType(leave);
+				String message = "The role " + leave.getLeaveType() + " was successfully deleted.";
+
+				redirectAttributes.addFlashAttribute("message", message);
+			} else {
+				mav = new ModelAndView("unauthorized-admin-access");
+			}
+
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+			mav = new ModelAndView("unauthorized-access");
+		}
 		return mav;
 	}
 
