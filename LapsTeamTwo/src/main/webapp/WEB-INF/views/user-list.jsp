@@ -45,9 +45,9 @@
 								</c:when>
 								</c:choose>
 									<td><a
-										href="${pageContext.request.contextPath}/admin/user/edit/${user.userId}.html">Edit</a></td>
+										href="${pageContext.request.contextPath}/admin/user/edit/${user.userId}.html" class="btn btn-success">Edit</a></td>
 									<td><a
-										href="${pageContext.request.contextPath}/admin/user/delete/${user.userId}.html">Delete</a></td>
+										href="${pageContext.request.contextPath}/admin/user/delete/${user.userId}.html" class="btn btn-danger">Delete</a></td>
 						</tr>
 					</c:forEach>
 				</tbody>

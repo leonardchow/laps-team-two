@@ -11,7 +11,7 @@
 		<tbody>
 			<tr>
 				<td>User ID</td>
-				<td><form:input path="userId" /></td>
+				<td><form:input path="userId"  readonly="true" /></td>
 				<td><form:errors path="userId" cssStyle="color: red;" /></td>
 			</tr>
 			<tr>
