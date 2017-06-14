@@ -43,7 +43,7 @@
 
 
 			</c:when>
-			<c:when test="${sessionScope.USERSESSION.user.isStaff eq true }">
+			<c:when test="${sessionScope.USERSESSION.user.isManager eq true or sessionScope.USERSESSION.user.isStaff eq true }">
 				<li role="presentation"><spring:url value="/staff/leave/create"
 						var="ulist" htmlEscape="true" /><a href="${ulist}">Apply
 						Leave</a></li>

@@ -9,15 +9,16 @@ import java.util.Calendar;
 import java.util.List;
 
 import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 
 import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.PageContext;
 import javax.validation.Valid;
-
-
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -36,10 +37,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.teamtwo.laps.javabeans.LeaveStatus;
+import com.teamtwo.laps.model.Holiday;
 import com.teamtwo.laps.model.Leave;
 import com.teamtwo.laps.model.LeaveType;
 import com.teamtwo.laps.model.Overtime;
@@ -126,7 +129,9 @@ public class StaffController {
 		ArrayList<Leave> leaves = lService.findAllLeaveOfStaff(staffId);
 		ModelAndView modelAndView = new ModelAndView("staff-dashboard");
 
-		modelAndView = DashboardBean.getDashboard(modelAndView, DASHBOARD_NUM_TO_SHOW, staffMember, leaves, hService);
+		List<Holiday> holidays = hService.findAllHoliday();
+		
+		modelAndView = DashboardBean.getDashboard(modelAndView, DASHBOARD_NUM_TO_SHOW, staffMember, leaves, holidays, otService);
 
 		// leaves.get(1).getStartDate().getDate()
 		logger.info("Rendering dashboard for user {}.", user.getUserId());
@@ -135,13 +140,16 @@ public class StaffController {
 	}
 
 	@RequestMapping(value = "/email")
-	public String sendEmail() {
+	public ModelAndView sendEmail(HttpServletRequest request) {
 
 		final String RECIPIENT = "sa44lapsteamtwo@gmail.com";
 
-		EmailSender.getEmailSender().addRecipient(RECIPIENT).setMessage("hello").setSubject("Not important").send();
+//		EmailSender.getEmailSender().addRecipient(RECIPIENT).setMessage("hello").setSubject("Not important").send();
 
-		return "email";
+		ModelAndView mav = new ModelAndView("email");
+		String basePath = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+		mav.addObject("url2", basePath);
+		return mav;
 	}
 
 	@RequestMapping(value = "/movement", method = RequestMethod.GET)
@@ -215,7 +223,7 @@ public class StaffController {
 		mav.addObject("leaveTypes", leaveTypes);
 		mav.addObject("staffMembers", staffMembers);
 		
-		int unclaimedHours = otService.findUnclaimedOvertimeOfStaff(loggedInStaffId);
+		int unclaimedHours = otService.findUnclaimedHoursOfStaff(loggedInStaffId);
 		mav.addObject("compHours", unclaimedHours);
 		mav.addObject("compDays", unclaimedHours * 1.0 / 8);
 		
@@ -232,18 +240,69 @@ public class StaffController {
     //Huitian
 	
 	@RequestMapping(value = "/history")
-	public ModelAndView staffLeaveHistory(HttpSession session) {
+	public ModelAndView staffLeaveHistory(HttpSession session, HttpServletRequest request,
+			@RequestParam(value = "perPage", required = false) Optional<Integer> prevPerPage,
+			@RequestParam(value = "page", required = false) Optional<Integer> prevCurrentPage) {
+		
+		final int DEFAULT_CURRENT_PAGE = 1;
+		final int DEFAULT_PER_PAGE = 5;
+		final int[] PER_PAGE_LIST = {5, 10, 15};
+		
+		
 		UserSession us = (UserSession) session.getAttribute("USERSESSION");
 		ModelAndView mav = new ModelAndView("login");
-		if (us.getSessionId() != null) {
-			mav = new ModelAndView("/staff-leave-history");
-			List<Leave> allLeave = lService.findStaffLeaveHistory(us.getEmployee().getStaffId());
-			Calendar cal = Calendar.getInstance();
-			int year = cal.get(Calendar.YEAR);
-			List<Leave> leaveHistoryList = MovementBean.filterLeaveByYear(allLeave, year);
-			mav.addObject("lhistory", leaveHistoryList);
-			return mav;
-		} 
+		if (us == null || us.getSessionId() == null) {
+			return new ModelAndView("redirect:/home/login");
+		}
+		mav = new ModelAndView("/staff-leave-history");
+		List<Leave> allLeave = lService.findStaffLeaveHistory(us.getEmployee().getStaffId());
+		Calendar cal = Calendar.getInstance();
+		int year = cal.get(Calendar.YEAR);
+		List<Leave> leaveHistoryList = MovementBean.filterLeaveByYear(allLeave, year);
+//			mav.addObject("lhistory", leaveHistoryList);
+		
+		/* Pagination */
+//			// Get paging settings from request, or set to defaults
+//			String prevPerPage = request.getParameter("perPage");
+//			System.out.println("prevPerPage:"+prevPerPage);
+//			//String prevCurrentPage = request.getParameter("currentPage");
+		
+//			String prevCurrentPage = null;
+//			if (request.getParameter("page") != null) {
+//				prevCurrentPage = request.getParameter("page");
+//			}
+		
+//			int currentPage = prevCurrentPage != null ? Integer.parseInt(prevCurrentPage) : 1;
+//			int perPage = prevPerPage != null ? Integer.parseInt(prevPerPage) : 2;
+		int currentPage = prevCurrentPage.isPresent() ? prevCurrentPage.get() : DEFAULT_CURRENT_PAGE;
+		int perPage = prevPerPage.isPresent() ? prevPerPage.get() : DEFAULT_PER_PAGE;
+		int totalPages = (int) Math.ceil(1.0 * leaveHistoryList.size() / perPage);
+		
+		if (currentPage > totalPages) currentPage = totalPages;
+		
+		// Set staffList on grid to only a selection, based on paging criteria
+		int startIndex = leaveHistoryList.size() <= ((currentPage - 1) * perPage) ? 0 : ((currentPage - 1) * perPage);
+		int endIndex = leaveHistoryList.size() > startIndex + perPage ? startIndex + perPage : leaveHistoryList.size();
+		System.out.println("perPage:"+perPage);
+		System.out.println("currentPage:"+currentPage);
+		List<Leave> leaveHistoryListOnPage = leaveHistoryList.subList(startIndex, endIndex);
+		
+		
+		mav.addObject("currentPage", currentPage);
+		mav.addObject("perPage", perPage);
+		mav.addObject("totalPages", totalPages);
+		mav.addObject("lhistory", leaveHistoryListOnPage);
+		
+		Boolean prevBtnEnabled = (currentPage == 1 || totalPages == 1) ? false : true;
+		Boolean nextBtnEnabled = currentPage >= totalPages ? false : true;
+		mav.addObject("prevBtnEnabled", prevBtnEnabled);
+		mav.addObject("nextBtnEnabled", nextBtnEnabled);
+		
+		mav.addObject("perPageList", PER_PAGE_LIST);
+		
+		/* End Pagination */
+
+		
 		return mav;
 	}
 	
@@ -270,6 +329,22 @@ public class StaffController {
 		UserSession us = (UserSession) session.getAttribute("USERSESSION");
 		int loggedInStaffId = us.getUser().getStaffId();
 		
+		ModelAndView mav = new ModelAndView("staff-leave-new");
+		ArrayList<LeaveType> leaveTypes = lTypeService.findAllLeaveType();
+		ArrayList<StaffMember> staffMembers = (ArrayList<StaffMember>) smService.findAllStaff().stream()
+				.filter(staff -> staff.getStaffId() != loggedInStaffId).collect(Collectors.toList());
+		Leave leave = lService.findLeaveById(id);
+		mav.addObject("leave", leave);
+		mav.addObject("leaveTypes", leaveTypes);
+		mav.addObject("staffMembers", staffMembers);
+		
+		int unclaimedHours = otService.findUnclaimedHoursOfStaff(loggedInStaffId);
+		mav.addObject("compHours", unclaimedHours);
+		mav.addObject("compDays", unclaimedHours * 1.0 / 8);
+		
+		mav.addObject("isEdit", true);
+		return mav;
+		/*
 		ModelAndView mav = new ModelAndView("staff-leave-history-update");
 		//ArrayList<LeaveType> leavetypes = lTypeService.findAllLeaveType();
 		ArrayList<StaffMember> staffMembers= (ArrayList<StaffMember>)smService.findAllStaff().stream()
@@ -282,6 +357,7 @@ public class StaffController {
 		mav.addObject("staffMembers", staffMembers);
 		//mav.addObject("startDate", startDate);
 		return mav;
+		*/
 	}
 	
 	
@@ -343,32 +419,32 @@ public class StaffController {
 		}
 		int staffId = us.getUser().getStaffId();
 
-		Boolean compNotOkay = false;
+//		Boolean compNotOkay = false;
 		String compErrorMessage = "";
-		if (leave.getLeaveType() == 3) {
+		if (leave.getLeaveType() == 3 && leave.getStartDate() != null && leave.getEndDate() != null) {
 			// If it's compensation do validation
-			int unclaimedHours = otService.findUnclaimedOvertimeOfStaff(staffId);
-			double eligibleDays = unclaimedHours * 1.0 / 8;
+//			int unclaimedHours = otService.findUnclaimedHoursOfStaff(staffId);
+//			double eligibleDays = unclaimedHours * 1.0 / 8;
 			Calendar start = Calendar.getInstance();
 			Calendar end = Calendar.getInstance();
 			start.setTime(leave.getStartDate());
 			end.setTime(leave.getEndDate());
 			
-			int startDate = start.get(Calendar.MONTH) * start.getActualMaximum(Calendar.DAY_OF_MONTH) + start.get(Calendar.DATE);
-			int endDate = end.get(Calendar.MONTH) * end.getActualMaximum(Calendar.DAY_OF_MONTH) + end.get(Calendar.DATE);
+//			int startDate = start.get(Calendar.MONTH) * start.getActualMaximum(Calendar.DAY_OF_MONTH) + start.get(Calendar.DATE);
+//			int endDate = end.get(Calendar.MONTH) * end.getActualMaximum(Calendar.DAY_OF_MONTH) + end.get(Calendar.DATE);
 			
 			String startHalfDay = request.getParameter("startDateHalfDay");
 			String endHalfDay = request.getParameter("endDateHalfDay");
 
-			double claimingDays = endDate - startDate;
+//			double claimingDays = endDate - startDate;
 			
 			if (startHalfDay != null) {
 				System.out.println("startHalfDay: " + startHalfDay);
 				Calendar startDateNew = Calendar.getInstance();
 				startDateNew.setTime(leave.getStartDate());
 				startDateNew.set(Calendar.HOUR_OF_DAY, 12);
-				leave.setStartDate(startDateNew.getTime());
-				claimingDays -= 0.5;
+//				leave.setStartDate(startDateNew.getTime());
+//				claimingDays -= 0.5;
 			}
 			
 			if (endHalfDay != null) {
@@ -376,33 +452,36 @@ public class StaffController {
 				Calendar endDateNew = Calendar.getInstance();
 				endDateNew.setTime(leave.getEndDate());
 				endDateNew.set(Calendar.HOUR_OF_DAY, 12);
-				leave.setEndDate(endDateNew.getTime());
-				claimingDays += 0.5;
+//				leave.setEndDate(endDateNew.getTime());
+				leave.setIsHalfDay(1);
+//				claimingDays += 0.5;
 			}
 			
-			System.out.println(claimingDays);
+//			System.out.println(claimingDays);
 			
-			if (claimingDays > eligibleDays) {
-				compNotOkay = true;
-				compErrorMessage = "You cannot claim more days than you are eligible for.";
-			}
+//			if (claimingDays > eligibleDays) {
+//				compNotOkay = true;
+//				compErrorMessage = String.format("Can't claim more than you have. Trying to claim: %.1f, unclaimed: %.1f).", claimingDays, eligibleDays); 
+//			}
 		}
 		
 		Boolean notEnoughLeaveDays = false;
 		String leaveDaysErrorMessage = "";
+		Double leaveDays = 0.0;
 		// Validate according to leave type
 		StaffMember staffMember = us.getEmployee();
 		
 		if (leave.getStartDate() != null && leave.getEndDate() != null) {
-			Double leaveDays = LeavePeriodCalculator.calculateLeaveDays(leave, hService);
-			Double availableLeave = staffMember.getAvailableLeaveDaysOfType(leave.getLeaveType(), hService);
+			List<Holiday> holidays = hService.findAllHoliday();
+			leaveDays = LeavePeriodCalculator.calculateLeaveDays(leave, holidays);
+			Double availableLeave = staffMember.getAvailableLeaveDaysOfType(leave.getLeaveType(), holidays, otService);
 			if (leaveDays > availableLeave) {
-				leaveDaysErrorMessage = String.format("You do not have enough leave days left (%.1f vs %.1f).", leaveDays, availableLeave); 
+				leaveDaysErrorMessage = String.format("Not enough leave days. Trying to claim: %.1f, eligible: %.1f).", leaveDays, availableLeave); 
 				notEnoughLeaveDays = true;
 			}
 		}
 		
-		if (result.hasErrors() || compNotOkay || notEnoughLeaveDays) {
+		if (result.hasErrors() || notEnoughLeaveDays) {
 			ModelAndView mavError = new ModelAndView("staff-leave-new");
 			ArrayList<LeaveType> leaveTypes = lTypeService.findAllLeaveType();
 			ArrayList<StaffMember> staffMembers = (ArrayList<StaffMember>) smService.findAllStaff().stream()
@@ -411,53 +490,72 @@ public class StaffController {
 			mavError.addObject("leaveTypes", leaveTypes);
 			mavError.addObject("staffMembers", staffMembers);
 			
-			int unclaimedHours = otService.findUnclaimedOvertimeOfStaff(staffId);
+			int unclaimedHours = otService.findUnclaimedHoursOfStaff(staffId);
 			mavError.addObject("compHours", unclaimedHours);
 			mavError.addObject("compDays", unclaimedHours * 1.0 / 8);
 
-			mavError.addObject("compError", compErrorMessage);
 			mavError.addObject("leaveDaysError", leaveDaysErrorMessage);
+			mavError.addObject("compError", compErrorMessage);
+			
+			if (request.getParameter("edit").equals("true")) {
+				mavError.addObject("isEdit", true);
+			}
 			
 			return mavError;
 		}
-			
+		
+		Integer claimHours = Double.valueOf(leaveDays * 8).intValue();
+		otService.claimHours(staffId, claimHours);
 		
 			ModelAndView mav = new ModelAndView("staff-leave-created");
 			// leave.setEmployeeId(us.getEmployee().getEmployeeId());
-
-			leave.setStaffId(us.getUser().getStaffId());
-
-			leave.setStatus(LeaveStatus.PENDING);
-
-			// String message = "New leave " + leave.getLeaveId() + " was
-			// successfully created.";
-			lService.createLeave(leave);
-
-			// ----- EMAIL ------
-			// Get manager email
-			String mgrEmail = "sa44lapsteamtwo+manager@gmail.com";
-			StaffMember mgr =  smService.findStaff(us.getEmployee().getManagerId());
-			//String mgrEmail = mgr.getEmail();
 			
-			// set message
-			int highestID = 0;
-			List<Leave> leaves = lService.findAllLeaveOfStaff(staffId);
-			
-			for (Leave leaveIter : leaves) {
-				if (leaveIter.getLeaveId() > highestID) {
-					highestID = leaveIter.getLeaveId();
+			if (request.getParameter("edit").equals("true")) {
+				// is an update
+				lService.changeLeave(leave);
+
+				leave.setStaffId(us.getEmployee().getStaffId());
+				leave.setStatus(LeaveStatus.UPDATED);
+				mav.setViewName("redirect:/staff/history");
+				lService.changeLeave(leave);
+			} else {
+				// is a create
+				leave.setStaffId(us.getUser().getStaffId());
+	
+				leave.setStatus(LeaveStatus.PENDING);
+	
+				// String message = "New leave " + leave.getLeaveId() + " was
+				// successfully created.";
+				lService.createLeave(leave);
+				
+				// ----- EMAIL ------
+				// Get manager email
+//			String mgrEmail = "sa44lapsteamtwo+manager@gmail.com";
+				StaffMember mgr =  smService.findStaff(us.getEmployee().getManagerId());
+				String mgrEmail = mgr.getEmail();
+				
+				// set message
+				int highestID = 0;
+				List<Leave> leaves = lService.findAllLeaveOfStaff(staffId);
+				
+				for (Leave leaveIter : leaves) {
+					if (leaveIter.getLeaveId() > highestID) {
+						highestID = leaveIter.getLeaveId();
+					}
 				}
+				
+				String basePath = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+				String url = basePath + "/manager/subordinate/history/detail/" + highestID + ".html";
+				String message = "Dear " + mgr.getName() + ",\n"
+						+ "Your subordinate, " + us.getEmployee().getName()
+						+ " has applied for leave. You can view the application here: \n"
+						+ url;
+				String subject = "Employee " + us.getEmployee().getName() + " has applied for leave.";
+				
+				EmailSender.getEmailSender().addRecipient(mgrEmail).setMessage(message).setSubject(subject).send();
+				// ----- END OF EMAIL ------
 			}
-			
-			String url = "http://localhost:8080/laps/manager/subordinate/history/detail/" + highestID + ".html";
-			String message = "Dear " + mgr.getName() + ",\n"
-					+ "Your subordinate, " + us.getEmployee().getName()
-							+ " has applied for leave. You can view the application here: \n"
-							+ url;
-			String subject = "Employee " + us.getEmployee().getName() + " has applied for leave.";
-			
-			EmailSender.getEmailSender().addRecipient(mgrEmail).setMessage(message).setSubject(subject).send();
-			// ----- END OF EMAIL ------
+
 
 			return mav;
 		}

@@ -1,6 +1,7 @@
 package com.teamtwo.laps.model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.persistence.Column;
@@ -42,13 +43,13 @@ public class Leave {
 	
 	@NotNull(message = "Please give a start date")
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@Temporal(TemporalType.DATE)
+//	@Temporal(TemporalType.DATE)
 	@Column(name = "startdate")
 	private Date startDate;
 
 	@NotNull(message = "Please give an end date")
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
-	@Temporal(TemporalType.DATE)
+//	@Temporal(TemporalType.DATE)
 	@Column(name = "enddate")
 	private Date endDate;
 	@NotNull
@@ -59,7 +60,6 @@ public class Leave {
 	@Column(name = "contactdetails")
 	private String contactDetails;
 
-	
 	@Enumerated(EnumType.STRING)
 	private LeaveStatus status;
 	
@@ -67,6 +67,8 @@ public class Leave {
 	private String comment;
 	@Column(name = "wasupdated")
 	private Integer wasUpdated;
+	@Column(name = "is_half_day")
+	private int isHalfDay;
 	
 	@ManyToOne
 	@JoinColumn(name = "staffid", insertable = false, updatable = false)
@@ -152,6 +154,14 @@ public class Leave {
 		this.wasUpdated = wasUpdated;
 	}
 	
+	public int getIsHalfDay() {
+		return isHalfDay;
+	}
+
+	public void setIsHalfDay(int isHalfDay) {
+		this.isHalfDay = isHalfDay;
+	}
+
 	public StaffMember getStaffMember() {
 		return staffMember;
 	}
@@ -184,8 +194,8 @@ public class Leave {
 		this.leaveTypeModel = leaveTypeModel;
 	}
 	
-	public Double getNumberOfDays(HolidayService hService) {
-		return LeavePeriodCalculator.calculateLeaveDays(this, hService);
+	public Double getNumberOfDays(List<Holiday> holidays) {
+		return LeavePeriodCalculator.calculateLeaveDays(this, holidays);
 //		return (int) TimeUnit.DAYS.convert(endDate.getTime() - startDate.getTime(), TimeUnit.MILLISECONDS);
 	}
 

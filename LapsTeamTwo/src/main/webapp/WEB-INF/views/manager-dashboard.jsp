@@ -12,8 +12,8 @@
 <link href="../css/leonard-styles.css" rel="STYLESHEET" type="text/css">
 
 <div class='container'>
-	<div class='row'>
 		<div class='col-xs-8'>
+	<div class='row'>
 
 			<!-- Subordinates' applications panel -->
 			<div class="panel panel-warning">
@@ -87,7 +87,7 @@
 									class=''>${ fmtEndDate }</span></td>
 								<td>${ leave.reason }</td>
 								<td><span class="label label-${ typeStyle }">${ leave.leaveTypeModel.leaveName }</span></td>
-								<td><a class='btn btn-info btn-xs'
+								<td><a class='btn btn-primary'
 									href='${pageContext.request.contextPath}/manager/pending/detail/${leave.leaveId}.html'>Details...</a></td>
 							</tr>
 						</c:forEach>
@@ -104,9 +104,9 @@
 			</div>
 		</div>
 
-	</div>
+<!-- 	</div> -->
 	<div class='row'>
-		<div class='col-xs-8'>
+<!-- 		<div class='col-xs-8'> -->
 			<!-- Make new application button -->
 			<div class='row bottom-margin-10'>
 				<a href="${pageContext.request.contextPath}/staff/leave/create"
@@ -203,11 +203,28 @@
 				</div>
 			</div>
 		</div>
-
-		<div class='col-xs-2'>
+	</div>
+		<div class='col-xs-3'>
 			<div class='row'>
 				<div class='panel-group margin-10'>
 					<div class="panel panel-info">
+						<div class="panel-heading">Compensation entitlement</div>
+						<div class="panel-body">
+							<div class='margin-10'>
+								Unclaimed hours: <b>${ compHoursUnclaimed }</b> h
+								<br />
+								Available: <b>${ availableCompLeaveDays }</b> days
+								<br />
+								Pending: <b>${ pendingCompLeaveDays }</b> days
+								<br />
+								<br />
+								<a href="${pageContext.request.contextPath}/staff/comp/loghours.html" class="btn btn-primary btn-sm">Log overtime</a>
+								<br />
+								<a href="${pageContext.request.contextPath}/staff/comp/history.html" class="btn btn-primary btn-sm">View past overtime</a>
+							</div>
+						</div>
+					</div>
+					<div class="panel panel-success">
 						<div class="panel-heading">
 							<spring:message code="title.dashboardAnnuaEntitl" />
 						</div>
@@ -236,7 +253,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+
 
 
 </div>

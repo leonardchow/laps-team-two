@@ -65,15 +65,15 @@
 					value="${overtime.id}" />
 				<tr>
 					<td><input name="overtimes[${idx.index}].loggedHours"
-						class="hourText" value="${overtime.loggedHours}" /></td>
-					<td><input class="datepicker"
+						class="hourText form-control" value="${overtime.loggedHours}" /></td>
+					<td><input class="datepicker form-control"
 						name="overtimes[${idx.index}].date" value="${ fmtDate }" /></td>
 					<td>
 					<c:choose>
 						<c:when test="${ (idx.index + 1) eq fn:length(logHours.overtimes)
 						&& fn:length(logHours.overtimes) > 1
 						&& not edit eq true }">
-							<input type="submit" name="delRow" value="Del Row" />
+							<input type="submit" name="delRow" value="Del Row" class="btn btn-warning" />
 						</c:when>
 						<c:when test="${ edit eq true }">
 							<a href="${pageContext.request.contextPath}/staff/comp/delete/${ overtime.id }" class="btn btn-danger btn-sm">Delete</a>
@@ -94,13 +94,15 @@
 			</tr>
 		</tbody>
 	</table>
-	<c:if test="${ not edit eq true }">
+	<c:if test="${ fn:length(logHours.overtimes) > 0 }">
+		<input type="submit" name="save" value="Save" class="btn btn-success" />
 	</c:if>
-	<input type="submit" name="save" value="Save" />
 	
 	<c:choose>
 		<c:when test="${ not edit eq true }">
-			<input type="submit" name="addRow" value="Add Row" />
+			<c:if test="${ fn:length(logHours.overtimes) < 5 }">
+				<input type="submit" name="addRow" value="Add Row" class="btn btn-info" />
+			</c:if>
 		</c:when>
 		<c:otherwise>
 			<a href="${pageContext.request.contextPath}/staff/comp/history" class="btn btn-default">Cancel</a>
