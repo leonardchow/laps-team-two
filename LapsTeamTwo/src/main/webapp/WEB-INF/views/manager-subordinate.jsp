@@ -3,13 +3,18 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
+</head>
 <body>
-	<h1>
+	<h3>
 		<spring:message code="title.selectEmployee" />
-	</h1>
+	</h3>
 
 	<c:if test="${fn:length(subordinateList) gt 0}">
-		<table style="cellspacing: 2; cellpadding: 2; border: 1;">
+		<div class="table-responsive">
+			<table class="table table-hover">
 			<thead>
 				<tr class="listHeading">
 					<th><spring:message code="fieldLabel.employeeId" /></th>
@@ -20,8 +25,8 @@
 					<th><spring:message code="fieldLabel.designation" /></th>
 					<th><spring:message code="fieldLabel.viewEmployee" /></th>
 				</tr>
-			</thead>
-			<tbody>
+				</thead>
+				<tbody>
 				<c:forEach var="staff_list" items="${subordinateList}">
 					<tr class="listRecord">
 						<td>${staff_list.staffId}</td>
@@ -35,8 +40,9 @@
 							class="btn btn-primary">Detail</a></td>
 					</tr>
 				</c:forEach>
-			</tbody>
-		</table>
+				</tbody>
+			</table>
+		</div>
 	</c:if>
 </body>
 

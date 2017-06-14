@@ -9,8 +9,7 @@
 	<c:forEach var="entry" items="${pendinghistory}">
 		<c:if test="${fn:length(entry.value) gt 0}">
 			<br />
-<!-- 			need to try to get the style, not important
- -->			<spring:message code="fieldLabel.name" /> : <c:out value="${entry.key.name}" />
+			<spring:message code="fieldLabel.name" /> : <c:out value="${entry.key.name}" />
 			<br />
 			<table class="table table-hover">
 				<tr class="listHeading">
