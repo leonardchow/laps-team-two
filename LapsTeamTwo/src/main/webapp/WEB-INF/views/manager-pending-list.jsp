@@ -5,21 +5,22 @@
 <html>
 <body>
 	<h3>
-		<spring:message code="Leaves for Approval" />
+		<spring:message code="title.appsForApproval" />
 	</h3>
 	<c:forEach var="entry" items="${pendinghistory}">
 		<c:if test="${fn:length(entry.value) gt 0}">
-			
+			<br />
+			<spring:message code="fieldLabel.name" /> : <c:out value="${entry.key.name}" />
+			<br />
 			<table class="table table-hover">
-				<tr>
-					<th>#</th>
-					<th>Name</th>
-					<th>Reason</th>
-					<th><spring:message code="startDate" /></th>
-					<th><spring:message code="endDate" /></th>
-					<th>Dissemination Member</th>
-					<th>Status</th>
-					<th>Detail</th>
+				<tr class="listHeading">
+					<th><spring:message code="fieldLabel.leaveId" /></th>
+					<th><spring:message code="fieldLabel.reason" /></th>
+					<th><spring:message code="fieldLabel.startDate" /></th>
+					<th><spring:message code="fieldLabel.endDate" /></th>
+					<th><spring:message code="fieldLabel.dissemination" /></th>
+					<th><spring:message code="fieldLabel.status" /></th>
+					<th><spring:message code="fieldLabel.approve" /></th>
 				</tr>
 				<c:forEach var="leave" items="${entry.value}">
 					<tr class="listRecord">

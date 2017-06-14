@@ -13,8 +13,7 @@
 <div class='container'>
 	<div class='col-xs-8'>
 		<div class='row margin-10'>
-			<input type='button' class='btn btn-success btn-lg'
-				value='Make new request' />
+			<a href="${pageContext.request.contextPath}/staff/leave/create" class='btn btn-success btn-lg'>Make new request</a>
 		</div>
 		<div class='row margin-10'>
 			<div class="panel panel-primary">

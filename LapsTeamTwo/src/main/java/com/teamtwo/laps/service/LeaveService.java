@@ -4,8 +4,9 @@ import java.util.ArrayList;
 
 
 
+import com.teamtwo.laps.javabeans.LeaveStatus;
 import com.teamtwo.laps.model.Leave;
-
+import com.teamtwo.laps.model.LeaveType;
 
 
 public interface LeaveService {
@@ -25,6 +26,10 @@ public interface LeaveService {
 
 	ArrayList<Leave> findPendingLeaveByType(Integer staffId);
 	
-	//Yin
+	//Huitian
+    void DeleteLeave(Leave lt, LeaveStatus ls);
+    
+	void cancelLeave(Leave lt, LeaveStatus ls);
+	
 	ArrayList<Leave> findStaffLeaveHistory(Integer sid );
 }
