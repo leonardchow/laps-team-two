@@ -12,7 +12,7 @@
 			<br />
 			<spring:message code="fieldLabel.name" /> : <c:out value="${entry.key.name}" />
 			<br />
-			<table style="cellspacing: 2; cellpadding: 2; border: 1;">
+			<table class="table table-hover">
 				<tr class="listHeading">
 					<th><spring:message code="fieldLabel.leaveId" /></th>
 					<th><spring:message code="fieldLabel.reason" /></th>
@@ -25,6 +25,7 @@
 				<c:forEach var="leave" items="${entry.value}">
 					<tr class="listRecord">
 						<td>${leave.leaveId}</td>
+						<td><c:out value="${entry.key.name}" /></td>
 						<td>${leave.reason}</td>
 						<td>${leave.startDate}</td>
 						<td>${leave.endDate}</td>
@@ -32,7 +33,7 @@
 						<td>${leave.status}</td>
 						<td><c:url
 								value="/manager/pending/detail/${leave.leaveId}.html" var="d" />
-							<a href="${d}"><spring:message code="detail" /></a></td>
+							<a href="${d}" class="btn btn-primary">Detail</a></td>
 					</tr>
 				</c:forEach>
 			</table>

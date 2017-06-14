@@ -39,7 +39,7 @@ public class StaffMember {
 	private List<Leave> appliedLeaves = new ArrayList<Leave>();
 	
 	public StaffMember() {
-		super();
+		
 		// TODO Auto-generated constructor stub
 	}
 	

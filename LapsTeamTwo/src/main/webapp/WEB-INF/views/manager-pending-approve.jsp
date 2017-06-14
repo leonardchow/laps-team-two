@@ -14,7 +14,7 @@
 		${leave.staffMember.name}'s <spring:message code="fieldLabel.leave" /> ${leave.leaveId}
 	</h3>
 
-	<table>
+	<table class="table table-striped">
 		<tr>
 			<th align="right"><spring:message code="fieldLabel.employeeName" /></th>
 			<td colspan="3"><c:out value="${leave.staffMember.name}" /></td>
@@ -55,7 +55,7 @@
 
 	<form:form method="POST" modelAttribute="approve"
 		action="${pageContext.request.contextPath}/manager/pending/edit/${leave.leaveId}.html">
-		<table>
+		<table class="table table-hover">
 			<tr>
 				<td><form:radiobutton path="decision" value="APPROVED"
 						id="decision" /> <spring:message code="caption.approve" /> &nbsp;&nbsp;
@@ -67,9 +67,8 @@
 						path="comment" cols="60" rows="4" id="comment" /></td>
 			</tr>
 		</table>
-		<form:button name="button" type="submit" value="submit">
-			<img src="${pageContext.request.contextPath}/image/button_submit.gif"
-				width="59" height="22" alt="" border="0">
+		<form:button name="button" type="submit" value="submit" class="btn btn-primary">
+			Submit
 		</form:button>
 	</form:form>
 	<form:form method="POST" modelAttribute="approve"

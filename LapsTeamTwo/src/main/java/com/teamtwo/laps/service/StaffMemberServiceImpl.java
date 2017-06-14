@@ -82,4 +82,17 @@ public class StaffMemberServiceImpl implements StaffMemberService {
 	public StaffMember findStaff(Integer sid) {
 		return repository.findOne(sid);
 	}
+
+	//htein
+	@Override
+	public StaffMember createStaff(StaffMember staff) {
+		// TODO Auto-generated method stub
+		return repository.saveAndFlush(staff);
+	}
+
+	@Override
+	public void removeStaff(StaffMember staff) {
+		// TODO Auto-generated method stub
+		repository.delete(staff);
+	}
 }

@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+	pageEncoding="ISO-8859-1"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
@@ -11,12 +11,12 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h3>Your Leave History</h3>
+<h3>Employee Leave History</h3>
 	<c:if test="${fn:length(lhistory) gt 0}">
 	    <div class="table-responsive">
 			<table class="table table-hover ">
 		<thead>
-			<tr class="listHeading">
+			<tr>
 				
 				<th><spring:message code="Leave ID" /></th>
 				<th><spring:message code="Leave Type" /></th>
@@ -30,7 +30,7 @@
 			</thead>
 			<tbody>
 			<c:forEach var="leave" items="${lhistory}">
-				<tr class="listRecord">
+				<tr >
 					<td>${leave.leaveId}</td>
 					<td>${leave.leaveTypeModel.leaveName}</td>
 					<td>${leave.startDate}</td>
