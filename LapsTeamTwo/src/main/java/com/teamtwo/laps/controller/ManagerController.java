@@ -1,5 +1,7 @@
 package com.teamtwo.laps.controller;
 
+
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -10,6 +12,7 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,7 +91,7 @@ public class ManagerController {
 
 	// DONE
 	@RequestMapping(value = "/pending/list")
-	public ModelAndView viewPendingPage(HttpSession session) {
+	public ModelAndView viewPendingPage(HttpSession session) throws IOException {
 		ModelAndView modelAndView = new ModelAndView("manager-pending-list");
 		HashMap<StaffMember, ArrayList<Leave>> hm = new HashMap<StaffMember, ArrayList<Leave>>();
 		UserSession us = (UserSession) session.getAttribute("USERSESSION");
@@ -99,7 +102,9 @@ public class ManagerController {
 				hm.put(sMember, llist);
 			}
 			mav = new ModelAndView("manager-pending-list");
-			mav.addObject("pendinghistory", hm);
+			//Pagination
+		     //ObjectMapper mapper = new ObjectMapper();
+			mav.addObject("pendinghistory", hm);		     
 			return mav;
 		}
 		return modelAndView;

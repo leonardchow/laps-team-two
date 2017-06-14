@@ -8,7 +8,8 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,11 +21,7 @@ import com.teamtwo.laps.model.User;
 
 import com.teamtwo.laps.service.StaffMemberService;
 import com.teamtwo.laps.service.UserService;
-
-
-
-
-
+import com.teamtwo.laps.validator.UserValidator;
 
 
 @RequestMapping(value="/admin/user")
@@ -32,12 +29,20 @@ import com.teamtwo.laps.service.UserService;
 public class AdminUserController {
 
 
-
 	@Autowired
 	private UserService uService;
 	
 	@Autowired
 	private StaffMemberService smService;
+	
+	@Autowired
+	private UserValidator uValidator;
+	
+	@InitBinder("user")
+	private void initUserBinder(WebDataBinder binder) {
+		binder.addValidators(uValidator);
+	}
+
 
 	/**
 	 * USER CRUD OPERATIONS
