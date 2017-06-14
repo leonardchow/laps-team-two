@@ -13,6 +13,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.teamtwo.laps.javabeans.LeaveStatus;
 
@@ -28,11 +32,19 @@ public class Leave {
 	private Integer staffId;
 	@Column(name = "leavetype")
 	private Integer leaveType;
+	@NotNull
+	@Size(min=1, message = "Please give a reason for the leave")
 	private String reason;
+	@NotNull(message = "Please give a start date")
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@Column(name = "startdate")
 	private Date startDate;
+	@NotNull(message = "Please give an end date")
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	@Column(name = "enddate")
 	private Date endDate;
+	@NotNull
+	@Size(min=1, message = "Please describe what work to be taken over")
 	private String dissemination;
 	@Column(name = "disseminationid")
 	private Integer disseminationId;

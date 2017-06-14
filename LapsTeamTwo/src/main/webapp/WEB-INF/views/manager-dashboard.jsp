@@ -106,8 +106,7 @@
 		<div class='col-xs-8'>
 			<!-- Make new application button -->
 			<div class='row bottom-margin-10'>
-				<input type='button' class='btn btn-success btn-lg bottom-margin-10'
-					value='Make new request' />
+				<a href="${pageContext.request.contextPath}/staff/leave/create" class='btn btn-success btn-lg'>Make new request</a>
 			</div>
 			<!-- Personal requests panel -->
 			<div class='row bottom-margin-10'>

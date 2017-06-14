@@ -1,9 +1,12 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+
 
 <link rel="STYLESHEET" type="text/css"
 	href="${pageContext.request.contextPath}/js/jquery-ui.theme.css" />
+<link href="${pageContext.request.contextPath}/css/leonard-styles.css" rel="STYLESHEET" type="text/css">
 
 <script src="${pageContext.request.contextPath}/js/jquery.js"></script>
 <script src="${pageContext.request.contextPath}/js/jquery-ui.js"></script>
@@ -12,12 +15,20 @@
 		$("#datepicker1").datepicker({
 			dateFormat : "dd/mm/yy"
 		});
-	});
-	$(document).ready(function() {
 		$("#datepicker2").datepicker({
 			dateFormat : "dd/mm/yy"
 		});
+		checkLeaveType();
 	});
+	
+	function checkLeaveType(event) {
+		var value = $("#leaveTypeSelect").val();
+		if (value == 3) {
+			$(".comp-conditional").removeClass("hidden");
+		} else {
+			$(".comp-conditional").addClass("hidden");
+		}
+	}
 </script>
 <h3>New Leave page</h3>
 <form:form method="POST" commandName="leave"
@@ -27,7 +38,7 @@
 	<tr>
 			<td>LeaveType</td>
 			<td colspan="3">
-			<form:select path="leaveType">
+			<form:select id="leaveTypeSelect" path="leaveType" onchange="checkLeaveType(event);">
 			  <c:forEach var="lType" items="${leaveTypes}">
 			    <form:option 
 			       value="${lType.leaveType }">${lType.leaveName}
@@ -36,20 +47,49 @@
 			</form:select>
 			<form:errors path="leaveType" cssStyle="color: red;" /></td>
 	</tr>
- 	 <tr>
+	<tr>
+		<td colspan="2">
+			<div class="margin-10">
+				<span class="label label-danger">${ compError }</span>
+			</div>
+			<div class="comp-conditional hidden">
+				<div class="margin-10">
+					<p class="label label-info">You have ${ compHours } hours of overtime</p>
+					<br />
+					<br />
+					<p class="label label-info">Eligible for ${ compDays } days of compensation leave</p>						
+				</div>
+			</div>
+		</td>
+	</tr>
+ 	<tr>
+ 	 		<c:set var="fmtStartDate">
+				<fmt:formatDate value="${ leave.startDate }" pattern="dd/MM/yyyy" />
+			</c:set>
 			<td>Start Date</td>
-			<td><form:input size="16" path="startDate" id="datepicker1" />
-			<form:errors path="startDate" cssStyle="color: red;" /></td>
+			<td><form:input size="16" path="startDate" id="datepicker1" value="${ fmtStartDate }"/>
+			<div class="comp-conditional hidden">
+				Half day <input type="checkbox" name="startDateHalfDay" />
+			</div>
+			<form:errors path="startDate" cssStyle="color: red;" />
+			</td>
 	</tr>
 	<tr>
+ 	 		<c:set var="fmtEndDate">
+				<fmt:formatDate value="${ leave.endDate }" pattern="dd/MM/yyyy" />
+			</c:set>
 	        <td>End Date</td>
-			<td><form:input size="16" path="endDate" id="datepicker2" />
+			<td><form:input size="16" path="endDate" id="datepicker2" value="${ fmtEndDate }"/>
+			<div class="comp-conditional hidden">
+				Half day <input type="checkbox" name="endDateHalfDay" />
+			</div>
 			<form:errors path="endDate" cssStyle="color: red;" /></td>
 	</tr>
 	<tr>
 			<td>Reason</td>
 			<td colspan="3">
-			<form:textarea cols="31" rows="3" path="reason" /></td>
+			<form:textarea cols="31" rows="3" path="reason" />
+			<form:errors path="reason" cssStyle="color: red;" /></td>
 	</tr>
 	<tr>
 			<td>Contact Details</td>
@@ -75,7 +115,8 @@
 	<tr>
 			<td>Dissemination</td>
 			<td colspan="3">
-			<form:input size="40" path="dissemination" /></td>
+			<form:input size="40" path="dissemination" />
+			<form:errors path="dissemination" cssStyle="color: red;" /></td>
 	</tr>
 	<tr>
 			<td>&nbsp;</td>

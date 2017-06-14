@@ -45,7 +45,7 @@
 <form:form method="POST" modelAttribute="logHours"
 	action="${pageContext.request.contextPath}/staff/comp/loghours.html">
 <%-- 	Entries: ${ fn:length(logHours.overtimes) } --%>
-	<p style="color:red; font-size:2em;'">${ valError }</p>
+	<p style="color:red; font-size:2em;">${ valError }</p>
 <%-- 	<form:errors path="loggedHoursZeroOrNull" cssStyle="color: red;" /> --%>
 	<table class="table">
 		<thead>
