@@ -18,21 +18,24 @@
 			<!-- Subordinates' applications panel -->
 			<div class="panel panel-warning">
 				<div class="panel-heading float-wrapper">
-					<span class="h4">${ numToShow } <spring:message code="title.dashboardPending"/></span>
+					<span class="h4">${ numToShow } <spring:message
+							code="title.dashboardPending" /></span>
 					<!-- 					Recent requests -->
 					<span class="float-vertical-align"><a
-						class="btn btn-primary" href="#"><spring:message code="caption.viewPending"/> (${ (totalLeavesNum - numToShow) > 0 ? totalLeavesNum - numToShow : 0 }
-							more)</a></span>
+						class="btn btn-primary"
+						href="${pageContext.request.contextPath}/manager/pending/list"><spring:message
+								code="caption.viewPending" /> (${ (totalLeavesNum - numToShow) > 0 ? totalLeavesNum - numToShow : 0 }
+					</a></span>
 				</div>
 				<!-- 					<div class="panel-body text-center float-wrapper"> -->
 				<!-- 					</div> -->
 				<table class='table table-striped'>
 					<thead>
 						<tr>
-							<th><spring:message code="fieldLabel.leaveId"/></th>
-							<th><spring:message code="fieldLabel.employeeName"/></th>
-							<th><spring:message code="fieldLabel.time"/></th>
-							<th><spring:message code="fieldLabel.reason"/></th>
+							<th><spring:message code="fieldLabel.leaveId" /></th>
+							<th><spring:message code="fieldLabel.employeeName" /></th>
+							<th><spring:message code="fieldLabel.time" /></th>
+							<th><spring:message code="fieldLabel.reason" /></th>
 							<th width=20px>Type</th>
 							<th width=20px></th>
 						</tr>
@@ -84,8 +87,8 @@
 									class=''>${ fmtEndDate }</span></td>
 								<td>${ leave.reason }</td>
 								<td><span class="label label-${ typeStyle }">${ leave.leaveTypeModel.leaveName }</span></td>
-								<td><input type='button' class='btn btn-primary btn-xs'
-									value='Details...' /></td>
+								<td><a class='btn btn-info btn-xs'
+									href='${pageContext.request.contextPath}/manager/pending/detail/${leave.leaveId}.html'>Details...</a></td>
 							</tr>
 						</c:forEach>
 					</tbody>
@@ -106,17 +109,18 @@
 		<div class='col-xs-8'>
 			<!-- Make new application button -->
 			<div class='row bottom-margin-10'>
-				<input type='button' class='btn btn-success btn-lg bottom-margin-10'
-					value='Make new request' />
+				<a href="${pageContext.request.contextPath}/staff/leave/create"
+					class='btn btn-success btn-lg'>Make new request</a>
 			</div>
 			<!-- Personal requests panel -->
 			<div class='row bottom-margin-10'>
 				<div class="panel panel-primary">
 					<div class="panel-heading float-wrapper">
-						<span class="h4">${ numToShow } <spring:message code="caption.recentApp"/></span>
+						<span class="h4">${ numToShow } <spring:message
+								code="caption.recentApp" /></span>
 						<!-- 					Recent requests -->
 						<span class="float-vertical-align"><a class="btn btn-info"
-							href="#"><spring:message code="caption.viewAllApp"/> (${ (totalLeavesNum - numToShow) > 0 ? totalLeavesNum - numToShow : 0 }
+							href="#"><spring:message code="caption.viewAllApp" /> (${ (totalLeavesNum - numToShow) > 0 ? totalLeavesNum - numToShow : 0 }
 								more)</a></span>
 					</div>
 					<!-- 					<div class="panel-body text-center float-wrapper"> -->
@@ -180,9 +184,9 @@
 										class=''>${ fmtEndDate }</span></td>
 									<td>${ leave.reason }</td>
 									<td class="<c:out value = "${ statusStyle }"/>">${ leave.status.toString() }</td>
-									<td><a href="" class='btn btn-info btn-xs'></a>
-										<spring:message code="caption.detail"/>
-									</td>
+									<td><a class='btn btn-info btn-xs'
+										href='${pageContext.request.contextPath}/manager/pending/detail/${leave.leaveId}.html'><spring:message
+												code="caption.detail" /></a></td>
 								</tr>
 							</c:forEach>
 						</tbody>
@@ -203,20 +207,28 @@
 			<div class='row'>
 				<div class='panel-group margin-10'>
 					<div class="panel panel-info">
-						<div class="panel-heading"><spring:message code="title.dashboardAnnuaEntitl"/></div>
+						<div class="panel-heading">
+							<spring:message code="title.dashboardAnnuaEntitl" />
+						</div>
 						<div class="panel-body">
 							<div class='margin-10'>
-								<spring:message code="fieldLabel.available"/>: <b>${ staffMember.aLeave - annualLeaveDays }</b> <br />
-								<spring:message code="fieldLabel.pending"/>: <b>${ annualLeavePending }</b>
+								<spring:message code="fieldLabel.available" />
+								: <b>${ staffMember.aLeave - annualLeaveDays }</b> <br />
+								<spring:message code="fieldLabel.pending" />
+								: <b>${ annualLeavePending }</b>
 							</div>
 						</div>
 					</div>
 					<div class="panel panel-warning">
-						<div class="panel-heading"><spring:message code="title.dashboardMediEntitl"/></div>
+						<div class="panel-heading">
+							<spring:message code="title.dashboardMediEntitl" />
+						</div>
 						<div class="panel-body">
 							<div class='margin-10'>
-								<spring:message code="fieldLabel.available"/>: <b>${ staffMember.mLeave - medicalLeaveDays }</b> <br />
-								<spring:message code="fieldLabel.pending"/>: <b>${ medicalLeavePending }</b>
+								<spring:message code="fieldLabel.available" />
+								: <b>${ staffMember.mLeave - medicalLeaveDays }</b> <br />
+								<spring:message code="fieldLabel.pending" />
+								: <b>${ medicalLeavePending }</b>
 							</div>
 						</div>
 					</div>
