@@ -20,7 +20,9 @@ import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.teamtwo.laps.javabeans.LeavePeriodCalculator;
 import com.teamtwo.laps.javabeans.LeaveStatus;
+import com.teamtwo.laps.service.HolidayService;
 
 @Entity
 @Table(name = "leave_history")
@@ -182,8 +184,9 @@ public class Leave {
 		this.leaveTypeModel = leaveTypeModel;
 	}
 	
-	public Integer getNumberOfDays() {
-		return (int) TimeUnit.DAYS.convert(endDate.getTime() - startDate.getTime(), TimeUnit.MILLISECONDS);
+	public Double getNumberOfDays(HolidayService hService) {
+		return LeavePeriodCalculator.calculateLeaveDays(this, hService);
+//		return (int) TimeUnit.DAYS.convert(endDate.getTime() - startDate.getTime(), TimeUnit.MILLISECONDS);
 	}
 
 	@Override

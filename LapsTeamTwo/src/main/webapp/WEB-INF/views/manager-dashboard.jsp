@@ -18,13 +18,13 @@
 			<!-- Subordinates' applications panel -->
 			<div class="panel panel-warning">
 				<div class="panel-heading float-wrapper">
-					<span class="h4">${ numToShow } <spring:message
+					<span class="h4">${ pendingNumToShow } <spring:message
 							code="title.dashboardPending" /></span>
 					<!-- 					Recent requests -->
 					<span class="float-vertical-align"><a
 						class="btn btn-primary"
 						href="${pageContext.request.contextPath}/manager/pending/list"><spring:message
-								code="caption.viewPending" /> (${ (totalLeavesNum - numToShow) > 0 ? totalLeavesNum - numToShow : 0 })
+								code="caption.viewPending" /> (${ (totalPendingNum - pendingNumToShow) > 0 ? totalPendingNum - pendingNumToShow : 0 })
 					</a></span>
 				</div>
 				<!-- 					<div class="panel-body text-center float-wrapper"> -->

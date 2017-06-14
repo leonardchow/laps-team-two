@@ -11,6 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.teamtwo.laps.javabeans.LeaveStatus;
+import com.teamtwo.laps.service.HolidayService;
+
 @Entity
 @Table(name = "staff_list")
 public class StaffMember {
@@ -136,6 +139,19 @@ public class StaffMember {
 
 	public void setAppliedLeaves(List<Leave> appliedLeaves) {
 		this.appliedLeaves = appliedLeaves;
+	}
+	
+	public Double getAvailableLeaveDaysOfType(LeaveType leaveType, HolidayService hService) {
+		return getAvailableLeaveDaysOfType(leaveType.getLeaveType(), hService);
+	}
+	
+	public Double getAvailableLeaveDaysOfType(Integer leaveTypeId, HolidayService hService) {
+		return appliedLeaves.stream()
+				.filter(a -> a.getLeaveType() == leaveTypeId
+					&& (a.getStatus() == LeaveStatus.APPROVED
+					|| a.getStatus() == LeaveStatus.PENDING
+					|| a.getStatus() == LeaveStatus.UPDATED))
+				.map(x -> x.getNumberOfDays(hService)).reduce(0.0, ((a, b) -> a + b));
 	}
 
 	@Override

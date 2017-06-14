@@ -44,7 +44,9 @@
 						<form:option value="${lType.leaveType }">${lType.leaveName}
 			    </form:option>
 					</c:forEach>
-				</form:select> <form:errors path="leaveType" cssStyle="color: red;" /></td>
+				</form:select> <form:errors path="leaveType" cssStyle="color: red;" />
+				<span class="label label-danger">${ leaveDaysError }</span>
+			</td>
 		</tr>
 		<tr>
 			<td colspan="2">

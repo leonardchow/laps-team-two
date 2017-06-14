@@ -1,6 +1,8 @@
 package com.teamtwo.laps.controller;
 
 
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.xpath;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.teamtwo.laps.service.HolidayService;
 import com.teamtwo.laps.service.LeaveService;
 import com.teamtwo.laps.service.StaffMemberService;
 
@@ -56,6 +59,9 @@ public class ManagerController {
 
 	@Autowired
 	private StaffMemberService smService;
+	
+	@Autowired
+	private HolidayService hService;
 
 	private final int DASHBOARD_NUM_TO_SHOW = 3;
 
@@ -85,12 +91,19 @@ public class ManagerController {
 
 		for (StaffMember staff : subordinates) {
 			subordinatesLeaves.addAll(staff.getAppliedLeaves().stream()
-					.filter(al -> al.getStatus() == LeaveStatus.PENDING).collect(Collectors.toList()));
+					.filter(al -> al.getStatus() == LeaveStatus.PENDING || al.getStatus() == LeaveStatus.UPDATED).collect(Collectors.toList()));
 		}
+		
+		// Sort leaves by leaveId
+		subordinatesLeaves = (ArrayList<Leave>) subordinatesLeaves.stream().sorted((s1, s2) -> s2.getLeaveId().compareTo(s1.getLeaveId())).collect(Collectors.toList());
 
 		ModelAndView modelAndView = new ModelAndView("manager-dashboard");
-		modelAndView = DashboardBean.getDashboard(modelAndView, DASHBOARD_NUM_TO_SHOW, staffMember, leaves);
-		modelAndView.addObject("subLeaves", subordinatesLeaves);
+		modelAndView = DashboardBean.getDashboard(modelAndView, DASHBOARD_NUM_TO_SHOW, staffMember, leaves, hService);
+		
+		int pendingToShow = subordinatesLeaves.size() > DASHBOARD_NUM_TO_SHOW ? DASHBOARD_NUM_TO_SHOW : subordinatesLeaves.size();
+		modelAndView.addObject("subLeaves", subordinatesLeaves.subList(0, pendingToShow));
+		modelAndView.addObject("pendingNumToShow", pendingToShow);
+		modelAndView.addObject("totalPendingNum", subordinatesLeaves.size());
 		return modelAndView;
 	}
 

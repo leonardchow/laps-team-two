@@ -45,11 +45,13 @@ import com.teamtwo.laps.model.LeaveType;
 import com.teamtwo.laps.model.Overtime;
 import com.teamtwo.laps.javabeans.DashboardBean;
 import com.teamtwo.laps.javabeans.EmailSender;
+import com.teamtwo.laps.javabeans.LeavePeriodCalculator;
 import com.teamtwo.laps.javabeans.MovementBean;
 import com.teamtwo.laps.javabeans.OvertimeList;
 import com.teamtwo.laps.model.Leave;
 import com.teamtwo.laps.model.StaffMember;
 import com.teamtwo.laps.model.User;
+import com.teamtwo.laps.service.HolidayService;
 import com.teamtwo.laps.service.LeaveService;
 import com.teamtwo.laps.service.LeaveTypeService;
 import com.teamtwo.laps.service.OvertimeService;
@@ -84,6 +86,9 @@ public class StaffController {
 	@Autowired
 	private LeaveValidator leaveValidator;
 	
+	@Autowired
+	private HolidayService hService;
+	
 	@InitBinder("leave")
 	private void initCourseBinder(WebDataBinder binder) {
 //		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -117,7 +122,7 @@ public class StaffController {
 		ArrayList<Leave> leaves = lService.findAllLeaveOfStaff(staffId);
 		ModelAndView modelAndView = new ModelAndView("staff-dashboard");
 
-		modelAndView = DashboardBean.getDashboard(modelAndView, DASHBOARD_NUM_TO_SHOW, staffMember, leaves);
+		modelAndView = DashboardBean.getDashboard(modelAndView, DASHBOARD_NUM_TO_SHOW, staffMember, leaves, hService);
 
 		// leaves.get(1).getStartDate().getDate()
 		logger.info("Rendering dashboard for user {}.", user.getUserId());
@@ -371,7 +376,21 @@ public class StaffController {
 			}
 		}
 		
-		if (result.hasErrors() || compNotOkay) {
+		Boolean notEnoughLeaveDays = false;
+		String leaveDaysErrorMessage = "";
+		// Validate according to leave type
+		StaffMember staffMember = us.getEmployee();
+		
+		if (leave.getStartDate() != null && leave.getEndDate() != null) {
+			Double leaveDays = LeavePeriodCalculator.calculateLeaveDays(leave, hService);
+			Double availableLeave = staffMember.getAvailableLeaveDaysOfType(leave.getLeaveType(), hService);
+			if (leaveDays > availableLeave) {
+				leaveDaysErrorMessage = String.format("You do not have enough leave days left (%.1f vs %.1f).", leaveDays, availableLeave); 
+				notEnoughLeaveDays = true;
+			}
+		}
+		
+		if (result.hasErrors() || compNotOkay || notEnoughLeaveDays) {
 			ModelAndView mavError = new ModelAndView("staff-leave-new");
 			ArrayList<LeaveType> leaveTypes = lTypeService.findAllLeaveType();
 			ArrayList<StaffMember> staffMembers = (ArrayList<StaffMember>) smService.findAllStaff().stream()
@@ -385,6 +404,7 @@ public class StaffController {
 			mavError.addObject("compDays", unclaimedHours * 1.0 / 8);
 
 			mavError.addObject("compError", compErrorMessage);
+			mavError.addObject("leaveDaysError", leaveDaysErrorMessage);
 			
 			return mavError;
 		}
