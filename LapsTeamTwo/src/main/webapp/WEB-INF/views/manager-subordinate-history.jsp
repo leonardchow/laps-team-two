@@ -14,14 +14,14 @@
 			<table style="cellspacing: 2; cellpadding: 2; border: 1;">
 				<thead>
 					<tr class="listHeading">
-						<th>Leave ID</th>
-						<th>Staff ID</th>
-						<th>Leave Type</th>
-						<th>Start Date</th>
-						<th>End Date</th>
-						<th>DisseminationId</th>
-						<th>Status</th>
-						<th>details</th>
+						<th><spring:message code="fieldLabel.leaveId"/></th>
+						<th><spring:message code="fieldLabel.employeeId"/>Staff ID</th>
+						<th><spring:message code="fieldLabel.leaveType"/>Leave Type</th>
+						<th><spring:message code="fieldLabel.startDate"/>Start Date</th>
+						<th><spring:message code="fieldLabel.endDate"/>End Date</th>
+						<th><spring:message code="fieldLabel.dissemination"/>DisseminationId</th>
+						<th><spring:message code="fieldLabel.status"/>Status</th>
+						<th><spring:message code="title.leaveDetails"/>details</th>
 					</tr>
 				</thead>
 				<tbody>
