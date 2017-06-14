@@ -24,7 +24,7 @@
 					<span class="float-vertical-align"><a
 						class="btn btn-primary"
 						href="${pageContext.request.contextPath}/manager/pending/list"><spring:message
-								code="caption.viewPending" /> (${ (totalLeavesNum - numToShow) > 0 ? totalLeavesNum - numToShow : 0 }
+								code="caption.viewPending" /> (${ (totalLeavesNum - numToShow) > 0 ? totalLeavesNum - numToShow : 0 })
 					</a></span>
 				</div>
 				<!-- 					<div class="panel-body text-center float-wrapper"> -->
@@ -120,7 +120,7 @@
 								code="caption.recentApp" /></span>
 						<!-- 					Recent requests -->
 						<span class="float-vertical-align"><a class="btn btn-info"
-							href="#"><spring:message code="caption.viewAllApp" /> (${ (totalLeavesNum - numToShow) > 0 ? totalLeavesNum - numToShow : 0 }
+							href="${pageContext.request.contextPath}/staff/history"><spring:message code="caption.viewAllApp" /> (${ (totalLeavesNum - numToShow) > 0 ? totalLeavesNum - numToShow : 0 }
 								more)</a></span>
 					</div>
 					<!-- 					<div class="panel-body text-center float-wrapper"> -->
@@ -184,9 +184,10 @@
 										class=''>${ fmtEndDate }</span></td>
 									<td>${ leave.reason }</td>
 									<td class="<c:out value = "${ statusStyle }"/>">${ leave.status.toString() }</td>
-									<td><a class='btn btn-info btn-xs'
-										href='${pageContext.request.contextPath}/manager/pending/detail/${leave.leaveId}.html'><spring:message
-												code="caption.detail" /></a></td>
+									<td><a
+										href='${pageContext.request.contextPath}/staff/history/details/${leave.leaveId}.html'
+										class="btn btn-info btn-xs"> <spring:message
+												code="caption.detail" /></a>
 								</tr>
 							</c:forEach>
 						</tbody>

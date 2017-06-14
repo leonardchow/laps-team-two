@@ -4,7 +4,60 @@ import java.util.*;
 import javax.mail.*;
 import javax.mail.internet.*;
 
+import org.hibernate.validator.constraints.Email;
+
 public class EmailSender {
+	
+	private ArrayList<String> recipients;
+	private String subjectMessage;
+	private String bodyMessage;
+	
+	public static EmailSender getEmailSender() {
+		EmailSender emailSender = new EmailSender();
+		emailSender.recipients = new ArrayList<>();
+		emailSender.subjectMessage = "Default subject";
+		emailSender.bodyMessage = "Default text";
+		return emailSender;
+	}
+	
+	public EmailSender setRecipients(ArrayList<String> recipients) {
+		this.recipients.clear();
+		this.recipients.addAll(recipients);
+		return this;
+	}
+	
+	public EmailSender addRecipient(String recipient) {
+		recipients.add(recipient);
+		return this;
+	}
+	
+	public EmailSender setSubject(String subject) {
+		this.subjectMessage = subject;
+		return this;
+	}
+	
+	public EmailSender setMessage(String message) {
+		this.bodyMessage = message;
+		return this;
+	}
+	
+	public void send() {
+		if (recipients.size() == 0) {
+			recipients.add("sa44lapsteamtwo@gmail.com");
+		}
+		
+		sendEmail(recipients.toArray(new String[0]), subjectMessage, bodyMessage);
+	}
+	
+	public static void sendEmail(String[] to, String subject, String body) {
+		final String USER_NAME = "sa44lapsteamtwo"; // GMail user name (just the
+		// part before "@gmail.com")
+		final String PASSWORD = "lapsteamtwo"; // GMail password
+		String from = USER_NAME;
+		String pass = PASSWORD;
+		
+		sendFromGMail(from, pass, to, subject, body);
+	}
 
 	public static void sendFromGMail(String from, String pass, String[] to, String subject, String body) {
         Properties props = System.getProperties();
