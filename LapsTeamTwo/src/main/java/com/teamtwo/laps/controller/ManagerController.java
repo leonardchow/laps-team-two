@@ -1,6 +1,5 @@
 package com.teamtwo.laps.controller;
 
-
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.xpath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 
@@ -62,7 +61,7 @@ public class ManagerController {
 
 	@Autowired
 	private StaffMemberService smService;
-	
+
 	@Autowired
 	private HolidayService hService;
 
@@ -97,27 +96,32 @@ public class ManagerController {
 
 		for (StaffMember staff : subordinates) {
 			subordinatesLeaves.addAll(staff.getAppliedLeaves().stream()
-					.filter(al -> al.getStatus() == LeaveStatus.PENDING || al.getStatus() == LeaveStatus.UPDATED).collect(Collectors.toList()));
+					.filter(al -> al.getStatus() == LeaveStatus.PENDING || al.getStatus() == LeaveStatus.UPDATED)
+					.collect(Collectors.toList()));
 		}
-		
+
 		// Sort leaves by leaveId, reversed (s1, s2) -> s2 compare s1
-		subordinatesLeaves = (ArrayList<Leave>) subordinatesLeaves.stream().sorted((s1, s2) -> s2.getLeaveId().compareTo(s1.getLeaveId())).collect(Collectors.toList());
+		subordinatesLeaves = (ArrayList<Leave>) subordinatesLeaves.stream()
+				.sorted((s1, s2) -> s2.getLeaveId().compareTo(s1.getLeaveId())).collect(Collectors.toList());
 
 		List<Holiday> holidays = hService.findAllHoliday();
 		ModelAndView modelAndView = new ModelAndView("manager-dashboard");
-		modelAndView = DashboardBean.getDashboard(modelAndView, DASHBOARD_NUM_TO_SHOW, staffMember, leaves, holidays, otService);
-		
+		modelAndView = DashboardBean.getDashboard(modelAndView, DASHBOARD_NUM_TO_SHOW, staffMember, leaves, holidays,
+				otService);
+
 		ManagerPath mp = ManagerPath.DASHBOARD;
 		session.setAttribute("USERPATH", mp);
-		
-		int pendingToShow = subordinatesLeaves.size() > DASHBOARD_NUM_TO_SHOW ? DASHBOARD_NUM_TO_SHOW : subordinatesLeaves.size();
+
+		int pendingToShow = subordinatesLeaves.size() > DASHBOARD_NUM_TO_SHOW ? DASHBOARD_NUM_TO_SHOW
+				: subordinatesLeaves.size();
 		modelAndView.addObject("subLeaves", subordinatesLeaves.subList(0, pendingToShow));
 		modelAndView.addObject("pendingNumToShow", pendingToShow);
 		modelAndView.addObject("totalPendingNum", subordinatesLeaves.size());
 		return modelAndView;
 	}
 
-	// DONE
+	// shows a list of leave applications of status = 'PENDING' or 'UPDATED'
+	// from manager's subordinate
 	@RequestMapping(value = "/pending/list")
 	public ModelAndView viewPendingPage(HttpSession session) throws IOException {
 
@@ -128,7 +132,7 @@ public class ManagerController {
 
 				mav = new ModelAndView("manager-pending-list");
 				HashMap<StaffMember, ArrayList<Leave>> hm = new HashMap<StaffMember, ArrayList<Leave>>();
-				
+
 				int staffId = us.getEmployee().getStaffId();
 				ArrayList<StaffMember> subordinates = smService.findSubordinates(staffId);
 
@@ -140,7 +144,7 @@ public class ManagerController {
 					// Pagination
 					// ObjectMapper mapper = new ObjectMapper();
 				}
-				
+
 				ManagerPath mp = ManagerPath.PENDING;
 				session.setAttribute("USERPATH", mp);
 				mav.addObject("pendinghistory", hm);
@@ -156,7 +160,7 @@ public class ManagerController {
 		return mav;
 	}
 
-	// DONE
+	// View specifics leave details, if leave has been approved,cancelled,deleted, rejected, manager cannot change its status
 	@RequestMapping(value = "/pending/detail/{leaveId}")
 	public ModelAndView approveApplicationPage(@PathVariable Integer leaveId, HttpSession session) {
 
@@ -192,11 +196,12 @@ public class ManagerController {
 		return mav;
 	}
 
-	// leave validation and business logic
+	// handles saving to database
 	@RequestMapping(value = "/pending/edit/{leaveId}", method = RequestMethod.POST, params = "submit")
 	public ModelAndView approveOrRejectCourse(@ModelAttribute("approve") Approve approve, BindingResult result,
-			@PathVariable Integer leaveId, HttpSession session, final RedirectAttributes redirectAttributes, HttpServletRequest request) {
-		
+			@PathVariable Integer leaveId, HttpSession session, final RedirectAttributes redirectAttributes,
+			HttpServletRequest request) {
+
 		UserSession us = (UserSession) session.getAttribute("USERSESSION");
 
 		if (us == null || us.getSessionId() == null) {
@@ -207,7 +212,7 @@ public class ManagerController {
 		else {
 			ModelAndView mav = new ModelAndView("manager-pending-approve");
 			Leave leave = lService.findLeaveById(leaveId);
-			
+
 			leave.setStatus(LeaveStatus.DELETED);
 
 			Calendar cal = Calendar.getInstance();
@@ -237,7 +242,7 @@ public class ManagerController {
 			leave.setStatus(LeaveStatus.APPROVED);
 		} else {
 			leave.setStatus(LeaveStatus.REJECTED);
-			
+
 			if (leave.getLeaveType() == 3) {
 				// If it was compensation, rollback hours
 				List<Holiday> holidays = hService.findAllHoliday();
@@ -246,7 +251,7 @@ public class ManagerController {
 				otService.unclaimHours(leave.getStaffId(), hoursToUnclaim);
 				appOrRej = "rejected";
 			}
-			
+
 		}
 		leave.setComment(approve.getComment());
 		System.out.println(leave.toString());
@@ -265,15 +270,16 @@ public class ManagerController {
 		// ----- EMAIL ------
 
 		// Get manager email
-//		String staffEmail = "sa44lapsteamtwo+staff@gmail.com";
+		// String staffEmail = "sa44lapsteamtwo+staff@gmail.com";
 		StaffMember staff = smService.findStaff(leave.getStaffId());
-		 String staffEmail = staff.getEmail();
+		String staffEmail = staff.getEmail();
 
 		// set message
-		String basePath = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+		String basePath = "http://" + request.getServerName() + ":" + request.getServerPort()
+				+ request.getContextPath();
 		String url = basePath + "/staff/history/details/" + leaveId + ".html";
-		String emailMsg = "Dear " + staff.getName() + ",\n" + "Your manager, " + us.getEmployee().getName()
-				+ " has " + appOrRej + " your leave. You can view the details here: \n" + url;
+		String emailMsg = "Dear " + staff.getName() + ",\n" + "Your manager, " + us.getEmployee().getName() + " has "
+				+ appOrRej + " your leave. You can view the details here: \n" + url;
 		String subject = "Manager " + us.getEmployee().getName() + " has " + appOrRej + " your leave.";
 
 		EmailSender.getEmailSender().addRecipient(staffEmail).setMessage(emailMsg).setSubject(subject).send();
@@ -284,6 +290,7 @@ public class ManagerController {
 		return mav;
 	}
 
+	// if the manager does not want to approve leave and wants to return to previous page
 	@RequestMapping(value = "/pending/edit/{leaveId}", method = RequestMethod.POST, params = "cancel")
 	public ModelAndView cancelApproveOrRejectCourse(@ModelAttribute("approve") Approve approve, BindingResult result,
 			@PathVariable Integer leaveId, HttpSession session, final RedirectAttributes redirectAttributes) {
@@ -304,7 +311,7 @@ public class ManagerController {
 		return mav;
 	}
 
-	// Yin
+	// shows a list of subordinates details
 	@RequestMapping(value = "/subordinate", method = RequestMethod.GET)
 	public ModelAndView viewSubordinateListForLeaveApproval(HttpSession session) {
 
@@ -325,12 +332,13 @@ public class ManagerController {
 			// TODO: handle exception
 			mav = new ModelAndView("unauthorized-access");
 		}
-		
+
 		ManagerPath mp = ManagerPath.HISTORY;
 		session.setAttribute("USERPATH", mp);
 		return mav;
 	}
 
+	// shows subordinate's leave history
 	@RequestMapping(value = "/subordinate/history/{staffId}", method = RequestMethod.GET)
 	public ModelAndView viewSubordinateLeaveHistoryDeatils(@PathVariable int staffId, HttpSession session) {
 
@@ -360,6 +368,7 @@ public class ManagerController {
 		return mav;
 	}
 
+	// Moving into see subordinate's leave details
 	@RequestMapping(value = "/subordinate/history/detail/{leaveId}", method = RequestMethod.GET)
 	public ModelAndView viewSubordinateLeaveHistory(@PathVariable int leaveId, HttpSession session) {
 
@@ -391,6 +400,7 @@ public class ManagerController {
 		return mav;
 	}
 
+	
 	@RequestMapping(value = "/view/detail/{leaveId}", method = RequestMethod.GET)
 	public ModelAndView viewSubordinateLeaveDetail(@PathVariable int leaveId, HttpSession session) {
 
