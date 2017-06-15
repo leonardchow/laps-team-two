@@ -271,7 +271,7 @@ public class StaffController {
 			List<Leave> leaveHistoryListOnPage = leaveHistoryList.subList(startIndex, endIndex);
 			mav.addObject("lhistory", leaveHistoryListOnPage);
 
-		} catch (Exception e) {
+		} catch (IndexOutOfBoundsException e) {
 			mav.addObject("valError", "You have not appplied for any yet leave!");
 		}
 		
