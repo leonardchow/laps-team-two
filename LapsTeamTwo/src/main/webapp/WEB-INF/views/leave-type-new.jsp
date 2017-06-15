@@ -5,6 +5,7 @@
 <h3>New Leave Type</h3>
 <form:form method="POST" commandName="leavetype"
 	action="${pageContext.request.contextPath}/admin/leavetype/create.html">
+	<div class="table-responsive">
 	<table class="table">
 		<tbody>
 			<tr>
@@ -25,4 +26,7 @@
 			</tr>
 		</tbody>
 	</table>
+	</div>
+	
+	
 </form:form>

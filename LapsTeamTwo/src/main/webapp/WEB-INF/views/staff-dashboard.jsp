@@ -13,17 +13,18 @@
 <div class='container'>
 	<div class='col-xs-8'>
 		<div class='row margin-10'>
-			<a href="${pageContext.request.contextPath}/staff/leave/create" class='btn btn-success btn-lg'>Make new request</a>
+			<a href="${pageContext.request.contextPath}/staff/leave/create"
+				class='btn btn-success btn-lg'>Make new request</a>
 		</div>
 		<div class='row margin-10'>
 			<div class="panel panel-primary">
 				<div class="panel-heading float-wrapper">
 					<span class="h4">${ numToShow } of the most recent requests</span>
 					<!-- 					Recent requests -->
-					<span class="float-vertical-align"><a
-						class="btn btn-info"
-						href="${pageContext.request.contextPath}/staff/history">
-						View all your applications (${ (totalLeavesNum - numToShow) > 0 ? totalLeavesNum - numToShow : 0 } more)</a></span>
+					<span class="float-vertical-align"><a class="btn btn-info"
+						href="${pageContext.request.contextPath}/staff/history"> View
+							all your applications (${ (totalLeavesNum - numToShow) > 0 ? totalLeavesNum - numToShow : 0 }
+							more)</a></span>
 				</div>
 				<!-- 					<div class="panel-body text-center float-wrapper"> -->
 				<!-- 					</div> -->
@@ -39,13 +40,13 @@
 					</thead>
 					<tbody>
 						<c:forEach items="${ leaves }" var="leave">
-							
-<%-- 							<c:set var="start-month" value=""/> --%>
+
+							<%-- 							<c:set var="start-month" value=""/> --%>
 							<c:choose>
 								<c:when
 									test="${ leave.startDate.month.equals(leave.endDate.month)
 								&& leave.startDate.year.equals(leave.endDate.year) }">
-<%-- 									<c:set var="fmtStartDate" value="${ leaves.startDate.day }" /> --%>
+									<%-- 									<c:set var="fmtStartDate" value="${ leaves.startDate.day }" /> --%>
 									<c:set var="fmtStartDate">
 										<fmt:formatDate value="${ leave.startDate }" pattern="dd" />
 									</c:set>
@@ -76,8 +77,7 @@
 							</c:choose>
 
 							<c:set var="fmtEndDate">
-								<fmt:formatDate value="${ leave.endDate }"
-									pattern="dd MMM yyyy" />
+								<fmt:formatDate value="${ leave.endDate }" pattern="dd MMM yyyy" />
 							</c:set>
 
 							<tr class="${ statusStyle }">
@@ -86,9 +86,9 @@
 									class=''>${ fmtEndDate }</span></td>
 								<td>${ leave.reason }</td>
 								<td class="<c:out value = "${statusStyle}"/>">${ leave.status.toString() }</td>
-								<td>
-								<a href='${pageContext.request.contextPath}/staff/history/details/${leave.leaveId}.html'
-								class="btn btn-info btn-xs">Details...</a>
+								<td><a
+									href='${pageContext.request.contextPath}/staff/history/details/${leave.leaveId}.html'
+									class="btn btn-info btn-xs">Details...</a>
 							</tr>
 						</c:forEach>
 					</tbody>

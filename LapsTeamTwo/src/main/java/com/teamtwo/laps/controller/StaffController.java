@@ -1,6 +1,5 @@
 package com.teamtwo.laps.controller;
 
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,8 +10,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+
 import java.util.Collections;
 
 import javax.servlet.http.HttpSession;
@@ -63,7 +61,6 @@ import com.teamtwo.laps.javabeans.StaffPath;
 
 import com.teamtwo.laps.controller.UserSession;
 
-
 import com.teamtwo.laps.validator.LeaveValidator;
 
 /**
@@ -80,7 +77,7 @@ public class StaffController {
 
 	@Autowired
 	private LeaveService lService;
-	
+
 	@Autowired
 	private LeaveTypeService lTypeService;
 
@@ -95,17 +92,18 @@ public class StaffController {
 	
 	@InitBinder("leave")
 	private void initCourseBinder(WebDataBinder binder) {
-//		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-//		dateFormat.setLenient(false);
-//		binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
+		// SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		// dateFormat.setLenient(false);
+		// binder.registerCustomEditor(Date.class, new
+		// CustomDateEditor(dateFormat, false));
 		binder.addValidators(leaveValidator);
 
 	}
-	
+
 	/**
 	 * Renders the staff dashboard.
 	 */
-	
+
 	@RequestMapping(value = "/dashboard")
 	public ModelAndView home(HttpSession session) {
 
@@ -124,7 +122,7 @@ public class StaffController {
 		if (user.getIsManager()) {
 			return new ModelAndView("redirect:/manager/dashboard");
 		}
-		
+
 		StaffMember staffMember = smService.findStaffById(staffId);
 		ArrayList<Leave> leaves = lService.findAllLeaveOfStaff(staffId);
 		ModelAndView modelAndView = new ModelAndView("staff-dashboard");
@@ -203,14 +201,14 @@ public class StaffController {
 
 	@RequestMapping(value = "/leave/create", method = RequestMethod.GET)
 	public ModelAndView NewLeavePage(HttpSession session) {
-		
+
 		UserSession us = (UserSession) session.getAttribute("USERSESSION");
-		
+
 		if (us == null) {
 			return new ModelAndView("redirect:/home/login");
 		}
 		int loggedInStaffId = us.getUser().getStaffId();
-		
+
 		ModelAndView mav = new ModelAndView("staff-leave-new");
 		ArrayList<LeaveType> leaveTypes = lTypeService.findAllLeaveType();
 		ArrayList<StaffMember> staffMembers = (ArrayList<StaffMember>) smService.findAllStaff().stream()
@@ -223,19 +221,19 @@ public class StaffController {
 		int unclaimedHours = otService.findUnclaimedHoursOfStaff(loggedInStaffId);
 		mav.addObject("compHours", unclaimedHours);
 		mav.addObject("compDays", unclaimedHours * 1.0 / 8);
-		
+
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/logout")
 	public String logout(HttpSession session) {
 		session.invalidate();
 		return "redirect:/home/login";
 
 	}
-	
-    //Huitian
-	
+
+	// Huitian
+
 	@RequestMapping(value = "/history")
 	public ModelAndView staffLeaveHistory(HttpSession session, HttpServletRequest request,
 			@RequestParam(value = "perPage", required = false) Optional<Integer> prevPerPage,
@@ -256,21 +254,8 @@ public class StaffController {
 		Calendar cal = Calendar.getInstance();
 		int year = cal.get(Calendar.YEAR);
 		List<Leave> leaveHistoryList = MovementBean.filterLeaveByYear(allLeave, year);
-//			mav.addObject("lhistory", leaveHistoryList);
 		
 		/* Pagination */
-//			// Get paging settings from request, or set to defaults
-//			String prevPerPage = request.getParameter("perPage");
-//			System.out.println("prevPerPage:"+prevPerPage);
-//			//String prevCurrentPage = request.getParameter("currentPage");
-		
-//			String prevCurrentPage = null;
-//			if (request.getParameter("page") != null) {
-//				prevCurrentPage = request.getParameter("page");
-//			}
-		
-//			int currentPage = prevCurrentPage != null ? Integer.parseInt(prevCurrentPage) : 1;
-//			int perPage = prevPerPage != null ? Integer.parseInt(prevPerPage) : 2;
 		int currentPage = prevCurrentPage.isPresent() ? prevCurrentPage.get() : DEFAULT_CURRENT_PAGE;
 		int perPage = prevPerPage.isPresent() ? prevPerPage.get() : DEFAULT_PER_PAGE;
 		int totalPages = (int) Math.ceil(1.0 * leaveHistoryList.size() / perPage);
@@ -298,19 +283,33 @@ public class StaffController {
 		mav.addObject("perPageList", PER_PAGE_LIST);
 		
 		/* End Pagination */
-
 		
 		return mav;
+
 	}
-	
+
 	@RequestMapping(value = "/history/details/{id}", method = RequestMethod.GET)
-	public ModelAndView LeaveDetails(@PathVariable Integer id) {
-		ModelAndView mav = new ModelAndView("staff-leave-history-details");
-		Leave leave = lService.findLeaveById(id);
-		mav.addObject("leave", leave);
+	public ModelAndView LeaveDetails(@PathVariable Integer id, HttpSession session) {
+		ModelAndView mav = new ModelAndView("login");
+		try {
+			Integer sid = lService.findStaffId(id);
+			UserSession us = (UserSession) session.getAttribute("USERSESSION");
+			if (us.getSessionId() != null && us.getUser().getStaffId() == sid) {
+
+				mav = new ModelAndView("staff-leave-history-details");
+				Leave leave = lService.findLeaveById(id);
+				mav.addObject("leave", leave);
+			} else {
+				mav = new ModelAndView("unauthorized-admin-access");
+			}
+
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+			mav = new ModelAndView("unauthorized-access");
+		}
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/history/details/{id}", method = RequestMethod.POST)
 	public ModelAndView LeaveDetailsBack(@PathVariable Integer id, HttpSession session) {
 		ModelAndView mav = new ModelAndView("redirect:/staff/history");
@@ -320,44 +319,41 @@ public class StaffController {
 		}
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/history/update/{id}", method = RequestMethod.GET)
 	public ModelAndView updateLeaveHistory(@PathVariable Integer id, HttpSession session) {
-		UserSession us = (UserSession) session.getAttribute("USERSESSION");
-		int loggedInStaffId = us.getUser().getStaffId();
-		
-		ModelAndView mav = new ModelAndView("staff-leave-new");
-		ArrayList<LeaveType> leaveTypes = lTypeService.findAllLeaveType();
-		ArrayList<StaffMember> staffMembers = (ArrayList<StaffMember>) smService.findAllStaff().stream()
-				.filter(staff -> staff.getStaffId() != loggedInStaffId).collect(Collectors.toList());
-		Leave leave = lService.findLeaveById(id);
-		mav.addObject("leave", leave);
-		mav.addObject("leaveTypes", leaveTypes);
-		mav.addObject("staffMembers", staffMembers);
-		
-		int unclaimedHours = otService.findUnclaimedHoursOfStaff(loggedInStaffId);
-		mav.addObject("compHours", unclaimedHours);
-		mav.addObject("compDays", unclaimedHours * 1.0 / 8);
-		
-		mav.addObject("isEdit", true);
+		ModelAndView mav = new ModelAndView("login");
+		try {
+			Integer sid = lService.findStaffId(id);
+			UserSession us = (UserSession) session.getAttribute("USERSESSION");
+			if (us.getSessionId() != null && us.getUser().getStaffId() == sid) {
+				int loggedInStaffId = us.getUser().getStaffId();
+				
+				mav = new ModelAndView("staff-leave-new");
+				ArrayList<LeaveType> leaveTypes = lTypeService.findAllLeaveType();
+				ArrayList<StaffMember> staffMembers = (ArrayList<StaffMember>) smService.findAllStaff().stream()
+						.filter(staff -> staff.getStaffId() != loggedInStaffId).collect(Collectors.toList());
+				Leave leave = lService.findLeaveById(id);
+				mav.addObject("leave", leave);
+				mav.addObject("leaveTypes", leaveTypes);
+				mav.addObject("staffMembers", staffMembers);
+				
+				int unclaimedHours = otService.findUnclaimedHoursOfStaff(loggedInStaffId);
+				mav.addObject("compHours", unclaimedHours);
+				mav.addObject("compDays", unclaimedHours * 1.0 / 8);
+				
+				mav.addObject("isEdit", true);
+			} else {
+				mav = new ModelAndView("unauthorized-admin-access");
+			}
+
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+			mav = new ModelAndView("unauthorized-access");
+		}
 		return mav;
-		/*
-		ModelAndView mav = new ModelAndView("staff-leave-history-update");
-		//ArrayList<LeaveType> leavetypes = lTypeService.findAllLeaveType();
-		ArrayList<StaffMember> staffMembers= (ArrayList<StaffMember>)smService.findAllStaff().stream()
-				.filter(staff -> staff.getStaffId() != loggedInStaffId).collect(Collectors.toList());
-		
-		Leave leave = lService.findLeaveById(id);
-		//Date startDate = leave.getStartDate();
-		mav.addObject("leave", leave);
-		//mav.addObject("leavename", leavetypes);
-		mav.addObject("staffMembers", staffMembers);
-		//mav.addObject("startDate", startDate);
-		return mav;
-		*/
 	}
-	
-	
+
 	@RequestMapping(value = "/history/update/{id}", method = RequestMethod.POST)
 	public ModelAndView updateLeave(@ModelAttribute @Valid Leave leave, BindingResult result, @PathVariable Integer id,
 			final RedirectAttributes redirectAttributes, HttpSession session) {
@@ -373,44 +369,72 @@ public class StaffController {
 		lService.changeLeave(leave);
 		redirectAttributes.addFlashAttribute("message", message);
 		return mav;
+		
+		
 	}
-	
+
 	@RequestMapping(value = "/history/delete/{id}", method = RequestMethod.GET)
-	public ModelAndView DeleteLeave(@PathVariable Integer id, final RedirectAttributes redirectAttributes)
-			 {
+	public ModelAndView DeleteLeave(@PathVariable Integer id, final RedirectAttributes redirectAttributes,
+			HttpSession session) {
+		ModelAndView mav = new ModelAndView("login");
+		try {
+			Integer sid = lService.findStaffId(id);
+			UserSession us = (UserSession) session.getAttribute("USERSESSION");
+			if (us.getSessionId() != null && us.getUser().getStaffId() == sid) {
 
-		ModelAndView mav = new ModelAndView("redirect:/staff/history");
-		Leave leave = lService.findLeaveById(id);
-		lService.DeleteLeave(leave, LeaveStatus.DELETED);
-		String message = "The leave " + leave.getLeaveId() + " has been successfully deleted.";
+				mav = new ModelAndView("redirect:/staff/history");
+				Leave leave = lService.findLeaveById(id);
+				lService.DeleteLeave(leave, LeaveStatus.DELETED);
+				String message = "The leave " + leave.getLeaveId() + " has been successfully deleted.";
 
-		redirectAttributes.addFlashAttribute("message", message);
+				redirectAttributes.addFlashAttribute("message", message);
+			} else {
+				mav = new ModelAndView("unauthorized-admin-access");
+			}
+
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+			mav = new ModelAndView("unauthorized-access");
+		}
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/history/cancel/{id}", method = RequestMethod.GET)
-	public ModelAndView cancelLeave(@PathVariable Integer id, final RedirectAttributes redirectAttributes)
-			 {
+	public ModelAndView cancelLeave(@PathVariable Integer id, final RedirectAttributes redirectAttributes,
+			HttpSession session) {
+		ModelAndView mav = new ModelAndView("login");
+		try {
+			Integer sid = lService.findStaffId(id);
+			UserSession us = (UserSession) session.getAttribute("USERSESSION");
+			if (us.getSessionId() != null && us.getUser().getStaffId() == sid) {
 
-		ModelAndView mav = new ModelAndView("redirect:/staff/history");
-		Leave leave = lService.findLeaveById(id);
-		lService.DeleteLeave(leave, LeaveStatus.CANCELLED);
-		String message = "The leave " + leave.getLeaveId() + " has been successfully cancelled.";
+				mav = new ModelAndView("redirect:/staff/history");
+				Leave leave = lService.findLeaveById(id);
+				lService.DeleteLeave(leave, LeaveStatus.CANCELLED);
+				String message = "The leave " + leave.getLeaveId() + " has been successfully cancelled.";
 
-		redirectAttributes.addFlashAttribute("message", message);
+				redirectAttributes.addFlashAttribute("message", message);
+			} else {
+				mav = new ModelAndView("unauthorized-admin-access");
+			}
+
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+			mav = new ModelAndView("unauthorized-access");
+		}
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/leave/created", method = RequestMethod.GET)
 	public ModelAndView refreshCreatedPage(HttpSession session) {
 		return NewLeavePage(session);
 	}
+
 	@RequestMapping(value = "/leave/created", method = RequestMethod.POST)
 	public ModelAndView createNewLeave(@ModelAttribute @Valid Leave leave, BindingResult result,
-			final RedirectAttributes redirectAttributes, HttpSession session,
-			HttpServletRequest request) {
+			final RedirectAttributes redirectAttributes, HttpSession session, HttpServletRequest request) {
 		UserSession us = (UserSession) session.getAttribute("USERSESSION");
-		
+
 		if (us == null) {
 			return new ModelAndView("redirect:/home/login");
 		}
@@ -443,7 +467,7 @@ public class StaffController {
 //				leave.setStartDate(startDateNew.getTime());
 //				claimingDays -= 0.5;
 			}
-			
+
 			if (endHalfDay != null) {
 				System.out.println("endHalfDay: " + endHalfDay);
 				Calendar endDateNew = Calendar.getInstance();
@@ -553,7 +577,7 @@ public class StaffController {
 				// ----- END OF EMAIL ------
 			}
 
-
 			return mav;
-		}
+	}
+
 }

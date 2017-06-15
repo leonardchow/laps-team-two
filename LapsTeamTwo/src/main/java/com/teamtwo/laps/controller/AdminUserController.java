@@ -98,7 +98,13 @@ public class AdminUserController {
 			final RedirectAttributes redirectAttributes) {
 
 		if (result.hasErrors())
-			return new ModelAndView("user-new");
+		{
+			ModelAndView mav =new ModelAndView("user-new");
+			ArrayList<Integer> sidList = smService.findAllStaffId();
+			mav.addObject("sidlist", sidList);
+			return mav;
+		}
+			
 
 		ModelAndView mav = new ModelAndView();
 		String message = "New user " + user.getUserId() + " was successfully created.";

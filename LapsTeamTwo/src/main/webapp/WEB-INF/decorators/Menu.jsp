@@ -4,10 +4,8 @@
 <c:if test="${sessionScope.USERSESSION.getSessionId() ne null}">
 
 	<ul class="nav nav-pills nav-stacked">
-	
-		<li role="presentation"><spring:url value="/staff/dashboard"
-						var="ulist" htmlEscape="true" /><a href="${ulist}">Dashboard
-						</a></li>
+
+		
 
 		<c:choose>
 			<c:when test="${sessionScope.USERSESSION.user.isAdmin eq true }">
@@ -36,9 +34,17 @@
 						value="/manager/pending/list" var="ulist" htmlEscape="true" /><a
 					href="${ulist}">View Leave Application For Approval</a></li>
 
-				<li role="presentation"><spring:url value="/manager/leave/subordinate"
-						var="ulist" htmlEscape="true" /><a href="${ulist}">Subordinate
-						Leave History</a></li>
+				<li role="presentation"><spring:url
+						value="/manager/subordinate" var="ulist" htmlEscape="true" /><a
+					href="${ulist}">Subordinate Leave History</a></li>
+
+				<li role="presentation"><spring:url value="/staff/leave/create"
+						var="ulist" htmlEscape="true" /><a href="${ulist}">Apply
+						Leave</a></li>
+
+				<li role="presentation"><spring:url value="/staff/history"
+						var="ulist" htmlEscape="true" /><a href="${ulist}">View Leave
+						History</a></li>
 
 
 			</c:when>
