@@ -5,13 +5,13 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 
 import java.io.IOException;
-import java.text.DateFormat;
+
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
+
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.LiveBeansView;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,11 +45,9 @@ import com.teamtwo.laps.javabeans.ManagerPath;
 import com.teamtwo.laps.javabeans.MovementBean;
 import com.teamtwo.laps.model.Holiday;
 import com.teamtwo.laps.model.Leave;
-import com.teamtwo.laps.model.LeaveType;
+
 import com.teamtwo.laps.model.StaffMember;
 import com.teamtwo.laps.model.User;
-import com.teamtwo.laps.service.LeaveService;
-import com.teamtwo.laps.service.StaffMemberService;
 
 /**
  * Handles requests for the application staff pages.
@@ -119,43 +117,70 @@ public class ManagerController {
 	// DONE
 	@RequestMapping(value = "/pending/list")
 	public ModelAndView viewPendingPage(HttpSession session) throws IOException {
-		ModelAndView modelAndView = new ModelAndView("manager-pending-list");
-		HashMap<StaffMember, ArrayList<Leave>> hm = new HashMap<StaffMember, ArrayList<Leave>>();
-		UserSession us = (UserSession) session.getAttribute("USERSESSION");
+
 		ModelAndView mav = new ModelAndView("login");
-		if (us.getSessionId() != null) {
-			for (StaffMember sMember : us.getSubordinates()) {
-				ArrayList<Leave> llist = lService.findPendingLeaveByType(sMember.getStaffId());
-				hm.put(sMember, llist);
+		try {
+			UserSession us = (UserSession) session.getAttribute("USERSESSION");
+			if (us.getSessionId() != null && us.getUser().getIsManager()) {
+
+				mav = new ModelAndView("manager-pending-list");
+				HashMap<StaffMember, ArrayList<Leave>> hm = new HashMap<StaffMember, ArrayList<Leave>>();
+
+				for (StaffMember sMember : us.getSubordinates()) {
+					ArrayList<Leave> llist = lService.findPendingLeaveByType(sMember.getStaffId());
+					hm.put(sMember, llist);
+
+					mav = new ModelAndView("manager-pending-list");
+					// Pagination
+					// ObjectMapper mapper = new ObjectMapper();
+					mav.addObject("pendinghistory", hm);
+					return mav;
+				}
+			} else {
+				mav = new ModelAndView("unauthorized-admin-access");
 			}
-			mav = new ModelAndView("manager-pending-list");
-			// Pagination
-			// ObjectMapper mapper = new ObjectMapper();
-			mav.addObject("pendinghistory", hm);
-			return mav;
+
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+			mav = new ModelAndView("unauthorized-access");
 		}
-		return modelAndView;
+		return mav;
 	}
 
 	// DONE
 	@RequestMapping(value = "/pending/detail/{leaveId}")
 	public ModelAndView approveApplicationPage(@PathVariable Integer leaveId, HttpSession session) {
-		ModelAndView modelAndView = new ModelAndView("manager-pending-approve");
-		ManagerPath mp = ManagerPath.PENDING;
-		session.setAttribute("USERPATH", mp);
-		Leave leave = lService.findLeaveById(leaveId);
 
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(leave.getStartDate());
-		int month = cal.get(Calendar.MONTH);
-		int year = cal.get(Calendar.YEAR);
-		ArrayList<Leave> allLeave = lService.findAllLeaveOfSubordinate(leave.getStaffMember().getManagerId());
-		List<Leave> subLeave = MovementBean.filterLeaveByStatusAndMonth(allLeave, LeaveStatus.APPROVED, month, year);
+		ModelAndView mav = new ModelAndView("login");
+		try {
+			UserSession us = (UserSession) session.getAttribute("USERSESSION");
+			if (us.getSessionId() != null && us.getUser().getIsManager()) {
 
-		modelAndView.addObject("leave", leave);
-		modelAndView.addObject("approve", new Approve());
-		modelAndView.addObject("subLeave", subLeave);
-		return modelAndView;
+				mav = new ModelAndView("manager-pending-approve");
+				ManagerPath mp = ManagerPath.PENDING;
+				session.setAttribute("MANAGERPATH", mp);
+				Leave leave = lService.findLeaveById(leaveId);
+
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(leave.getStartDate());
+				int month = cal.get(Calendar.MONTH);
+				int year = cal.get(Calendar.YEAR);
+				ArrayList<Leave> allLeave = lService.findAllLeaveOfSubordinate(leave.getStaffMember().getManagerId());
+				List<Leave> subLeave = MovementBean.filterLeaveByStatusAndMonth(allLeave, LeaveStatus.APPROVED, month,
+						year);
+
+				mav.addObject("leave", leave);
+				mav.addObject("approve", new Approve());
+				mav.addObject("subLeave", subLeave);
+			} else {
+				mav = new ModelAndView("unauthorized-admin-access");
+			}
+
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+			mav = new ModelAndView("unauthorized-access");
+		}
+		return mav;
 	}
 
 	// leave validation and business logic
@@ -273,52 +298,108 @@ public class ManagerController {
 	// Yin
 	@RequestMapping(value = "/subordinate", method = RequestMethod.GET)
 	public ModelAndView viewSubordinateListForLeaveApproval(HttpSession session) {
-		ModelAndView mav = new ModelAndView("manager-subordinate");
-		UserSession us = (UserSession) session.getAttribute("USERSESSION");
-		List<StaffMember> subordinateList = smService.findSubordinates(us.getEmployee().getStaffId());
-		mav.addObject("subordinateList", subordinateList);
+
+		ModelAndView mav = new ModelAndView("login");
+		try {
+			UserSession us = (UserSession) session.getAttribute("USERSESSION");
+			if (us.getSessionId() != null && us.getUser().getIsManager()) {
+
+				mav = new ModelAndView("manager-subordinate");
+
+				List<StaffMember> subordinateList = smService.findSubordinates(us.getEmployee().getStaffId());
+				mav.addObject("subordinateList", subordinateList);
+			} else {
+				mav = new ModelAndView("unauthorized-admin-access");
+			}
+
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+			mav = new ModelAndView("unauthorized-access");
+		}
 		return mav;
 	}
 
 	@RequestMapping(value = "/subordinate/history/{staffId}", method = RequestMethod.GET)
-	public ModelAndView viewSubordinateLeaveHistoryDeatils(@PathVariable int staffId) {
-		ModelAndView mav = new ModelAndView("manager-subordinate-history");
+	public ModelAndView viewSubordinateLeaveHistoryDeatils(@PathVariable int staffId, HttpSession session) {
 
-		StaffMember staffMember = smService.findStaff(staffId);
-		mav.addObject("staffMember", staffMember);
+		ModelAndView mav = new ModelAndView("login");
+		try {
+			UserSession us = (UserSession) session.getAttribute("USERSESSION");
+			if (us.getSessionId() != null && us.getUser().getIsManager()) {
 
-		List<Leave> allLeave = lService.findStaffLeaveHistory(staffMember.getStaffId());
-		Calendar cal = Calendar.getInstance();
-		int year = cal.get(Calendar.YEAR);
-		List<Leave> leaveHistoryList = MovementBean.filterLeaveByYear(allLeave, year);
-		mav.addObject("leaveHistoryList", leaveHistoryList);
+				mav = new ModelAndView("manager-subordinate-history");
+
+				StaffMember staffMember = smService.findStaff(staffId);
+				mav.addObject("staffMember", staffMember);
+
+				List<Leave> allLeave = lService.findStaffLeaveHistory(staffMember.getStaffId());
+				Calendar cal = Calendar.getInstance();
+				int year = cal.get(Calendar.YEAR);
+				List<Leave> leaveHistoryList = MovementBean.filterLeaveByYear(allLeave, year);
+				mav.addObject("leaveHistoryList", leaveHistoryList);
+			} else {
+				mav = new ModelAndView("unauthorized-admin-access");
+			}
+
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+			mav = new ModelAndView("unauthorized-access");
+		}
 		return mav;
 	}
 
 	@RequestMapping(value = "/subordinate/history/detail/{leaveId}", method = RequestMethod.GET)
 	public ModelAndView viewSubordinateLeaveHistory(@PathVariable int leaveId, HttpSession session) {
-		ModelAndView modelAndView = new ModelAndView("manager-pending-approve");
-		Leave leave = lService.findLeaveById(leaveId);
-		if ((leave.getStatus() == LeaveStatus.APPROVED) || (leave.getStatus() == LeaveStatus.CANCELLED)
-				|| (leave.getStatus() == LeaveStatus.REJECTED)) {
-			String url = "redirect:/manager/view/detail/" + leave.getLeaveId();
-			modelAndView = new ModelAndView(url);
-			return modelAndView;
+
+		ModelAndView mav = new ModelAndView("login");
+		try {
+			UserSession us = (UserSession) session.getAttribute("USERSESSION");
+			if (us.getSessionId() != null && us.getUser().getIsManager()) {
+
+				mav = new ModelAndView("manager-pending-approve");
+				Leave leave = lService.findLeaveById(leaveId);
+				if ((leave.getStatus() == LeaveStatus.APPROVED) || (leave.getStatus() == LeaveStatus.CANCELLED)
+						|| (leave.getStatus() == LeaveStatus.REJECTED)) {
+					String url = "redirect:/manager/view/detail/" + leave.getLeaveId();
+					mav = new ModelAndView(url);
+					return mav;
+				}
+				ManagerPath mp = ManagerPath.HISTORY;
+				session.setAttribute("MANAGERPATH", mp);
+				mav.addObject("leave", leave);
+				mav.addObject("approve", new Approve());
+			} else {
+				mav = new ModelAndView("unauthorized-admin-access");
+			}
+
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+			mav = new ModelAndView("unauthorized-access");
 		}
-		ManagerPath mp = ManagerPath.HISTORY;
-		session.setAttribute("USERPATH", mp);
-		modelAndView.addObject("leave", leave);
-		modelAndView.addObject("approve", new Approve());
-		return modelAndView;
+		return mav;
 	}
 
 	@RequestMapping(value = "/view/detail/{leaveId}", method = RequestMethod.GET)
 	public ModelAndView viewSubordinateLeaveDetail(@PathVariable int leaveId, HttpSession session) {
-		ModelAndView modelAndView = new ModelAndView("manager-view-details");
-		Leave leave = lService.findLeaveById(leaveId);
-		ManagerPath mp = ManagerPath.DETAIL;
-		session.setAttribute("USERPATH", mp);
-		modelAndView.addObject("leave", leave);
-		return modelAndView;
+
+		ModelAndView mav = new ModelAndView("login");
+		try {
+			UserSession us = (UserSession) session.getAttribute("USERSESSION");
+			if (us.getSessionId() != null && us.getUser().getIsManager()) {
+
+				mav = new ModelAndView("manager-view-details");
+				Leave leave = lService.findLeaveById(leaveId);
+				ManagerPath mp = ManagerPath.DETAIL;
+				session.setAttribute("MANAGERPATH", mp);
+				mav.addObject("leave", leave);
+			} else {
+				mav = new ModelAndView("unauthorized-admin-access");
+			}
+
+		} catch (NullPointerException e) {
+			// TODO: handle exception
+			mav = new ModelAndView("unauthorized-access");
+		}
+		return mav;
 	}
 }

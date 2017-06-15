@@ -7,6 +7,8 @@
 <h3>Edit Leave Type</h3>
 <form:form method="POST" commandName="leaveType"
 	action="${pageContext.request.contextPath}/admin/leavetype/edit/${leaveType.leaveType}.html">
+	
+	<div class="table-responsive">
 	<table class="table">
 		<tbody>
 			<tr>
@@ -21,10 +23,12 @@
 			</tr>
 
 			<tr>
-				<td><input type="submit" value="Update" class="btn btn-primary" /></td>
+				<td><input type="submit" value="Update" class="btn btn-primary"/></td>
 				<td></td>
 				<td></td>
 			</tr>
 		</tbody>
 	</table>
+	</div>
+	
 </form:form>

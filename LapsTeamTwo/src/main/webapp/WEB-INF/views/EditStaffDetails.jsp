@@ -60,8 +60,8 @@
 
 		</table>
 
-		<br /> <input type="submit" value="Undo Changes">
-		&nbsp;&nbsp;&nbsp;&nbsp; <input type="submit" value="Submit">
+<br/>
+<input type="submit" value="Undo Changes" class="btn btn-primary"> &nbsp;&nbsp; <input type="submit" value="Submit" class="btn btn-primary">
 
 	</div>
 </body>
