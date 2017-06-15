@@ -31,19 +31,24 @@
 		}
 	}
 </script>
-<h3>New Leave page</h3>
+<c:choose>
+	<c:when test="${ isEdit eq true }">
+		<h3>Edit Leave page</h3>
+	</c:when>
+	<c:otherwise>
+		<h3>New Leave page</h3>
+	</c:otherwise>
+</c:choose>
 <form:form method="POST" commandName="leave"
 	action="${pageContext.request.contextPath}/staff/leave/created">
 
-	<table class="table table-striped">
-		<tr>
-			<td>LeaveType</td>
-			<td>
 			<form:input path="staffId" type="hidden"
 					value="${leave.staffId}" />
 			<form:input path="leaveId" type="hidden"
 					value="${leave.leaveId}" />
-			</td>
+	<table class="table table-striped">
+		<tr>
+			<td>LeaveType</td>
 			<td colspan="3"><form:select id="leaveTypeSelect"
 					path="leaveType" onchange="checkLeaveType(event);">
 					<c:forEach var="lType" items="${leaveTypes}">
@@ -128,10 +133,26 @@
 					path="dissemination" cssStyle="color: red;" /></td>
 		</tr>
 		<tr>
+			<c:choose>
+				<c:when test="${ isEdit eq true }">
+					<c:set var="submitBtnText">
+						Update
+					</c:set>
+					<spring:url value="/staff/history"
+							var="backToDash" htmlEscape="true" />
+				</c:when>
+				<c:otherwise>
+					<c:set var="submitBtnText">
+						Submit
+					</c:set>
+					<spring:url value="/staff/dashboard"
+							var="backToDash" htmlEscape="true" />
+				</c:otherwise>
+			</c:choose>
 			<td><form:button type="submit" class="btn btn-primary">
-					Submit
+					${ submitBtnText }
 				</form:button></td>
-			<td><a href="javascript:history.back(-1);"
+			<td><a href="${ backToDash }"
 				class="btn btn-primary"> Cancel</a></td>
 		</tr>
 	</table>

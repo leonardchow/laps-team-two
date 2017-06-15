@@ -29,4 +29,6 @@ public interface UserService {
 	
 	void removeUser(User user);
 
+	User findUserByStaffId(Integer staffId);
+
 }
