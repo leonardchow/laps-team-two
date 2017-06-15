@@ -171,7 +171,8 @@ public class StaffMember {
 	
 	public Double getAvailableLeaveDaysOfType(Integer leaveTypeId, List<Holiday> holidays, OvertimeService otService) {
 		Double result = appliedLeaves.stream()
-				.filter(a -> a.getLeaveType() == leaveTypeId
+				.filter(a -> a.getStaffId() == this.getStaffId() && 
+				a.getLeaveType() == leaveTypeId
 					&& (a.getStatus() == LeaveStatus.APPROVED
 					|| a.getStatus() == LeaveStatus.PENDING
 					|| a.getStatus() == LeaveStatus.UPDATED))

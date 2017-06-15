@@ -95,4 +95,11 @@ public class StaffMemberServiceImpl implements StaffMemberService {
 		// TODO Auto-generated method stub
 		repository.delete(staff);
 	}
+
+	@Override
+	public ArrayList<StaffMember> findAllStaffExcept(Integer staffId) {
+		// TODO Auto-generated method stub
+		ArrayList<StaffMember> allExcept = repository.findAllStaffExcept(staffId);
+		return allExcept;
+	}
 }

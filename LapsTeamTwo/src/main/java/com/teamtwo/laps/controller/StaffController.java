@@ -40,6 +40,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.teamtwo.laps.javabeans.LeaveStatus;
+import com.teamtwo.laps.javabeans.ManagerPath;
 import com.teamtwo.laps.model.Holiday;
 import com.teamtwo.laps.model.Leave;
 import com.teamtwo.laps.model.LeaveType;
@@ -57,7 +58,6 @@ import com.teamtwo.laps.service.LeaveService;
 import com.teamtwo.laps.service.LeaveTypeService;
 import com.teamtwo.laps.service.OvertimeService;
 import com.teamtwo.laps.service.StaffMemberService;
-import com.teamtwo.laps.javabeans.StaffPath;
 
 import com.teamtwo.laps.controller.UserSession;
 
@@ -109,7 +109,7 @@ public class StaffController {
 
 		UserSession userSession = (UserSession) session.getAttribute("USERSESSION");
 		
-		StaffPath sp = StaffPath.SDASHBOARD;
+		ManagerPath sp = ManagerPath.DASHBOARD;
 		session.setAttribute("USERPATH", sp);
 
 		if (userSession == null || userSession.getSessionId() == null) {
@@ -255,6 +255,9 @@ public class StaffController {
 		int year = cal.get(Calendar.YEAR);
 		List<Leave> leaveHistoryList = MovementBean.filterLeaveByYear(allLeave, year);
 		
+		ManagerPath mp = ManagerPath.HISTORY;
+		session.setAttribute("USERPATH", mp);
+		
 		/* Pagination */
 		int currentPage = prevCurrentPage.isPresent() ? prevCurrentPage.get() : DEFAULT_CURRENT_PAGE;
 		int perPage = prevPerPage.isPresent() ? prevPerPage.get() : DEFAULT_PER_PAGE;
@@ -272,7 +275,7 @@ public class StaffController {
 			mav.addObject("lhistory", leaveHistoryListOnPage);
 
 		} catch (IndexOutOfBoundsException e) {
-			mav.addObject("valError", "You have not appplied for any yet leave!");
+			mav.addObject("valError", "You have not appplied for any leave yet!");
 		}
 		
 		
@@ -318,8 +321,8 @@ public class StaffController {
 	@RequestMapping(value = "/history/details/{id}", method = RequestMethod.POST)
 	public ModelAndView LeaveDetailsBack(@PathVariable Integer id, HttpSession session) {
 		ModelAndView mav = new ModelAndView("redirect:/staff/history");
-		StaffPath sp = (StaffPath) session.getAttribute("USERPATH");
-		if (sp == StaffPath.SDASHBOARD) {
+		ManagerPath sp = (ManagerPath) session.getAttribute("USERPATH");
+		if (sp == ManagerPath.DASHBOARD) {
 			mav = new ModelAndView("redirect:/staff/dashboard");
 		}
 		return mav;
