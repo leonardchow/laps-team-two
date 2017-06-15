@@ -158,11 +158,8 @@ public class StaffController {
 		UserSession userSession = (UserSession) session.getAttribute("USERSESSION");
 
 		if (userSession == null || userSession.getSessionId() == null) {
-			// return new ModelAndView("redirect:/home/login");
+			 return new ModelAndView("redirect:/home/login");
 		}
-
-		// int staffId = userSession.getEmployee().getStaffId();
-		// String userid = userSession.getUser().getUserId();
 
 		int currentMonth = Calendar.getInstance().get(Calendar.MONTH);
 		int currentYear = Calendar.getInstance().get(Calendar.YEAR);

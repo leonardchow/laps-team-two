@@ -50,6 +50,9 @@
 				<li role="presentation"><spring:url value="/staff/history"
 						var="ulist" htmlEscape="true" /><a href="${ulist}">View Leave
 						History</a></li>
+						
+				<li role="presentation"><spring:url value="/staff/movement"
+						var="ulist" htmlEscape="true" /><a href="${ulist}">View Movement Register</a></li>
 
 
 			</c:when>
