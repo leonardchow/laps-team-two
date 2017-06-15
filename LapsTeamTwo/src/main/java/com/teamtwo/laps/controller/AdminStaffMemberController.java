@@ -1,7 +1,9 @@
 package com.teamtwo.laps.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -73,7 +75,10 @@ public class AdminStaffMemberController {
 			if (us.getSessionId() != null && us.getUser().getIsAdmin()) {
 
 				mav = new ModelAndView("staff-new", "staff", new StaffMember());
-				ArrayList<StaffMember> sList = smService.findAllStaff();
+				List<StaffMember> sList = smService.findAllStaff();
+				
+				sList = sList.stream().filter(staff -> uService.findUserByStaffId(staff.getStaffId()).getIsManager()).collect(Collectors.toList());
+				
 				mav.addObject("mlist", sList);
 			} else {
 				mav = new ModelAndView("unauthorized-admin-access");

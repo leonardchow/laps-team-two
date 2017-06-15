@@ -52,6 +52,12 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
+	public User findUserByStaffId(Integer staffId) {
+		// TODO Auto-generated method stub
+		return userRepository.findUserByStaffId(staffId);
+	}
+	
+	@Override
 	@Transactional
 	public User changeUser(User user) {
 		return userRepository.saveAndFlush(user);
