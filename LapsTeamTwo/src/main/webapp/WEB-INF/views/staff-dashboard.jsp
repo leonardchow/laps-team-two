@@ -23,7 +23,7 @@
 					<span class="float-vertical-align"><a
 						class="btn btn-info"
 						href="${pageContext.request.contextPath}/staff/history">
-						View all your applications (${ (totalLeavesNum - numToShow) > 0 ? totalLeavesNum - numToShow : 0 } more)</a></span>
+						View all your applications (${totalLeavesNum})</a></span>
 				</div>
 				<!-- 					<div class="panel-body text-center float-wrapper"> -->
 				<!-- 					</div> -->
