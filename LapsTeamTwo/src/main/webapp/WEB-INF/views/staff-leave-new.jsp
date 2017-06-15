@@ -38,19 +38,29 @@
 	<table class="table table-striped">
 		<tr>
 			<td>LeaveType</td>
+			<td>
+			<form:input path="staffId" type="hidden"
+					value="${leave.staffId}" />
+			<form:input path="leaveId" type="hidden"
+					value="${leave.leaveId}" />
+			</td>
 			<td colspan="3"><form:select id="leaveTypeSelect"
 					path="leaveType" onchange="checkLeaveType(event);">
 					<c:forEach var="lType" items="${leaveTypes}">
 						<form:option value="${lType.leaveType }">${lType.leaveName}
 			    </form:option>
 					</c:forEach>
-				</form:select> <form:errors path="leaveType" cssStyle="color: red;" /></td>
+				</form:select> <form:errors path="leaveType" cssStyle="color: red;" />
+				<div class="margin-15">
+					<h4><span class="label label-danger">${ leaveDaysError }</span></h4>
+				<c:if test="${ not leaveDaysError.isEmpty() }">
+				</c:if>
+				</div>
+			</td>
 		</tr>
 		<tr>
 			<td colspan="2">
-				<div class="margin-10">
-					<span class="label label-danger">${ compError }</span>
-				</div>
+				<span class="label label-danger">${ compError }</span>
 				<div class="comp-conditional hidden">
 					<div class="margin-10">
 						<p class="label label-info">You have ${ compHours } hours of
@@ -69,19 +79,25 @@
 			<td>Start Date</td>
 			<td><form:input size="16" path="startDate" id="datepicker1"
 					value="${ fmtStartDate }" />
-				<div class="comp-conditional hidden">
-					Half day <input type="checkbox" name="startDateHalfDay" />
-				</div> <form:errors path="startDate" cssStyle="color: red;" /></td>
+<!-- 				<div class="comp-conditional hidden"> -->
+<!-- 					Half day <input type="checkbox" name="startDateHalfDay" /> -->
+<!-- 				</div> -->
+				<form:errors path="startDate" cssStyle="color: red;" /></td>
 		</tr>
 		<tr>
 			<c:set var="fmtEndDate">
 				<fmt:formatDate value="${ leave.endDate }" pattern="dd/MM/yyyy" />
 			</c:set>
+			<c:set var="isHalfDayCheck">
+				<c:if test="${ leave.isHalfDay == 1 }">
+					checked="checked"
+				</c:if>
+			</c:set>
 			<td>End Date</td>
 			<td><form:input size="16" path="endDate" id="datepicker2"
 					value="${ fmtEndDate }" />
 				<div class="comp-conditional hidden">
-					Half day <input type="checkbox" name="endDateHalfDay" />
+					Half day less <input type="checkbox" name="endDateHalfDay" ${ isHalfDayCheck } />
 				</div> <form:errors path="endDate" cssStyle="color: red;" /></td>
 		</tr>
 		<tr>
@@ -119,4 +135,5 @@
 				class="btn btn-primary"> Cancel</a></td>
 		</tr>
 	</table>
+	<input type="hidden" name="edit" value="${ isEdit }" />
 </form:form>

@@ -69,6 +69,110 @@
 					</c:forEach>
 				</tbody>
 			</table>
+
+			<!-- Pagination  -->
+			<!-- Paging control -->
+			<c:set var="buttonClasses" value="btn btn-default btn-sm" />
+			<c:url var="firstBtnUrl" value="history">
+				<c:param name="page" value="${ 1 }" />
+				<c:param name="perPage" value="${ perPage }" />
+			</c:url>
+			<c:url var="prevBtnUrl" value="history">
+				<c:param name="page" value="${ currentPage - 1 }" />
+				<c:param name="perPage" value="${ perPage }" />
+			</c:url>
+			<c:url var="nextBtnUrl" value="history">
+				<c:param name="page" value="${ currentPage + 1 }" />
+				<c:param name="perPage" value="${ perPage }" />
+			</c:url>
+			<c:url var="lastBtnUrl" value="history">
+				<c:param name="page" value="${ totalPages }" />
+				<c:param name="perPage" value="${ perPage }" />
+			</c:url>
+			
+			
+			<div class='col-xs-6 col-xs-offset-3'>
+
+				<div class='row'>
+					<div class='btn-group'>
+						<a href='${ prevBtnEnabled ? firstBtnUrl : "#" }'
+							class='${ buttonClasses }' ${ prevBtnEnabled ? '' : 'disabled' }>First</a>
+						<a href='${ prevBtnEnabled ? prevBtnUrl : "#" }'
+							class='${ buttonClasses }' ${ prevBtnEnabled ? '' : 'disabled' }>Previous</a>
+					</div>
+					<!-- Change page dropdown -->
+					<div class="btn-group dropup">
+						<button type="button"
+							class="btn btn-sm btn-default dropdown-toggle"
+							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Page ${ currentPage } / ${ totalPages } <span class="caret"></span>
+						</button>
+							<ul class="dropdown-menu">
+								<li class="dropdown-header">Total ${ totalPages } page<c:if
+										test="${ totalPages > 1 }">s</c:if>
+								</li>
+								<c:forEach var="i" begin="1" end="${ totalPages }">
+	
+									<c:url var="changePageUrl" value="history">
+										<c:param name="page" value="${ i }" />
+										<c:param name="perPage" value="${ perPage }" />
+									</c:url>
+	
+									<c:choose>
+										<c:when test="${ i == currentPage }">
+											<li class="disabled"><a>Page ${ i }</a></li>
+										</c:when>
+										<c:when test="${ i != currentPage }">
+											<li><a href="${ changePageUrl }">Page ${ i }</a></li>
+										</c:when>
+									</c:choose>
+								</c:forEach>
+							</ul>
+					</div>
+					<!-- Change page dropdown -->
+
+					<div class='btn-group'>
+						<a href='${ nextBtnEnabled ? nextBtnUrl : "#" }'
+							class='${ buttonClasses }' ${ nextBtnEnabled ? '' : 'disabled' }>Next</a>
+						<a href='${ nextBtnEnabled ? lastBtnUrl : "#" }'
+							class='${ buttonClasses }' ${ nextBtnEnabled ? '' : 'disabled' }>Last</a>
+					</div>
+				</div>
+
+				<!-- Per page -->
+				<div class='row margin-10'>
+					<span>Results per page:</span>
+					<div class="btn-group dropup">
+						<button type="button"
+							class="btn btn-sm btn-default dropdown-toggle"
+							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							${ perPage } <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<c:forEach items="${ perPageList }" var="perPageItem">
+
+								<c:url var="changePerPageUrl" value="history">
+									<c:param name="page" value="${ currentPage }" />
+									<c:param name="perPage" value="${ perPageItem }" />
+								</c:url>
+
+								<c:choose>
+									<c:when test="${ perPageItem == perPage }">
+										<li class="disabled"><a>${ perPageItem }</a></li>
+									</c:when>
+									<c:when test="${ perPageItem != perPage }">
+										<li><a href="${ changePerPageUrl }">${ perPageItem }</a></li>
+									</c:when>
+								</c:choose>
+							</c:forEach>
+
+						</ul>
+					</div>
+				</div>
+
+			</div>
+			<!-- End Pagination  -->
+
 		</div>
 	</c:if>
 </body>

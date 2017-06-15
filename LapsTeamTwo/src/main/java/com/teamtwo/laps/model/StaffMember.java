@@ -2,6 +2,8 @@ package com.teamtwo.laps.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,6 +14,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.print.attribute.standard.MediaSize.Other;
+
+import com.teamtwo.laps.javabeans.LeaveStatus;
+import com.teamtwo.laps.service.HolidayService;
+import com.teamtwo.laps.service.OvertimeService;
 
 @Entity
 @Table(name = "staff_list")
@@ -160,6 +167,36 @@ public class StaffMember {
 
 	public void setAppliedLeaves(List<Leave> appliedLeaves) {
 		this.appliedLeaves = appliedLeaves;
+	}
+	
+	public Double getAvailableLeaveDaysOfType(Integer leaveTypeId, List<Holiday> holidays, OvertimeService otService) {
+		Double result = appliedLeaves.stream()
+				.filter(a -> a.getLeaveType() == leaveTypeId
+					&& (a.getStatus() == LeaveStatus.APPROVED
+					|| a.getStatus() == LeaveStatus.PENDING
+					|| a.getStatus() == LeaveStatus.UPDATED))
+				.map(x -> x.getNumberOfDays(holidays))
+				.reduce(0.0, ((a, b) -> a + b));
+		
+		Double available = 0.0;
+		switch (leaveTypeId) {
+		case 1:
+			// Annual
+			available = aLeave * 1.0 - result;
+			break;
+		case 2:
+			// Medical
+			available = mLeave * 1.0 - result;
+			break;
+		case 3:
+			// Compensation
+			available = otService.findUnclaimedHoursOfStaff(staffId) * 1.0 / 8;
+			break;
+
+		default:
+			break;
+		}
+		return available;
 	}
 
 	@Override

@@ -18,7 +18,7 @@
 		<div class='row margin-10'>
 			<div class="panel panel-primary">
 				<div class="panel-heading float-wrapper">
-					<span class="h4">${ numToShow } most recent requests</span>
+					<span class="h4">${ numToShow } of the most recent requests</span>
 					<!-- 					Recent requests -->
 					<span class="float-vertical-align"><a
 						class="btn btn-info"
@@ -106,16 +106,33 @@
 
 	</div>
 
-	<div class='col-xs-2'>
+	<div class='col-xs-3'>
 		<div class='row'>
 			<div class='panel-group margin-10'>
 				<div class="panel panel-info">
+					<div class="panel-heading">Compensation entitlement</div>
+					<div class="panel-body">
+						<div class='margin-10'>
+							Unclaimed hours: <b>${ compHoursUnclaimed }</b> h
+							<br />
+							Available: <b>${ availableCompLeaveDays }</b> days
+							<br />
+							Pending: <b>${ pendingCompLeaveDays }</b> days
+							<br />
+							<br />
+							<a href="${pageContext.request.contextPath}/staff/comp/loghours.html" class="btn btn-primary btn-sm">Log overtime</a>
+							<br />
+							<a href="${pageContext.request.contextPath}/staff/comp/history.html" class="btn btn-primary btn-sm">View past overtime</a>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-success">
 					<div class="panel-heading">Annual leave entitlement</div>
 					<div class="panel-body">
 						<div class='margin-10'>
-							Available: <b>${ staffMember.aLeave - annualLeaveDays }</b>
+							Available: <b>${ staffMember.aLeave - annualLeaveDays }</b> days
 							<br />
-							Pending: <b>${ annualLeavePending }</b>
+							Pending: <b>${ annualLeavePending }</b> days
 						</div>
 					</div>
 				</div>
@@ -123,9 +140,9 @@
 					<div class="panel-heading">Medical leave</div>
 					<div class="panel-body">
 						<div class='margin-10'>
-							Available: <b>${ staffMember.mLeave - medicalLeaveDays }</b>
+							Available: <b>${ staffMember.mLeave - medicalLeaveDays }</b> days
 							<br />
-							Pending: <b>${ medicalLeavePending }</b>
+							Pending: <b>${ medicalLeavePending }</b> days
 						</div>
 					</div>
 				</div>
