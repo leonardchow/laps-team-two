@@ -2,6 +2,8 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+
 <%@ page session="false"%>
 <html>
 <head>
@@ -20,8 +22,7 @@
 
 				<table class="table">
 					<tr>
-						<th align="right"><spring:message
-								code="fieldLabel.employeeName" /></th>
+						<th align="right"><spring:message code="fieldLabel.employeeName" /></th>
 						<td colspan="3"><c:out value="${leave.staffMember.name}" /></td>
 					</tr>
 					<tr>
@@ -34,8 +35,7 @@
 					</tr>
 					<tr>
 						<th align="right"><spring:message code="fieldLabel.leaveType" /></th>
-						<td colspan="3"><c:out
-								value="${leave.leaveTypeModel.leaveName}" /></td>
+						<td colspan="3"><c:out value="${leave.leaveTypeModel.leaveName}" /></td>
 					</tr>
 					<tr>
 						<th align="right"><spring:message code="fieldLabel.startDate" /></th>
@@ -44,16 +44,14 @@
 						<td><c:out value="${leave.endDate }" /></td>
 					</tr>
 					<tr>
-						<th align="right"><spring:message
-								code="fieldLabel.dissemTask" /></th>
+						<th align="right"><spring:message code="fieldLabel.dissemTask" /></th>
 						<td><c:out value="${leave.dissemination}" /></td>
 						<th align="right"><spring:message
 								code="fieldLabel.dissemination" /></th>
 						<td><c:out value="${leave.disseminationMember.name}" /></td>
 					</tr>
 					<tr>
-						<th align="right"><spring:message
-								code="fieldLabel.contactInfo" /></th>
+						<th align="right"><spring:message code="fieldLabel.contactInfo" /></th>
 						<td colspan="3"><c:out value="${leave.contactDetails}" /></td>
 					</tr>
 					<tr>

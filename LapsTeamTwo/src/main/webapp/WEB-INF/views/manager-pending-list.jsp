@@ -17,38 +17,34 @@
 
 				<div class="table-responsive">
 					<table class="table table-hover">
-						<tr>
-							<th><spring:message code="fieldLabel.leaveId" /></th>
-							<th><spring:message code="fieldLabel.reason" /></th>
-							<th><spring:message code="fieldLabel.startDate" /></th>
-							<th><spring:message code="fieldLabel.endDate" /></th>
-							<th><spring:message code="fieldLabel.dissemination" /></th>
-							<th><spring:message code="fieldLabel.status" /></th>
-							<th><spring:message code="fieldLabel.approve" /></th>
-						</tr>
+						<tr class="listHeading">
+					<th><spring:message code="fieldLabel.leaveId" /></th>
+					<th><spring:message code="fieldLabel.employeeName" /></th>
+					<th><spring:message code="fieldLabel.startDate" /></th>
+					<th><spring:message code="fieldLabel.endDate" /></th>
+					<th><spring:message code="fieldLabel.dissemination" /></th>
+					<th><spring:message code="fieldLabel.status" /></th>
+					<th><spring:message code="fieldLabel.approve" /></th>
+					<th><spring:message code="caption.details" /></th>
+				</tr>
 						<c:forEach var="leave" items="${entry.value}">
-							<tr>
-								<td>${leave.leaveId}</td>
-								<td><c:out value="${entry.key.name}" /></td>
-								<td>${leave.reason}</td>
-								<td>${leave.startDate}</td>
-								<td>${leave.endDate}</td>
-								<td>${leave.disseminationMember.name}</td>
-								<td>${leave.status}</td>
-								<td><c:url
-										value="/manager/pending/detail/${leave.leaveId}.html" var="d" />
-									<a href="${d}" class="btn btn-primary">Detail</a></td>
-							</tr>
-						</c:forEach>
+					<tr class="listRecord">
+						<td>${leave.leaveId}</td>
+						<td><c:out value="${entry.key.name}" /></td>
+						<td>${leave.reason}</td>
+						<td>${leave.startDate}</td>
+						<td>${leave.endDate}</td>
+						<td>${leave.disseminationMember.name}</td>
+						<td>${leave.status}</td>
+						<td><c:url
+								value="/manager/pending/detail/${leave.leaveId}.html" var="d" />
+							<a href="${d}" class="btn btn-primary">Detail</a></td>
+					</tr>
+				</c:forEach>
 					</table>
 				</div>
 			</div>
 		</div>
 
-
-
-
 	</c:if>
 </c:forEach>
-
-

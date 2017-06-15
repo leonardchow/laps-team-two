@@ -8,6 +8,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<h3>Leave Type List</h3>
 
 
 	<c:if test="${fn:length(leaveTypeList) gt 0}">
@@ -29,9 +30,11 @@
 							<td>${leave.leaveType}</td>
 							<td>${leave.leaveName}</td>
 							<td><a
-								href="${pageContext.request.contextPath}/admin/leavetype/edit/${leave.leaveType}.html" class="btn btn-success">Edit</a></td>
+								href="${pageContext.request.contextPath}/admin/leavetype/edit/${leave.leaveType}.html"
+								class="btn btn-success">Edit</a></td>
 							<td><a
-								href="${pageContext.request.contextPath}/admin/leavetype/delete/${leave.leaveType}.html" class="btn btn-danger">Delete</a></td>
+								href="${pageContext.request.contextPath}/admin/leavetype/delete/${leave.leaveType}.html"
+								class="btn btn-danger">Delete</a></td>
 						</tr>
 					</c:forEach>
 				</tbody>

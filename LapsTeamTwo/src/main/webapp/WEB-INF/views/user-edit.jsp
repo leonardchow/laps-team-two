@@ -3,7 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
-<h3>Edit User page</h3>
+<h3>Edit ${user.userId}'s user information</h3>
 
 <form:form method="POST" commandName="user"
 	action="${pageContext.request.contextPath}/admin/user/edit/${user.userId}.html">

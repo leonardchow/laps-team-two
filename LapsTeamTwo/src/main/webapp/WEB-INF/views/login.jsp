@@ -7,8 +7,6 @@
 <form:form modelAttribute="user" method="POST"
 	action="${pageContext.request.contextPath}/home/authenticate">
 
-
-
 	<div class="row">
 		<div class="col-md-6 col-md-offset-3">
 			<div class="panel panel-primary">
@@ -37,23 +35,11 @@
 
 							</table>
 						
-
-
-
-
 				</div>
 			</div>
 
 		</div>
 
 	</div>
-
-
-
-
-
-
-
-
 </form:form>
 </html>

@@ -2,6 +2,8 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+
+
 <h3>Edit Leave Type</h3>
 <form:form method="POST" commandName="leaveType"
 	action="${pageContext.request.contextPath}/admin/leavetype/edit/${leaveType.leaveType}.html">
