@@ -25,6 +25,7 @@
 						<th><spring:message code="fieldLabel.homeAddress" /></th>
 						<th><spring:message code="fieldLabel.designation" /></th>
 						<th><spring:message code="fieldLabel.viewEmployee" /></th>
+						<th>View Employee's Overtime claims</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -39,6 +40,9 @@
 							<td><a
 								href="${pageContext.request.contextPath}/manager/subordinate/history/${staff_list.staffId}.html"
 								class="btn btn-success">Detail</a></td>
+							<td><a
+								href="${pageContext.request.contextPath}/manager/comp/history/${staff_list.staffId}.html"
+								class="btn btn-success">Pending OT</a></td>
 						</tr>
 					</c:forEach>
 				</tbody>

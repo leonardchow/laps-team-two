@@ -66,6 +66,8 @@ public class OvertimeServiceImpl implements OvertimeService {
 			Overtime storedOt = repository.findOne(overtime.getId());
 			storedOt.setLoggedHours(overtime.getLoggedHours());
 			storedOt.setDate(overtime.getDate());
+			storedOt.setApproved(overtime.getApproved());
+			storedOt.setWasConfirmed(overtime.getWasConfirmed());
 //			toSave.add(storedOt);
 			repository.saveAndFlush(storedOt);
 		}
@@ -78,7 +80,7 @@ public class OvertimeServiceImpl implements OvertimeService {
 	public void claimHours(Integer staffId, Integer hours) {
 		List<Overtime> overtimes = findOvertimeOfStaff(staffId);
 		// Filter to those that have not fully been claimed, and sort it by lowest id first
-		overtimes = overtimes.stream().filter(ot -> ot.getLoggedHours() != ot.getClaimedHours()).sorted((a, b) -> a.getId().compareTo(b.getId())).collect(Collectors.toList());
+		overtimes = overtimes.stream().filter(ot -> ot.getLoggedHours() != ot.getClaimedHours() && ot.getApproved()).sorted((a, b) -> a.getId().compareTo(b.getId())).collect(Collectors.toList());
 		
 		for (Overtime overtime : overtimes) {
 			Integer claimableHours = overtime.getLoggedHours() - overtime.getClaimedHours();
@@ -107,7 +109,7 @@ public class OvertimeServiceImpl implements OvertimeService {
 	public void unclaimHours(Integer staffId, Integer hoursToUnclaim) {
 		List<Overtime> overtimes = findOvertimeOfStaff(staffId);
 		// Filter to those that have been at least part claimed, and sort it by highest id first
-		overtimes = overtimes.stream().filter(ot -> ot.getClaimedHours() > 0).sorted((a, b) -> b.getId().compareTo(a.getId())).collect(Collectors.toList());
+		overtimes = overtimes.stream().filter(ot -> ot.getClaimedHours() > 0 && ot.getApproved()).sorted((a, b) -> b.getId().compareTo(a.getId())).collect(Collectors.toList());
 		
 		for (Overtime overtime : overtimes) {
 			if (hoursToUnclaim >= overtime.getClaimedHours()) {

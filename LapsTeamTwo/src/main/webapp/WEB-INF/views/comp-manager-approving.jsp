@@ -12,20 +12,6 @@
 <script src="${pageContext.request.contextPath}/js/jquery-ui.js"></script>
 <script>
 	$(document).ready(function() {
-		$(".datepicker").datepicker({
-			dateFormat : "dd/mm/yy"
-		});
-		
-		$(".hourText").each(function() {
-			$(this).keyup(function(){
-				updateTotalHours();
-			});
-			$(this).click(function(){
-				if (this.value == "0") {
-					this.value = "";
-				} 
-			});
-		});
 		updateTotalHours();
 	});
 	function updateTotalHours() {
@@ -39,11 +25,11 @@
 	}
 </script>
 
-<h3>Log Overtime Hours <c:if test="${ edit eq true }">
+<h3>${ viewStaff.name }'s Pending Overtime Hours <c:if test="${ edit eq true }">
 		<span class="alert alert-warning">Editing only unclaimed</span>
 	</c:if> </h3>
 <form:form method="POST" modelAttribute="logHours"
-	action="${pageContext.request.contextPath}/staff/comp/loghours.html">
+	action="${pageContext.request.contextPath}/manager/comp/approve.html">
 <%-- 	Entries: ${ fn:length(logHours.overtimes) } --%>
 	<p style="color:red; font-size:2em;">${ valError }</p>
 <%-- 	<form:errors path="loggedHoursZeroOrNull" cssStyle="color: red;" /> --%>
@@ -52,7 +38,7 @@
 			<tr>
 				<th>Hours</th>
 				<th>Date of overtime</th>
-				<th></th>
+				<th>Approved?</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -63,26 +49,27 @@
 				</c:set>
 				<input name="overtimes[${idx.index}].id" type="hidden"
 					value="${overtime.id}" />
-				<input name="overtimes[${idx.index}].approved" type="hidden"
-					value="${overtime.approved}" />
+				<input name="overtimes[${idx.index}].staffId" type="hidden"
+					value="${overtime.staffId}" />
+				
 				<input name="overtimes[${idx.index}].wasConfirmed" type="hidden"
 					value="${overtime.wasConfirmed}" />
 				<tr>
 					<td><input name="overtimes[${idx.index}].loggedHours"
-						class="hourText form-control" value="${overtime.loggedHours}" /></td>
+						class="hourText form-control" value="${overtime.loggedHours}" readonly="readonly" /></td>
 					<td><input class="datepicker form-control"
-						name="overtimes[${idx.index}].date" value="${ fmtDate }" /></td>
+						name="overtimes[${idx.index}].date" value="${ fmtDate }" readonly="readonly" /></td>
 					<td>
-					<c:choose>
-						<c:when test="${ (idx.index + 1) eq fn:length(logHours.overtimes)
-						&& fn:length(logHours.overtimes) > 1
-						&& not edit eq true }">
-							<input type="submit" name="delRow" value="Del Row" class="btn btn-warning" />
-						</c:when>
-						<c:when test="${ edit eq true }">
-							<a href="${pageContext.request.contextPath}/staff/comp/delete/${ overtime.id }" class="btn btn-danger btn-sm">Delete</a>
-						</c:when>
-					</c:choose>
+					<input name="overtimes[${idx.index}].approved" type="checkbox"
+					value="${overtime.approved}" />
+					
+<%-- 					<c:choose> --%>
+<%-- 						<c:when test="${ (idx.index + 1) eq fn:length(logHours.overtimes) --%>
+<%-- 						&& fn:length(logHours.overtimes) > 1 --%>
+<%-- 						&& not edit eq true }"> --%>
+<!-- 							<input type="submit" name="delRow" value="Del Row" class="btn btn-warning" /> -->
+<%-- 						</c:when> --%>
+<%-- 					</c:choose> --%>
 <%-- 					<c:if --%>
 <%-- 							test="${ (idx.index + 1) eq fn:length(logHours.overtimes) --%>
 <%-- 						&& fn:length(logHours.overtimes) > 1 --%>
@@ -92,26 +79,18 @@
 				</tr>
 			</c:forEach>
 			<tr>
-				<th>Total: <span id="totalHours"></span></th>
+				<th>Total: <span id="totalHours"></span> hours</th>
 				<th></th>
 				<th></th>
 			</tr>
 		</tbody>
 	</table>
 	<c:if test="${ fn:length(logHours.overtimes) > 0 }">
-		<input type="submit" name="save" value="Save" class="btn btn-success" />
+		<input type="submit" name="save" value="Confirm all" class="btn btn-success" />
+<%-- 		<a href="${pageContext.request.contextPath}/manager/comp/save/${ viewStaff.staffId }" class="btn btn-success">Confirm all</a> --%>
 	</c:if>
 	
-	<c:choose>
-		<c:when test="${ not edit eq true }">
-			<c:if test="${ fn:length(logHours.overtimes) < 5 }">
-				<input type="submit" name="addRow" value="Add Row" class="btn btn-info" />
-			</c:if>
-		</c:when>
-		<c:otherwise>
-			<a href="${pageContext.request.contextPath}/staff/comp/history" class="btn btn-default">Cancel</a>
-		</c:otherwise>
-	</c:choose>
+	<a href="${pageContext.request.contextPath}/manager/comp/history/${ viewStaff.staffId }" class="btn btn-default">Cancel</a>
 					
 	<input type="hidden" name="edit" value="${ edit }" />
 

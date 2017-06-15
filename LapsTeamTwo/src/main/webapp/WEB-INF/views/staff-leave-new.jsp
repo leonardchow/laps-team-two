@@ -69,7 +69,7 @@
 				<div class="comp-conditional hidden">
 					<div class="margin-10">
 						<p class="label label-info">You have ${ compHours } hours of
-							overtime</p>
+							approved overtime</p>
 						<br /> <br />
 						<p class="label label-info">Eligible for ${ compDays } days of
 							compensation leave</p>

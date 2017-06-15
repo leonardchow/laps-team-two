@@ -29,7 +29,27 @@ public class Overtime {
 	private Integer loggedHours;
 	@Column(name = "claimed_hours")
 	private Integer claimedHours;
+	public Boolean getWasConfirmed() {
+		return wasConfirmed;
+	}
+
+	public void setWasConfirmed(Boolean wasConfirmed) {
+		this.wasConfirmed = wasConfirmed;
+	}
+
+	@Column(name = "approved")
+	private Boolean approved;
+	@Column(name = "was_confirmed")
+	private Boolean wasConfirmed;
 	
+	public Boolean getApproved() {
+		return approved;
+	}
+
+	public void setApproved(Boolean approved) {
+		this.approved = approved;
+	}
+
 	@ManyToOne
 	@JoinColumn(name = "staff_id", insertable = false, updatable = false)
 	private StaffMember staffMember;

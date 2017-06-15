@@ -25,8 +25,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.teamtwo.laps.javabeans.EmailSender;
 import com.teamtwo.laps.javabeans.OvertimeList;
+import com.teamtwo.laps.model.Leave;
 import com.teamtwo.laps.model.Overtime;
+import com.teamtwo.laps.model.StaffMember;
 import com.teamtwo.laps.service.LeaveService;
 import com.teamtwo.laps.service.LeaveTypeService;
 import com.teamtwo.laps.service.OvertimeService;
@@ -197,6 +200,33 @@ public class StaffOvertimeController {
 		}
 		
 		modelAndView.addObject("totalHours", overtimeList.getSumLoggedHours());
+		
+		// ----- EMAIL ------
+		// Get manager email
+//	String mgrEmail = "sa44lapsteamtwo+manager@gmail.com";
+		StaffMember mgr =  smService.findStaff(userSession.getEmployee().getManagerId());
+		String mgrEmail = mgr.getEmail();
+		
+		// set message
+		int highestID = 0;
+		List<Leave> leaves = lService.findAllLeaveOfStaff(staffId);
+		
+		for (Leave leaveIter : leaves) {
+			if (leaveIter.getLeaveId() > highestID) {
+				highestID = leaveIter.getLeaveId();
+			}
+		}
+		
+		String basePath = "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
+		String url = basePath + "/manager/comp/history/" + userSession.getEmployee().getStaffId() + ".html";
+		String message = "Dear " + mgr.getName() + ",\n"
+				+ "Your subordinate, " + userSession.getEmployee().getName()
+				+ " has applied for overtime. You can view the application here: \n"
+				+ url;
+		String subject = "Employee " + userSession.getEmployee().getName() + " has applied for compensation.";
+		
+		EmailSender.getEmailSender().addRecipient(mgrEmail).setMessage(message).setSubject(subject).send();
+		// ----- END OF EMAIL ------
 		
 		return modelAndView;
 	}

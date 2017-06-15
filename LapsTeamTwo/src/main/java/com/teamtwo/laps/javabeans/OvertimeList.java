@@ -24,6 +24,11 @@ public class OvertimeList {
 	}
 	
 	public void resetAllHoursClaimed() {
-		overtimes.forEach(overtime -> overtime.setClaimedHours(0));
+		overtimes.forEach(overtime ->  {
+			overtime.setClaimedHours(0);
+			overtime.setApproved(false);
+			overtime.setWasConfirmed(false);
+		}
+		);
 	}
 }

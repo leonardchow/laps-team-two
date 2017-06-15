@@ -13,25 +13,7 @@
 	crossorigin='anonymous'>
 <link href="../css/leonard-styles.css" rel="STYLESHEET" type="text/css">
 
-<h3>Log Overtime History</h3>
-
-<c:choose>
-	<c:when test="${ hide eq true }">
-		<c:set var="btnText">Show claimed</c:set>
-		<c:set var="urlParam">0</c:set>
-	</c:when>
-	<c:otherwise>
-		<c:set var="btnText">Hide claimed</c:set>
-		<c:set var="urlParam">1</c:set>
-	</c:otherwise>
-</c:choose>
-
-<c:url var="toggleClaimed" value="history">
-	<c:param name="hideClaimed" value="${ urlParam }" />
-</c:url>
-
-<a href="${ toggleClaimed }" class="btn btn-primary">${ btnText }</a>
-
+<h3>${ viewStaff.name }'s Overtime History</h3>
 
 <table class="table">
 	<thead>
@@ -41,7 +23,6 @@
 			<th>Claimed hrs</th>
 			<th>Date of overtime</th>
 			<th>Approved?</th>
-			<th>Pending?</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -64,13 +45,6 @@
 					</c:otherwise>
 				</c:choose>
 				</td>
-				<td>
-				<c:choose>
-					<c:when test="${ overtime.wasConfirmed eq false }">
-						Pending
-					</c:when>
-				</c:choose>
-				</td>
 			</tr>
 		</c:forEach>
 		<tr>
@@ -79,15 +53,13 @@
 			<th>Total: ${ totalClaimedHours }</th>
 			<th></th>
 			<th></th>
-			<th></th>
 		</tr>
 	</tbody>
 </table>
 
-<c:url var="editUnclaimed" value="loghours">
-	<c:param name="edit" value="1" />
+<c:url var="editUnclaimed" value="/manager/comp/approve/${ viewStaff.staffId }">
+<%-- 	<c:param name="edit" value="1" /> --%>
 </c:url>
 
-<a href="${ editUnclaimed }" class="btn btn-warning">Edit unclaimed
-	overtimes</a>
+<a href="${ editUnclaimed }" class="btn btn-success">Go to Approved or Reject overtimes</a>
 
