@@ -267,13 +267,18 @@ public class StaffController {
 		int endIndex = leaveHistoryList.size() > startIndex + perPage ? startIndex + perPage : leaveHistoryList.size();
 		System.out.println("perPage:"+perPage);
 		System.out.println("currentPage:"+currentPage);
-		List<Leave> leaveHistoryListOnPage = leaveHistoryList.subList(startIndex, endIndex);
+		try {
+			List<Leave> leaveHistoryListOnPage = leaveHistoryList.subList(startIndex, endIndex);
+			mav.addObject("lhistory", leaveHistoryListOnPage);
+
+		} catch (Exception e) {
+			mav.addObject("valError", "You have not appplied for any yet leave!");
+		}
 		
 		
 		mav.addObject("currentPage", currentPage);
 		mav.addObject("perPage", perPage);
 		mav.addObject("totalPages", totalPages);
-		mav.addObject("lhistory", leaveHistoryListOnPage);
 		
 		Boolean prevBtnEnabled = (currentPage == 1 || totalPages == 1) ? false : true;
 		Boolean nextBtnEnabled = currentPage >= totalPages ? false : true;

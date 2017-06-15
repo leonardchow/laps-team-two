@@ -12,6 +12,8 @@
 </head>
 <body>
 	<h3>Employee Leave History</h3>
+	<br/>
+	<h4>${valError }</h4>
 	<c:if test="${fn:length(lhistory) gt 0}">
 		<div class="table-responsive">
 			<table class="table table-hover ">
