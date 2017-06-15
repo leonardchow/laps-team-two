@@ -84,7 +84,7 @@ public class AdminStaffMemberController {
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public ModelAndView createNewUser(@ModelAttribute @Valid StaffMember staff, BindingResult result,
+	public ModelAndView createNewUser(@Valid @ModelAttribute ("staff") StaffMember staff, BindingResult result,
 			final RedirectAttributes redirectAttributes) {
 
 		if (result.hasErrors())

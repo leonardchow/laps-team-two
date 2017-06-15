@@ -13,25 +13,40 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
+
 @Entity
 @Table(name = "staff_list")
 public class StaffMember {
 	@Id
 	@Column(name = "staff_id")
 	private int staffId;
+	
+	@NotEmpty(message = "Please enter employee name.")
 	private String name;
+	
 	@Column(name = "contact_no")
 	private int contactNo;
+	
+	@NotEmpty(message = "Please enter email address")
+	@Email (message = "Please right correct email format")
 	private String email;
+	
 	@Column(name = "home_address")
+	@NotEmpty(message = "Please enter home address")
 	private String homeAddress;
+	
+	@NotEmpty(message = "Please enter designation ")
 	private String designation;
+	
 	@Column(name = "a_leave")
 	private int aLeave;
 	@Column(name = "m_leave")
 	private int mLeave;
 	@Column(name = "c_leave")
 	private int cLeave;
+	
 	@Column(name = "reports_to")
 	private int managerId;
 	@Column(name = "total_hours_claimed")

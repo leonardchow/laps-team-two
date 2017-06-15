@@ -19,7 +19,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.teamtwo.laps.service.LeaveTypeService;
-import com.teamtwo.laps.validator.LeaveTypeValidator;
 import com.teamtwo.laps.validator.UserValidator;
 import com.teamtwo.laps.model.LeaveType;;
 
@@ -33,13 +32,6 @@ public class AdminLeaveTypeController {
 	@Autowired
 	private LeaveTypeService ltService;
 	
-	@Autowired
-	private LeaveTypeValidator lValidator;
-	
-	@InitBinder("leavetype")
-	private void initUserBinder(WebDataBinder binder) {
-		binder.addValidators(lValidator);
-	}
 
 	/**
 	 * Renders the staff dashboard.
@@ -64,16 +56,18 @@ public class AdminLeaveTypeController {
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public ModelAndView createNewLeavePage(@ModelAttribute @Valid LeaveType leave, BindingResult result,
+	public ModelAndView createNewLeavePage(@Valid @ModelAttribute ("leavetype") LeaveType leavetype, BindingResult result,
 			final RedirectAttributes redirectAttributes) {
+
 
 		if (result.hasErrors())
 			return new ModelAndView("leave-type-new");
 
+	
 		ModelAndView mav = new ModelAndView();
-		String message = "New leave type " + leave.getLeaveName() + " was successfully created.";
+		String message = "New leave type " + leavetype.getLeaveName() + " was successfully created.";
 
-		ltService.createLeaveType(leave);
+		ltService.createLeaveType(leavetype);
 		mav.setViewName("redirect:/admin/leavetype/list");
 
 		redirectAttributes.addFlashAttribute("message", message);

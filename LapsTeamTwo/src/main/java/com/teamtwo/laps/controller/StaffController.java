@@ -327,6 +327,7 @@ public class StaffController {
 	public ModelAndView refreshCreatedPage(HttpSession session) {
 		return NewLeavePage(session);
 	}
+	
 	@RequestMapping(value = "/leave/created", method = RequestMethod.POST)
 	public ModelAndView createNewLeave(@ModelAttribute @Valid Leave leave, BindingResult result,
 			final RedirectAttributes redirectAttributes, HttpSession session,
