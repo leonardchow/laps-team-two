@@ -2,6 +2,8 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
 
 <body>
 	<h1>
@@ -34,8 +36,8 @@
 								<td>${leave_history.leaveId}</td>
 								<td>${leave_history.staffMember.name}</td>
 								<td>${leave_history.leaveTypeModel.leaveName}</td>
-								<td>${leave_history.startDate}</td>
-								<td>${leave_history.endDate}</td>
+								<td><fmt:formatDate value="${ leave_history.startDate }" pattern="dd MMM" /></td>
+								<td><fmt:formatDate value="${ leave_history.endDate }" pattern="dd MMM" /></td>
 								<td>${leave_history.disseminationMember.name}</td>
 								<td>${leave_history.status.toString()}</td>
 								<td><a

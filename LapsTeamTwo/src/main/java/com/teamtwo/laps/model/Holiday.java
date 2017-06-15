@@ -16,6 +16,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "publicholiday")
@@ -27,8 +28,10 @@ public class Holiday {
 	@Temporal(TemporalType.DATE)
 	@Column(name = "date")
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@NotEmpty(message="Please enter date")
 	private Date date;
 	@Column(name = "name")
+	@NotEmpty(message="Please enter name")
 	private String name;
 	
 	

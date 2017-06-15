@@ -20,11 +20,11 @@
 						<tr class="listHeading">
 					<th><spring:message code="fieldLabel.leaveId" /></th>
 					<th><spring:message code="fieldLabel.employeeName" /></th>
+					<th><spring:message code="fieldLabel.reason" /></th>
 					<th><spring:message code="fieldLabel.startDate" /></th>
 					<th><spring:message code="fieldLabel.endDate" /></th>
 					<th><spring:message code="fieldLabel.dissemination" /></th>
 					<th><spring:message code="fieldLabel.status" /></th>
-					<th><spring:message code="fieldLabel.approve" /></th>
 					<th><spring:message code="caption.details" /></th>
 				</tr>
 						<c:forEach var="leave" items="${entry.value}">
@@ -32,8 +32,8 @@
 						<td>${leave.leaveId}</td>
 						<td><c:out value="${entry.key.name}" /></td>
 						<td>${leave.reason}</td>
-						<td>${leave.startDate}</td>
-						<td>${leave.endDate}</td>
+						<td><fmt:formatDate value="${ leave.startDate }" pattern="dd MMM" /></td>
+						<td><fmt:formatDate value="${ leave.endDate }" pattern="dd MMM" /></td>
 						<td>${leave.disseminationMember.name}</td>
 						<td>${leave.status}</td>
 						<td><c:url

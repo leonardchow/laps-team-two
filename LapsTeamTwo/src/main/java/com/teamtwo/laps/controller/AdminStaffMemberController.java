@@ -95,8 +95,16 @@ public class AdminStaffMemberController {
 	public ModelAndView createNewUser(@Valid @ModelAttribute ("staff") StaffMember staff, BindingResult result,
 			final RedirectAttributes redirectAttributes) {
 
-		if (result.hasErrors())
-			return new ModelAndView("staff-new");
+		if (result.hasErrors()) {
+			List<StaffMember> sList = smService.findAllStaff();
+			
+			sList = sList.stream().filter(staff1 -> uService.findUserByStaffId(staff1.getStaffId()).getIsManager()).collect(Collectors.toList());
+			
+			ModelAndView modelAndView = new ModelAndView("staff-new");
+			modelAndView.addObject("mlist", sList);
+			return modelAndView;
+		}
+			
 
 		ModelAndView mav = new ModelAndView();
 		String message = "New staff " + staff.getStaffId() + " was successfully created.";

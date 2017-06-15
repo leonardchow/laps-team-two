@@ -165,7 +165,7 @@ public class ManagerOvertimeController {
 
 				// Get manager email
 //				String staffEmail = "sa44lapsteamtwo+staff@gmail.com";
-				StaffMember staff = smService.findStaff(overtimes.get(1).getStaffId());
+				StaffMember staff = smService.findStaff(overtimes.get(0).getStaffId());
 				 String staffEmail = staff.getEmail();
 
 				// set message
