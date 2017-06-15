@@ -13,13 +13,13 @@
 
 <c:if test="${fn:length(stafflist) gt 0}">
 
-	<!-- <div class="row">
+<div class="row">
 		<div class="col-md-4">
 			<input type="text" id="myInput" onkeyup="StaffSearch()"
 				placeholder="Search for Staff Name..." class="form-control"
 				title="Type in a name">
 		</div>
-	</div> -->
+	</div>
 
 
 	<div class="table-responsive">
@@ -69,7 +69,7 @@
 	href="${pageContext.request.contextPath}/admin/staff/create">Add
 	New Employee</a>
 
-<!-- <script>
+<script>
 	function StaffSearch() {
 		var input, filter, table, tr, td, i;
 		input = document.getElementById("myInput");
@@ -87,7 +87,7 @@
 			}
 		}
 	}
-</script> -->
+</script>
 <script>
 	$(document).ready(function() {
 		$('#staffTable').DataTable();

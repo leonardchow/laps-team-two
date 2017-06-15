@@ -92,7 +92,7 @@ public class AdminStaffMemberController {
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public ModelAndView createNewUser(@ModelAttribute @Valid StaffMember staff, BindingResult result,
+	public ModelAndView createNewUser(@Valid @ModelAttribute ("staff") StaffMember staff, BindingResult result,
 			final RedirectAttributes redirectAttributes) {
 
 		if (result.hasErrors())
@@ -119,7 +119,7 @@ public class AdminStaffMemberController {
 				mav = new ModelAndView("staff-edit");
 				StaffMember staff = smService.findStaff(id);
 				mav.addObject("staff", staff);
-				ArrayList<StaffMember> sList = smService.findAllStaff();
+				ArrayList<StaffMember> sList = smService.findAllStaffExcept(us.getEmployee().getStaffId());
 				mav.addObject("mlist", sList);
 			} else {
 				mav = new ModelAndView("unauthorized-admin-access");

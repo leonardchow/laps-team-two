@@ -11,22 +11,21 @@
 			<tr>
 				<td>Leave Type</td>
 				<td><form:input  path="leaveType" /></td>
-				<td><form:errors path="leaveType" cssStyle="color: red;" /></td>
+				<td><form:errors path="leaveType" cssStyle="color: red;" cssClass="error" /></td>
+
 			</tr>
 			<tr>
 				<td>Leave Name</td>
 				<td><form:input path="leaveName" /></td>
-				<td><form:errors path="leaveName" cssStyle="color: red;" /></td>
+				<td><form:errors path="leaveName" cssStyle="color: red;" cssClass="error" /></td>
 			</tr>
 
 			<tr>
-				<td><input type="submit" value="Create" class="btn btn-primary"/></td>
+				<td><input type="submit" value="Create" class="btn btn-primary" onclick="myFunction()"/></td>
 				<td></td>
 				<td></td>
 			</tr>
 		</tbody>
 	</table>
-	</div>
-	
-	
+</div>
 </form:form>

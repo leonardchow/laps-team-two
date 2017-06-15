@@ -26,4 +26,7 @@ public interface StaffMemberRepository extends JpaRepository<StaffMember, Intege
 	//Yin
 	@Query(value="select s.name from staff_list s, leave_history l where s.staffid =  l.staffid ", nativeQuery=true)
 	ArrayList<String> getOnlyStaffName();
+	
+	@Query("SELECT  e FROM StaffMember e WHERE e.staffId != :staffId")
+	ArrayList<StaffMember> findAllStaffExcept(@Param("staffId") Integer staffId);
 }

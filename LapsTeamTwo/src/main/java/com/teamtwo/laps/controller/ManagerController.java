@@ -107,6 +107,9 @@ public class ManagerController {
 		ModelAndView modelAndView = new ModelAndView("manager-dashboard");
 		modelAndView = DashboardBean.getDashboard(modelAndView, DASHBOARD_NUM_TO_SHOW, staffMember, leaves, holidays, otService);
 		
+		ManagerPath mp = ManagerPath.DASHBOARD;
+		session.setAttribute("USERPATH", mp);
+		
 		int pendingToShow = subordinatesLeaves.size() > DASHBOARD_NUM_TO_SHOW ? DASHBOARD_NUM_TO_SHOW : subordinatesLeaves.size();
 		modelAndView.addObject("subLeaves", subordinatesLeaves.subList(0, pendingToShow));
 		modelAndView.addObject("pendingNumToShow", pendingToShow);
@@ -125,17 +128,23 @@ public class ManagerController {
 
 				mav = new ModelAndView("manager-pending-list");
 				HashMap<StaffMember, ArrayList<Leave>> hm = new HashMap<StaffMember, ArrayList<Leave>>();
+				
+				int staffId = us.getEmployee().getStaffId();
+				ArrayList<StaffMember> subordinates = smService.findSubordinates(staffId);
 
-				for (StaffMember sMember : us.getSubordinates()) {
+				for (StaffMember sMember : subordinates) {
 					ArrayList<Leave> llist = lService.findPendingLeaveByType(sMember.getStaffId());
 					hm.put(sMember, llist);
 
 					mav = new ModelAndView("manager-pending-list");
 					// Pagination
 					// ObjectMapper mapper = new ObjectMapper();
-					mav.addObject("pendinghistory", hm);
-					return mav;
 				}
+				
+				ManagerPath mp = ManagerPath.PENDING;
+				session.setAttribute("USERPATH", mp);
+				mav.addObject("pendinghistory", hm);
+				return mav;
 			} else {
 				mav = new ModelAndView("unauthorized-admin-access");
 			}
@@ -316,6 +325,9 @@ public class ManagerController {
 			// TODO: handle exception
 			mav = new ModelAndView("unauthorized-access");
 		}
+		
+		ManagerPath mp = ManagerPath.HISTORY;
+		session.setAttribute("USERPATH", mp);
 		return mav;
 	}
 
@@ -359,7 +371,7 @@ public class ManagerController {
 				mav = new ModelAndView("manager-pending-approve");
 				Leave leave = lService.findLeaveById(leaveId);
 				if ((leave.getStatus() == LeaveStatus.APPROVED) || (leave.getStatus() == LeaveStatus.CANCELLED)
-						|| (leave.getStatus() == LeaveStatus.REJECTED)) {
+						|| (leave.getStatus() == LeaveStatus.REJECTED) || (leave.getStatus() == LeaveStatus.DELETED)) {
 					String url = "redirect:/manager/view/detail/" + leave.getLeaveId();
 					mav = new ModelAndView(url);
 					return mav;

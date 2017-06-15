@@ -29,7 +29,7 @@ public class DashboardBean {
 		Double annualLeavePending = leaves.stream().filter(a -> a.getLeaveType() == 1 && (a.getStatus() == LeaveStatus.PENDING || a.getStatus() == LeaveStatus.UPDATED)).map(x -> x.getNumberOfDays(holidays)).reduce(0.0, ((a, b) -> a + b));
 		
 		Double medicalLeaveDays = leaves.stream()
-				.filter(a -> a.getLeaveType() == 1
+				.filter(a -> a.getLeaveType() == 2
 				&& (a.getStatus() == LeaveStatus.APPROVED
 				|| a.getStatus() == LeaveStatus.PENDING
 				|| a.getStatus() == LeaveStatus.UPDATED))

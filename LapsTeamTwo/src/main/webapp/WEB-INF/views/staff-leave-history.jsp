@@ -12,6 +12,8 @@
 </head>
 <body>
 	<h3>Employee Leave History</h3>
+	<br />
+	<p style="color: red; font-size: 1em;">${ valError }</p>
 	<c:if test="${fn:length(lhistory) gt 0}">
 		<div class="table-responsive">
 			<table class="table table-hover ">
@@ -89,8 +91,8 @@
 				<c:param name="page" value="${ totalPages }" />
 				<c:param name="perPage" value="${ perPage }" />
 			</c:url>
-			
-			
+
+
 			<div class='col-xs-6 col-xs-offset-3'>
 
 				<div class='row'>
@@ -107,27 +109,27 @@
 							data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 							Page ${ currentPage } / ${ totalPages } <span class="caret"></span>
 						</button>
-							<ul class="dropdown-menu">
-								<li class="dropdown-header">Total ${ totalPages } page<c:if
-										test="${ totalPages > 1 }">s</c:if>
-								</li>
-								<c:forEach var="i" begin="1" end="${ totalPages }">
-	
-									<c:url var="changePageUrl" value="history">
-										<c:param name="page" value="${ i }" />
-										<c:param name="perPage" value="${ perPage }" />
-									</c:url>
-	
-									<c:choose>
-										<c:when test="${ i == currentPage }">
-											<li class="disabled"><a>Page ${ i }</a></li>
-										</c:when>
-										<c:when test="${ i != currentPage }">
-											<li><a href="${ changePageUrl }">Page ${ i }</a></li>
-										</c:when>
-									</c:choose>
-								</c:forEach>
-							</ul>
+						<ul class="dropdown-menu">
+							<li class="dropdown-header">Total ${ totalPages } page<c:if
+									test="${ totalPages > 1 }">s</c:if>
+							</li>
+							<c:forEach var="i" begin="1" end="${ totalPages }">
+
+								<c:url var="changePageUrl" value="history">
+									<c:param name="page" value="${ i }" />
+									<c:param name="perPage" value="${ perPage }" />
+								</c:url>
+
+								<c:choose>
+									<c:when test="${ i == currentPage }">
+										<li class="disabled"><a>Page ${ i }</a></li>
+									</c:when>
+									<c:when test="${ i != currentPage }">
+										<li><a href="${ changePageUrl }">Page ${ i }</a></li>
+									</c:when>
+								</c:choose>
+							</c:forEach>
+						</ul>
 					</div>
 					<!-- Change page dropdown -->
 
