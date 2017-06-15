@@ -5,10 +5,15 @@
 
 <h3>Employee List</h3>
 
+<link rel="stylesheet"
+	href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+<script
+	src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 
 <c:if test="${fn:length(stafflist) gt 0}">
 
-	<div class="row">
+<div class="row">
 		<div class="col-md-4">
 			<input type="text" id="myInput" onkeyup="StaffSearch()"
 				placeholder="Search for Staff Name..." class="form-control"
@@ -20,7 +25,7 @@
 	<div class="table-responsive">
 
 
-		<table id="staffTable" class="table table-hover">
+		<table id="staffTable" class="table table-responsive">
 			<thead>
 				<tr>
 					<th>Staff ID</th>
@@ -82,4 +87,9 @@
 			}
 		}
 	}
+</script>
+<script>
+	$(document).ready(function() {
+		$('#staffTable').DataTable();
+	});
 </script>

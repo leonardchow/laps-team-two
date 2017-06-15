@@ -1,12 +1,15 @@
 package com.teamtwo.laps.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 
@@ -60,6 +63,8 @@ public class AdminStaffMemberController {
 		}
 		return mav;
 	}
+	
+		
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)
 	public ModelAndView newUserPage(HttpSession session) {
@@ -70,7 +75,10 @@ public class AdminStaffMemberController {
 			if (us.getSessionId() != null && us.getUser().getIsAdmin()) {
 
 				mav = new ModelAndView("staff-new", "staff", new StaffMember());
-				ArrayList<StaffMember> sList = smService.findAllStaff();
+				List<StaffMember> sList = smService.findAllStaff();
+				
+				sList = sList.stream().filter(staff -> uService.findUserByStaffId(staff.getStaffId()).getIsManager()).collect(Collectors.toList());
+				
 				mav.addObject("mlist", sList);
 			} else {
 				mav = new ModelAndView("unauthorized-admin-access");
@@ -111,7 +119,7 @@ public class AdminStaffMemberController {
 				mav = new ModelAndView("staff-edit");
 				StaffMember staff = smService.findStaff(id);
 				mav.addObject("staff", staff);
-				ArrayList<StaffMember> sList = smService.findAllStaff();
+				ArrayList<StaffMember> sList = smService.findAllStaffExcept(us.getEmployee().getStaffId());
 				mav.addObject("mlist", sList);
 			} else {
 				mav = new ModelAndView("unauthorized-admin-access");

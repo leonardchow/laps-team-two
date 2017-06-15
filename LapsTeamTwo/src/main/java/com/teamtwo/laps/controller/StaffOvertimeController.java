@@ -172,8 +172,8 @@ public class StaffOvertimeController {
 		ModelAndView modelAndViewError = new ModelAndView("comp-log-hours", "logHours", overtimeList);
 		
 		for (Overtime overtime : overtimeList.getOvertimes()) {
-			if (overtime.getLoggedHours() == null) {
-				modelAndViewError.addObject("valError", "All hours must be filled.");
+			if (overtime.getLoggedHours() == null || overtime.getLoggedHours() == 0) {
+				modelAndViewError.addObject("valError", "All hours must be filled and more than 0.");
 				return modelAndViewError;
 			}
 			if (overtime.getDate() == null) {

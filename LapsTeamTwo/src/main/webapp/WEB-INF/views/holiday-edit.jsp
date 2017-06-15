@@ -41,7 +41,7 @@
 			</tr>
 
 			<tr>
-				<td><input type="submit" value="Edit" class="btn btn-primary" /></td>
+				<td><input type="submit" value="Edit" class="btn btn-primary"/></td>
 				<td></td>
 				<td></td>
 			</tr>

@@ -15,51 +15,59 @@
 		<spring:message code="fieldLabel.leave" />
 		${leave.leaveId}
 	</h3>
+	<div class="row">
+		<div class="col-md-8">
 
-	<table class="table table-striped">
-		<tr>
-			<th align="right"><spring:message code="fieldLabel.employeeName" /></th>
-			<td colspan="3"><c:out value="${leave.staffMember.name}" /></td>
-		</tr>
-		<tr>
-			<th align="right"><spring:message code="fieldLabel.leaveId" /></th>
-			<td colspan="3"><c:out value="${leave.leaveId}" /></td>
-		</tr>
-		<tr>
-			<th align="right"><spring:message code="fieldLabel.reason" /></th>
-			<td colspan="3"><c:out value="${leave.reason}" /></td>
-		</tr>
-		<tr>
-			<th align="right"><spring:message code="fieldLabel.leaveType" /></th>
-			<td colspan="3"><c:out value="${leave.leaveTypeModel.leaveName}" /></td>
-		</tr>
-		<tr>
-			<th align="right"><spring:message code="fieldLabel.startDate" /></th>
-			<td><c:out value="${leave.startDate }" /></td>
-			<th align="right"><spring:message code="fieldLabel.endDate" /></th>
-			<td><c:out value="${leave.endDate }" /></td>
-		</tr>
-		<tr>
-			<th align="right"><spring:message code="fieldLabel.dissemTask" /></th>
-			<td><c:out value="${leave.dissemination}" /></td>
-			<th align="right"><spring:message
-					code="fieldLabel.dissemination" /></th>
-			<td><c:out value="${leave.disseminationMember.name}" /></td>
-		</tr>
-		<tr>
-			<th align="right"><spring:message code="fieldLabel.contactInfo" /></th>
-			<td colspan="3"><c:out value="${leave.contactDetails}" /></td>
-		</tr>
-		<tr>
-			<th align="right"><spring:message code="fieldLabel.status" /></th>
-			<td colspan="3"><c:out value="${leave.status}" /></td>
-		</tr>
-		<tr>
-			<th align="right"><spring:message
-					code="fieldLabel.actionComment" /></th>
-			<td colspan="3"><c:out value="${leave.comment}" /></td>
-		</tr>
-	</table>
+			<div class="table-responsive">
+
+				<table class="table">
+					<tr>
+						<th align="right"><spring:message code="fieldLabel.employeeName" /></th>
+						<td colspan="3"><c:out value="${leave.staffMember.name}" /></td>
+					</tr>
+					<tr>
+						<th align="right"><spring:message code="fieldLabel.leaveId" /></th>
+						<td colspan="3"><c:out value="${leave.leaveId}" /></td>
+					</tr>
+					<tr>
+						<th align="right"><spring:message code="fieldLabel.reason" /></th>
+						<td colspan="3"><c:out value="${leave.reason}" /></td>
+					</tr>
+					<tr>
+						<th align="right"><spring:message code="fieldLabel.leaveType" /></th>
+						<td colspan="3"><c:out value="${leave.leaveTypeModel.leaveName}" /></td>
+					</tr>
+					<tr>
+						<th align="right"><spring:message code="fieldLabel.startDate" /></th>
+						<td><c:out value="${leave.startDate }" /></td>
+						<th align="right"><spring:message code="fieldLabel.endDate" /></th>
+						<td><c:out value="${leave.endDate }" /></td>
+					</tr>
+					<tr>
+						<th align="right"><spring:message code="fieldLabel.dissemTask" /></th>
+						<td><c:out value="${leave.dissemination}" /></td>
+						<th align="right"><spring:message
+								code="fieldLabel.dissemination" /></th>
+						<td><c:out value="${leave.disseminationMember.name}" /></td>
+					</tr>
+					<tr>
+						<th align="right"><spring:message code="fieldLabel.contactInfo" /></th>
+						<td colspan="3"><c:out value="${leave.contactDetails}" /></td>
+					</tr>
+					<tr>
+						<th align="right"><spring:message code="fieldLabel.status" /></th>
+						<td colspan="3"><c:out value="${leave.status}" /></td>
+					</tr>
+					<tr>
+						<th align="right"><spring:message
+								code="fieldLabel.actionComment" /></th>
+						<td colspan="3"><c:out value="${leave.comment}" /></td>
+					</tr>
+				</table>
+
+			</div>
+		</div>
+	</div>
 
 	<form:form method="POST" modelAttribute="leave"
 		action="${pageContext.request.contextPath}/manager/pending/edit/${leave.leaveId}.html">

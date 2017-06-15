@@ -19,6 +19,8 @@ public interface StaffMemberService {
 	StaffMember findStaffMemberById(Integer staffId);
 	
 	ArrayList<StaffMember> findSubordinates(Integer staffId);
+	
+	ArrayList<StaffMember> findAllStaffExcept(Integer staffId);
 
 	//Yin
 	ArrayList<StaffMember> showBySubordinateName();

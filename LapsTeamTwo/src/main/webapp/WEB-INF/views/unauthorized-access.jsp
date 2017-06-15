@@ -10,7 +10,7 @@
 	<div class="alert alert-danger">
 		Your are not authorized to do this. Go to <a
 			href="${pageContext.request.contextPath}/home/login"
-			class="btn btn-warning">Login</a> page.
+			class="btn btn-warning"> Login </a> page.
 	</div>
 
 

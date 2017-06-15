@@ -13,36 +13,39 @@
 	</h3>
 
 	<c:if test="${fn:length(subordinateList) gt 0}">
+
 		<div class="table-responsive">
-			<table class="table table-hover">
-			<thead>
-				<tr class="listHeading">
-					<th><spring:message code="fieldLabel.employeeId" /></th>
-					<th><spring:message code="fieldLabel.employeeName" /></th>
-					<th><spring:message code="fieldLabel.contactInfo" /></th>
-					<th><spring:message code="fieldLabel.email" /></th>
-					<th><spring:message code="fieldLabel.homeAddress" /></th>
-					<th><spring:message code="fieldLabel.designation" /></th>
-					<th><spring:message code="fieldLabel.viewEmployee" /></th>
-				</tr>
+			<table class="table">
+				<thead>
+					<tr class="listHeading">
+						<th><spring:message code="fieldLabel.employeeId" /></th>
+						<th><spring:message code="fieldLabel.employeeName" /></th>
+						<th><spring:message code="fieldLabel.contactInfo" /></th>
+						<th><spring:message code="fieldLabel.email" /></th>
+						<th><spring:message code="fieldLabel.homeAddress" /></th>
+						<th><spring:message code="fieldLabel.designation" /></th>
+						<th><spring:message code="fieldLabel.viewEmployee" /></th>
+					</tr>
 				</thead>
 				<tbody>
-				<c:forEach var="staff_list" items="${subordinateList}">
-					<tr class="listRecord">
-						<td>${staff_list.staffId}</td>
-						<td>${staff_list.name}</td>
-						<td>${staff_list.contactNo}</td>
-						<td>${staff_list.email}</td>
-						<td>${staff_list.homeAddress}</td>
-						<td>${staff_list.designation}</td>
-						<td><a
-							href="${pageContext.request.contextPath}/manager/subordinate/history/${staff_list.staffId}.html"
-							class="btn btn-primary">Detail</a></td>
-					</tr>
-				</c:forEach>
+					<c:forEach var="staff_list" items="${subordinateList}">
+						<tr class="listRecord">
+							<td>${staff_list.staffId}</td>
+							<td>${staff_list.name}</td>
+							<td>${staff_list.contactNo}</td>
+							<td>${staff_list.email}</td>
+							<td>${staff_list.homeAddress}</td>
+							<td>${staff_list.designation}</td>
+							<td><a
+								href="${pageContext.request.contextPath}/manager/subordinate/history/${staff_list.staffId}.html"
+								class="btn btn-success">Detail</a></td>
+						</tr>
+					</c:forEach>
 				</tbody>
 			</table>
 		</div>
+
+
 	</c:if>
 </body>
 

@@ -34,4 +34,8 @@ public interface LeaveService {
 	void cancelLeave(Leave lt, LeaveStatus ls);
 	
 	ArrayList<Leave> findStaffLeaveHistory(Integer sid );
+	
+	//Htein
+	
+	Integer findStaffId(Integer id);
 }

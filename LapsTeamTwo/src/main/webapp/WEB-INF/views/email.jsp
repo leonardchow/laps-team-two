@@ -10,5 +10,11 @@
 </h1>
 
 <P>  Email sent. </P>
+${ url1 }
+<br />
+${ url2 }
+<br />
+${ url3 }
+<br />
 </body>
 </html>

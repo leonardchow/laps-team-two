@@ -15,7 +15,7 @@ public interface OvertimeService {
 
 	Overtime findOvertimeById(Integer id);
 
-	Integer findUnclaimedOvertimeOfStaff(Integer staffId);
+	Integer findUnclaimedHoursOfStaff(Integer staffId);
 
 	Integer findLoggedHoursOfStaff(Integer staffId);
 
@@ -26,5 +26,9 @@ public interface OvertimeService {
 	void updateOvertimes(List<Overtime> overtimes);
 
 	void deleteOvertime(Integer id);
+
+	void claimHours(Integer staffId, Integer hours);
+
+	void unclaimHours(Integer staffId, Integer hoursToUnclaim);
 
 }

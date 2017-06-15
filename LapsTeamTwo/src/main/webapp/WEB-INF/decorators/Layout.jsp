@@ -5,6 +5,11 @@
 <html>
 <head>
 
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+	name="viewport" />
+
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -16,6 +21,11 @@
 	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
 	integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
 	crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript for JQuery -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+	integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+	crossorigin="anonymous"></script>
 
 <!-- Latest compiled and minified JavaScript -->
 <script
@@ -29,17 +39,14 @@ h1 {
 	margin: 1em 0 0.5em 0;
 	font-weight: 600;
 	font-family: 'Titillium Web', sans-serif;
-	position: relative;  
+	position: relative;
 	font-size: 21px;
 	line-height: 60px;
 	padding: 15px 15px 15px 15%;
 	color: #355681;
-	box-shadow: 
-		inset 0 0 0 1px rgba(53,86,129, 0.4), 
-		inset 0 0 5px rgba(53,86,129, 0.5),
-		inset -285px 0 35px white;
+	box-shadow: inset 0 0 0 1px rgba(53, 86, 129, 0.4), inset 0 0 5px
+		rgba(53, 86, 129, 0.5), inset -285px 0 35px white;
 	border-radius: 0 10px 0 10px;
-	
 }
 </style>
 
@@ -51,7 +58,7 @@ h1 {
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-2"><%@ include file="Menu.jsp"%></div>
-	
+
 			<div class="col-md-8">
 				<spring:message code="${bodyTitle}" />
 

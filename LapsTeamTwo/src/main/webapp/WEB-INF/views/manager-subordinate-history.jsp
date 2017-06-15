@@ -4,17 +4,18 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
 <body>
-	<h3>
+	<h1>
 		<spring:message code="title.leaveDetailsHistory" />
-	</h3>
+	</h1>
 
 	<form:form method="POST" modelAttribute="staffMember"
 		action="${pageContext.request.contextPath}/manager/subordinate/LeaveHistory/Details/${staffMember.staffId}.html">
 
-		<h4>Staff Name: ${staffMember.name}</h4>
+		<h3>Staff Name: ${staffMember.name}</h3>
 		<c:if test="${fn:length(leaveHistoryList) gt 0}">
+
 			<div class="table-responsive">
-				<table class="table table-hover ">
+				<table class="table">
 					<thead>
 						<tr class="listHeading">
 							<th><spring:message code="fieldLabel.leaveId" /></th>
@@ -39,12 +40,13 @@
 								<td>${leave_history.status.toString()}</td>
 								<td><a
 									href="${pageContext.request.contextPath}/manager/subordinate/history//detail/${leave_history.leaveId}.html"
-									class="btn btn-primary">Detail</a></td>
+									class="btn btn-success">Detail</a></td>
 							</tr>
 						</c:forEach>
 					</tbody>
 				</table>
 			</div>
+
 		</c:if>
 	</form:form>
 </body>
