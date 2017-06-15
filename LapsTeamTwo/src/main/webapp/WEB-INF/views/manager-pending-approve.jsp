@@ -97,7 +97,8 @@
 
 	<%-- add current staff movement registry --%>
 	<c:if test="${fn:length(subLeave) gt 0}">
-		<table style="cellspacing: 2; cellpadding: 2; border: 1;">
+		<h4>Current subordinates on leave during same period</h4>
+		<table class="table table-hover">
 			<thead>
 				<tr class="listHeading">
 					<th><spring:message code="fieldLabel.leaveId" /></th>
