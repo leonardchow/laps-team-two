@@ -95,4 +95,10 @@ public class LeaveServiceImpl implements LeaveService {
 		// TODO Auto-generated method stub
 		return leavel;
 	}
+
+	@Override
+	public Integer findStaffId(Integer id) {
+		// TODO Auto-generated method stub
+		return repository.findStaffId(id);
+	}
 }

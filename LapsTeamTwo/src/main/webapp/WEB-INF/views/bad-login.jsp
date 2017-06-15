@@ -47,6 +47,13 @@
 		</div>
 
 	</div>
+	
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+		
+		<div class="alert alert-danger" role="alert">User name and password missmatch.</div>
+		</div>
+		</div>
 
 
 

@@ -34,6 +34,12 @@ public class CommonController {
 		model.addAttribute("user", new User());
 		return "login";
 	}
+	
+	@RequestMapping(value = "/badlogin", method = RequestMethod.GET)
+	public String logic2(Model model) {
+		model.addAttribute("user", new User());
+		return "bad-login";
+	}
 
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
 	public ModelAndView authenticate(@ModelAttribute User user, HttpSession session, BindingResult result) {
@@ -42,17 +48,26 @@ public class CommonController {
 			return mav;
 		UserSession us = new UserSession();
 		if (user.getUserId() != null && user.getPassword() != null) {
-			User u = uService.authenticate(user.getUserId(), user.getPassword());
-			us.setUser(u);
-			// PUT CODE FOR SETTING SESSION ID
-			us.setSessionId(session.getId());
-			us.setEmployee(smService.findStaffById(us.getUser().getStaffId()));
-			ArrayList<StaffMember> subordinates = smService.findSubordinates(us.getUser().getStaffId());
-			if (subordinates != null) {
-				us.setSubordinates(subordinates);
+			
+			try {
+				
+				User u = uService.authenticate(user.getUserId(), user.getPassword());
+				us.setUser(u);
+				// PUT CODE FOR SETTING SESSION ID
+				us.setSessionId(session.getId());
+				us.setEmployee(smService.findStaffById(us.getUser().getStaffId()));
+				ArrayList<StaffMember> subordinates = smService.findSubordinates(us.getUser().getStaffId());
+				if (subordinates != null) {
+					us.setSubordinates(subordinates);
 
+				}
+				mav = new ModelAndView("redirect:/staff/dashboard");
+				
+			} catch (NullPointerException e) {
+				return mav = new ModelAndView("redirect:/home/badlogin");
 			}
-			mav = new ModelAndView("redirect:/staff/dashboard");
+			
+			
 		} else {
 			return mav;
 		}

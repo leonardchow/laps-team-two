@@ -6,44 +6,45 @@
 <h3>New User</h3>
 <form:form method="POST" commandName="user"
 	action="${pageContext.request.contextPath}/admin/user/create.html">
-	<table class="table">
-		<tbody>
-			<tr>
-				<td>User ID</td>
-				<td><form:input path="userId" /></td>
-				<td><form:errors path="userId" cssStyle="color: red;" /></td>
-			</tr>
-			<tr>
-				<td>Password</td>
-				<td><form:input path="password" /></td>
-				<td><form:errors path="password" cssStyle="color: red;" /></td>
-			</tr>
-			<tr>
 
-				<td>Staff ID</td>
+	<div class="table-responsive">
+		<table class="table">
+			<tbody>
+				<tr>
+					<td>User ID</td>
+					<td><form:input path="userId" /></td>
+					<td><form:errors path="userId" cssStyle="color: red;" /></td>
+				</tr>
+				<tr>
+					<td>Password</td>
+					<td><form:input path="password" /></td>
+					<td><form:errors path="password" cssStyle="color: red;" /></td>
+				</tr>
+				<tr>
 
-				<td><form:select path="staffId" items="${sidlist}" /></td>
+					<td>Staff ID</td>
 
-				<td><form:errors path="staffId" cssStyle="color: red;" /></td>
-			</tr>
+					<td><form:select path="staffId" items="${sidlist}" /></td>
 
-			<tr>
-				<td>Role</td>
-				<td>
+					<td><form:errors path="staffId" cssStyle="color: red;" /></td>
+				</tr>
 
-				<form:checkbox path="isAdmin" /> Admin 
-				<form:checkbox path="isManager" /> Manager
-				 <form:checkbox path="isStaff"  /> Staff
+				<tr>
+					<td>Role</td>
+					<td><form:checkbox path="isAdmin" /> Admin <form:checkbox
+							path="isManager" /> Manager <form:checkbox path="isStaff" />
+						Staff
+				</tr>
 
-			</tr>
-
-			<tr>
-				<td><input type="submit" value="Create" /></td>
-				<td></td>
-				<td></td>
-			</tr>
-		</tbody>
-	</table>
+				<tr>
+					<td><input type="submit" value="Create"
+						class="btn btn-primary" /></td>
+					<td></td>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </form:form>
 
 
